@@ -1,18 +1,19 @@
 package com.reclaim.reclaim.ui.trigger
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
-import androidx.compose.runtime.*
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
 
 
 data class Trigger(
@@ -23,7 +24,7 @@ data class Trigger(
 )
 
 @Composable
-fun TriggerGrid() {
+fun TriggerGrid(draggedStrategy: String?) {
     val triggers = remember {
         mutableStateListOf(
             Trigger("Stress", Icons.Default.Warning, Color(0xFFE57373), listOf("Deep breathing", "Go for a walk")),
@@ -40,6 +41,22 @@ fun TriggerGrid() {
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .pointerInput(trigger.name) {
+                        detectDragGestures(
+                            onDragStart = {},
+                            onDrag = { _, _ -> },
+                            onDragEnd = {
+                                draggedStrategy?.let { strategy ->
+                                    if (!trigger.strategies.contains(strategy)) {
+                                        triggers[index] = trigger.copy(
+                                            strategies = trigger.strategies + strategy
+                                        )
+                                    }
+                                }
+                            },
+                            onDragCancel = {}
+                        )
+                    }
                     .clickable { expanded = !expanded },
                 colors = CardDefaults.cardColors(containerColor = trigger.color),
                 elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
@@ -51,10 +68,15 @@ fun TriggerGrid() {
                     }
 
                     AnimatedVisibility(visible = expanded) {
-                        Column(verticalArrangement = Arrangement.spacedBy(4.dp), modifier = Modifier.padding(top = 8.dp)) {
+                        Column(
+                            verticalArrangement = Arrangement.spacedBy(4.dp),
+                            modifier = Modifier
+                                .padding(top = 8.dp)
+                                .animateContentSize()
+                        ) {
                             trigger.strategies.forEach { strategy ->
                                 AssistChip(
-                                    onClick = { /* TODO: Edit or unlink */ },
+                                    onClick = { /* Optional unlink */ },
                                     label = { Text(strategy) }
                                 )
                             }
@@ -65,4 +87,3 @@ fun TriggerGrid() {
         }
     }
 }
-

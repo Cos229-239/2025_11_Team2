@@ -13,6 +13,8 @@ import com.reclaim.reclaim.ui.components.BottomNavBar
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TriggerMapScreen(navController: NavController) {
+    var draggedStrategy by remember { mutableStateOf<String?>(null) }
+
     Scaffold(
         bottomBar = { BottomNavBar(navController) },
         topBar = {
@@ -28,12 +30,9 @@ fun TriggerMapScreen(navController: NavController) {
         ) {
             Text("Explore your triggers and link strategies", style = MaterialTheme.typography.titleMedium)
 
-            StrategyBar { draggedStrategy ->
-                println("Dragging: $draggedStrategy")
-                // TODO: Handle drag start logic
-            }
+            StrategyBar { strategy -> draggedStrategy = strategy }
 
-            TriggerGrid()
+            TriggerGrid(draggedStrategy)
         }
     }
 }
