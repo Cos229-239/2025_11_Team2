@@ -6,12 +6,15 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.reclaim.reclaim.ui.trigger.StrategyBar
+import com.reclaim.reclaim.ui.components.BottomNavBar
+
 
 @OptIn(ExperimentalMaterial3Api::class)
-
 @Composable
 fun TriggerMapScreen(navController: NavController) {
     Scaffold(
+        bottomBar = { BottomNavBar(navController) },
         topBar = {
             TopAppBar(title = { Text("Trigger Map") })
         }
@@ -21,11 +24,15 @@ fun TriggerMapScreen(navController: NavController) {
                 .fillMaxSize()
                 .padding(padding)
                 .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Text("Explore your triggers and link strategies", style = MaterialTheme.typography.titleMedium)
 
-            // Placeholder for trigger grid
+            StrategyBar { draggedStrategy ->
+                println("Dragging: $draggedStrategy")
+                // TODO: Handle drag start logic
+            }
+
             TriggerGrid()
         }
     }

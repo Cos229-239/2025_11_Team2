@@ -10,39 +10,59 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import androidx.compose.runtime.*
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.animation.AnimatedVisibility
+
 
 data class Trigger(
     val name: String,
     val icon: ImageVector,
-    val color: Color
+    val color: Color,
+    val strategies: List<String> = emptyList()
 )
 
 @Composable
 fun TriggerGrid() {
-    val triggers = listOf(
-        Trigger("Stress", Icons.Default.Warning, Color(0xFFE57373)),
-        Trigger("Loneliness", Icons.Default.Person, Color(0xFF64B5F6)),
-        Trigger("Boredom", Icons.Default.HourglassEmpty, Color(0xFFFFB74D)),
-        Trigger("Celebration", Icons.Default.EmojiEvents, Color(0xFF81C784))
-    )
+    val triggers = remember {
+        mutableStateListOf(
+            Trigger("Stress", Icons.Default.Warning, Color(0xFFE57373), listOf("Deep breathing", "Go for a walk")),
+            Trigger("Loneliness", Icons.Default.Person, Color(0xFF64B5F6), listOf("Call a friend")),
+            Trigger("Boredom", Icons.Default.HourglassEmpty, Color(0xFFFFB74D), listOf("Read a book")),
+            Trigger("Celebration", Icons.Default.EmojiEvents, Color(0xFF81C784), listOf("Reflect on progress"))
+        )
+    }
 
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        triggers.forEach { trigger ->
+        triggers.forEachIndexed { index, trigger ->
+            var expanded by remember { mutableStateOf(false) }
+
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clickable { /* TODO: Expand or link strategy */ },
+                    .clickable { expanded = !expanded },
                 colors = CardDefaults.cardColors(containerColor = trigger.color),
                 elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
             ) {
-                Row(
-                    modifier = Modifier.padding(16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    Icon(trigger.icon, contentDescription = trigger.name)
-                    Text(trigger.name, style = MaterialTheme.typography.bodyLarge)
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                        Icon(trigger.icon, contentDescription = trigger.name)
+                        Text(trigger.name, style = MaterialTheme.typography.bodyLarge)
+                    }
+
+                    AnimatedVisibility(visible = expanded) {
+                        Column(verticalArrangement = Arrangement.spacedBy(4.dp), modifier = Modifier.padding(top = 8.dp)) {
+                            trigger.strategies.forEach { strategy ->
+                                AssistChip(
+                                    onClick = { /* TODO: Edit or unlink */ },
+                                    label = { Text(strategy) }
+                                )
+                            }
+                        }
+                    }
                 }
             }
         }
     }
 }
+
