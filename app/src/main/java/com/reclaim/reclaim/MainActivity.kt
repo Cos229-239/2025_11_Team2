@@ -15,11 +15,14 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             val navController = rememberNavController()
-            ReclaimTheme { // Use your custom theme wrapper
+            val userName = "Brandy" // Replace with dynamic value later if needed
+
+            ReclaimTheme {
                 Surface(modifier = Modifier.fillMaxSize()) {
-                    NavGraph(navController)
+                    NavGraph(navController = navController, name = userName)
                 }
             }
         }
+
     }
 }
