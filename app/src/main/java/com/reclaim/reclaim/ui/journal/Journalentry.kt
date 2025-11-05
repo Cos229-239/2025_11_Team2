@@ -14,10 +14,12 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import androidx.navigation.NavController
 
 @Composable
-fun JournalScreen(name: String) {
-    val navController = rememberNavController()
+fun JournalScreen(name: String, navController: NavController)
+ {
+
     var entry by remember { mutableStateOf("") }
     val date = LocalDate.now().format(DateTimeFormatter.ofPattern("EEEE, MMM d"))
 
