@@ -5,6 +5,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.reclaim.reclaim.ui.home.HomeScreen
+import com.reclaim.reclaim.ui.journal.JournalScreen
 
 
 @Composable
@@ -13,6 +14,9 @@ fun NavGraph(navController: NavHostController) {
         composable(Screen.Home.route) {
             HomeScreen(navController)
             // Add other screens here
+        }
+        composable(Screen.Journal.route) {
+            JournalScreen(name = "Mya")
         }
     }
 }
