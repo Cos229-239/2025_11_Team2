@@ -8,14 +8,12 @@ import java.time.Period
 import java.time.temporal.ChronoUnit
 import com.reclaim.reclaim.model.SoberTime
 
-
-
 class HomeViewModel : ViewModel() {
 
-    // Set your sober start date here
+    // ✅ Sober start date
     private val soberStartDate = LocalDate.of(2024, 8, 25)
 
-    // Reactive flow that calculates sober time
+    // ✅ Reactive sober time calculation
     val soberTime: StateFlow<SoberTime> = flow {
         val today = LocalDate.now()
         val period = Period.between(soberStartDate, today)
@@ -35,7 +33,15 @@ class HomeViewModel : ViewModel() {
         initialValue = SoberTime(0, 0, 0, 0)
     )
 
-    // Default affirmation
+    // ✅ Affirmation
     private val _affirmation = MutableStateFlow("You're stronger today than yesterday!")
     val affirmation: StateFlow<String> = _affirmation.asStateFlow()
+
+    // ✅ Mood tracking
+    private val _mood = MutableStateFlow<String?>(null)
+    val mood: StateFlow<String?> = _mood.asStateFlow()
+
+    fun setMood(mood: String) {
+        _mood.value = mood
+    }
 }

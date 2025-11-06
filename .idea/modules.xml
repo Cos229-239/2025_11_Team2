@@ -2,7 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/2025_11_Team2.iml" filepath="$PROJECT_DIR$/.idea/2025_11_Team2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Reclaim.iml" filepath="$PROJECT_DIR$/.idea/modules/Reclaim.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Reclaim.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Reclaim.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Reclaim.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Reclaim.app.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Reclaim.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Reclaim.app.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Reclaim.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Reclaim.app.unitTest.iml" />
     </modules>
   </component>
 </project>

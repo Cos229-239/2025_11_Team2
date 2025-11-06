@@ -8,11 +8,14 @@ import com.reclaim.reclaim.ui.home.HomeScreen
 import com.reclaim.reclaim.ui.trigger.TriggerMapScreen
 
 
+
 @Composable
-fun NavGraph(navController: NavHostController) {
+fun NavGraph(navController: NavHostController, name: String) {
+
     NavHost(navController = navController, startDestination = Screen.Home.route) {
         composable(Screen.Home.route) {
-            HomeScreen(navController)
+            HomeScreen(name = name, navController = navController)
+
         }
         composable(Screen.Map.route) {
             TriggerMapScreen(navController)

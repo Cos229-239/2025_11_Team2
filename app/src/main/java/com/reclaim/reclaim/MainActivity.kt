@@ -11,7 +11,9 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             val navController = rememberNavController()
-            NavGraph(navController)
+            val userName = "Brandy" // You can make this dynamic later
+
+            NavGraph(navController = navController, name = userName)
         }
     }
 }
