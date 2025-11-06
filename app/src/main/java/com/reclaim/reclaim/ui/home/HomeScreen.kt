@@ -1,8 +1,10 @@
 package com.reclaim.reclaim.ui.home
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -10,10 +12,12 @@ import com.reclaim.reclaim.ui.components.BottomNavBar
 import com.reclaim.reclaim.ui.components.NavigationGrid
 import com.reclaim.reclaim.ui.components.SoberTimeTracker
 import java.time.LocalTime
+import androidx.compose.ui.text.font.FontWeight
 
 
 @Composable
 fun HomeScreen(
+    name: String,
     navController: NavController,
     viewModel: HomeViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
 ) {
@@ -45,7 +49,7 @@ fun HomeScreen(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Text(
-                    text = "$greeting 👋",
+                    text = "$greeting, $name 👋",
                     style = MaterialTheme.typography.headlineMedium
                 )
 
@@ -59,6 +63,36 @@ fun HomeScreen(
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
+
+                // ✅ Mood Check-In Card
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    elevation = CardDefaults.cardElevation(4.dp)
+                ) {
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        Text(
+                            text = "Mood Check-In",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.SemiBold
+                        )
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(12.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            val moods = listOf("😊", "😐", "😢", "😠", "😨", "😴", "❤️", "🤯")
+                            moods.forEach { mood ->
+                                Text(
+                                    text = mood,
+                                    style = MaterialTheme.typography.headlineMedium,
+                                    modifier = Modifier.clickable { viewModel.setMood(mood) }
+                                )
+                            }
+                        }
+                    }
+                }
 
                 SoberTimeTracker(soberTime)
 
