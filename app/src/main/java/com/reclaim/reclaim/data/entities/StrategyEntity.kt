@@ -7,5 +7,6 @@ import androidx.room.PrimaryKey
 data class StrategyEntity(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val triggerName: String,
-    val strategy: String
+    val strategy: String,
+    val isFavorite: Boolean = false // New field, defaults to false
 )
