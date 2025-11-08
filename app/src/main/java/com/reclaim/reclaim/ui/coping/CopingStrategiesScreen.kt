@@ -26,8 +26,9 @@ fun CopingStrategiesScreen(
     viewModel: CopingStrategiesViewModel = viewModel()
 ) {
     val strategies by viewModel.strategies.collectAsState(initial = emptyList())
-    val backgroundColor = Color(0xFFA5D6A7)
-    val cardColor = Color(0xFFE8F5E9)
+    val backgroundColor = MaterialTheme.colorScheme.background
+    val cardColor = MaterialTheme.colorScheme.surface
+
 
     Scaffold(
         topBar = {
@@ -43,8 +44,9 @@ fun CopingStrategiesScreen(
                 )
             )
         },
-        containerColor = backgroundColor // Set overall background color
-    ) { paddingValues ->
+        containerColor = backgroundColor
+    )
+    { paddingValues ->
         if (strategies.isEmpty()) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
@@ -63,12 +65,13 @@ fun CopingStrategiesScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .shadow(4.dp, RoundedCornerShape(16.dp)),
-                        shape = RoundedCornerShape(16.dp), // Rounded for friendly feel
+                        shape = RoundedCornerShape(16.dp),
                         colors = CardDefaults.cardColors(
-                            containerColor = cardColor // Lighter green for cards
+                            containerColor = cardColor
                         ),
                         onClick = { expanded = !expanded }
-                    ) {
+                    )
+                    {
                         Row(
                             modifier = Modifier
                                 .padding(16.dp)
