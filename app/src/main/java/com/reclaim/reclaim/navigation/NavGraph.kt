@@ -8,6 +8,7 @@ import com.reclaim.reclaim.ui.home.HomeScreen
 import com.reclaim.reclaim.ui.trigger.TriggerMapScreen
 import com.reclaim.reclaim.ui.coping.CopingStrategiesScreen
 import com.reclaim.reclaim.ui.journal.JournalScreen
+import com.reclaim.reclaim.ui.profile.ProfileScreen
 
 
 @Composable
@@ -16,7 +17,7 @@ fun NavGraph(navController: NavHostController, name: String) {
         composable(Screen.Home.route) {
             HomeScreen(navController = navController)
 
-    }
+        }
         composable(Screen.Map.route) {
             TriggerMapScreen(navController = navController)
         }
@@ -25,6 +26,9 @@ fun NavGraph(navController: NavHostController, name: String) {
         }
         composable(Screen.Journal.route) {
             JournalScreen(name = name, navController = navController)
+        }
+        composable(Screen.Profile.route) {
+            ProfileScreen(name = name, navController = navController)
         }
     }
 }
