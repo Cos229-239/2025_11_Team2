@@ -10,14 +10,14 @@ import com.reclaim.reclaim.ui.home.HomeScreen
 
 @Composable
 fun AppNavHost(
-    navController: NavHostController = rememberNavController()
+    name: String, navController: NavHostController = rememberNavController()
 ) {
     NavHost(
         navController = navController,
         startDestination = "home"
     ) {
         composable("home") {
-            HomeScreen(navController = navController)
+            HomeScreen(name = name, navController = navController)
         }
         composable("coping_strategies") {
             CopingStrategiesScreen(onBackClick = { navController.popBackStack() })
