@@ -15,7 +15,7 @@ import com.reclaim.reclaim.ui.profile.ProfileScreen
 fun NavGraph(navController: NavHostController, name: String) {
     NavHost(navController = navController, startDestination = Screen.Home.route) {
         composable(Screen.Home.route) {
-            HomeScreen(navController = navController)
+            HomeScreen(name = name, navController = navController)
 
         }
         composable(Screen.Map.route) {
