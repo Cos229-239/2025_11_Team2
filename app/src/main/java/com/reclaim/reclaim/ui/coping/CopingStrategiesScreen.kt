@@ -63,7 +63,7 @@ fun CopingStrategiesScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .shadow(4.dp, RoundedCornerShape(16.dp)),
-                        shape = RoundedCornerShape(16.dp), // Rounded for friendly feel
+                        shape = RoundedCornerShape(16.dp), // Rounded corners
                         colors = CardDefaults.cardColors(
                             containerColor = cardColor // Lighter green for cards
                         ),
