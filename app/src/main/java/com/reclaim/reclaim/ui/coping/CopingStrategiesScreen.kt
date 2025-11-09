@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
-package com.reclaim.reclaim.ui.coping // Adjust if your package is different
+package com.reclaim.reclaim.ui.coping
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
