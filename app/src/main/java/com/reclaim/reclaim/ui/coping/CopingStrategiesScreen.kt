@@ -28,7 +28,6 @@ fun CopingStrategiesScreen(
     viewModel: CopingStrategiesViewModel = viewModel()
 ) {
     val strategies by viewModel.strategies.collectAsState(initial = emptyList())
-<<<<<<< HEAD
     val showFavoritesOnly by viewModel.showFavoritesOnly.collectAsState(initial = false)
     var searchQuery by remember { mutableStateOf("") } // New for search
     val filteredStrategies = strategies.filter {
@@ -38,11 +37,6 @@ fun CopingStrategiesScreen(
     }
     val backgroundColor = Color(0xFFA5D6A7)
     val cardColor = Color(0xFFE8F5E9)
-=======
-    val backgroundColor = MaterialTheme.colorScheme.background
-    val cardColor = MaterialTheme.colorScheme.surface
-
->>>>>>> origin/dev
 
     Scaffold(
         topBar = {
@@ -58,8 +52,7 @@ fun CopingStrategiesScreen(
                 )
             )
         },
-<<<<<<< HEAD
-        containerColor = backgroundColor // Set overall background color here
+        containerColor = backgroundColor // Set overall background color
     ) { paddingValues ->
         Column(modifier = Modifier.fillMaxSize().padding(paddingValues)) {
             // New Search Bar
@@ -67,17 +60,6 @@ fun CopingStrategiesScreen(
                 value = searchQuery,
                 onValueChange = { searchQuery = it },
                 label = { Text("Search strategies...") },
-=======
-        containerColor = backgroundColor
-    )
-    { paddingValues ->
-        if (strategies.isEmpty()) {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
-            }
-        } else {
-            LazyColumn(
->>>>>>> origin/dev
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp),
@@ -91,7 +73,6 @@ fun CopingStrategiesScreen(
                     .padding(horizontal = 16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-<<<<<<< HEAD
                 Text("Show Favorites Only")
                 Spacer(Modifier.weight(1f))
                 Switch(
@@ -114,28 +95,12 @@ fun CopingStrategiesScreen(
                     items(filteredStrategies) { strategyItem ->
                         var expanded by remember { mutableStateOf(false) }
                         Card(
-=======
-                items(strategies) { strategyItem ->
-                    var expanded by remember { mutableStateOf(false) }
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .shadow(4.dp, RoundedCornerShape(16.dp)),
-                        shape = RoundedCornerShape(16.dp),
-                        colors = CardDefaults.cardColors(
-                            containerColor = cardColor
-                        ),
-                        onClick = { expanded = !expanded }
-                    )
-                    {
-                        Row(
->>>>>>> origin/dev
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .shadow(4.dp, RoundedCornerShape(16.dp)),
-                            shape = RoundedCornerShape(16.dp), // Rounded for better look
+                            shape = RoundedCornerShape(16.dp), // Rounded corners
                             colors = CardDefaults.cardColors(
-                                containerColor = cardColor // Lighter green for card color
+                                containerColor = cardColor // Lighter green for cards
                             ),
                             onClick = { expanded = !expanded }
                         ) {
