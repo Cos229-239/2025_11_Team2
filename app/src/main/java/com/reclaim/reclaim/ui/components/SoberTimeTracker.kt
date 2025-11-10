@@ -58,4 +58,3 @@ fun SoberTimeTracker(soberTime: SoberTime) {
         }
     }
 }
-

@@ -6,12 +6,21 @@ import androidx.lifecycle.viewModelScope
 import com.reclaim.reclaim.data.db.AppDatabase
 import com.reclaim.reclaim.data.entities.StrategyEntity
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 
+
 class CopingStrategiesViewModel(application: Application) : AndroidViewModel(application) {
     private val dao = AppDatabase.getDatabase(application).strategyDao()
-    val strategies: Flow<List<StrategyEntity>> = dao.getAllStrategies()
+    private val _showFavoritesOnly = MutableStateFlow(false) // New: State for favorites filter
+    val showFavoritesOnly = _showFavoritesOnly.asStateFlow() // New: Public read-only flow
+
+    val strategies: Flow<List<StrategyEntity>> = combine(dao.getAllStrategies(), _showFavoritesOnly) { all, favoritesOnly ->
+        if (favoritesOnly) all.filter { it.isFavorite } else all // New: Reactive filtering in Flow
+    }
 
     init {
         populateStrategiesIfEmpty()
@@ -45,5 +54,15 @@ class CopingStrategiesViewModel(application: Application) : AndroidViewModel(app
                 dao.insertAll(initialStrategies)
             }
         }
+    }
+
+    fun toggleFavorite(strategy: StrategyEntity) { // New: Toggle favorite in DB
+        viewModelScope.launch {
+            dao.update(strategy.copy(isFavorite = !strategy.isFavorite))
+        }
+    }
+
+    fun toggleShowFavoritesOnly() { // New: Toggle the favorites filter state
+        _showFavoritesOnly.value = !_showFavoritesOnly.value
     }
 }
