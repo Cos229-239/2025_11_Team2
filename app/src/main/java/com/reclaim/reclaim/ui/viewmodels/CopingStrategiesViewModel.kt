@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 
+
 class CopingStrategiesViewModel(application: Application) : AndroidViewModel(application) {
     private val dao = AppDatabase.getDatabase(application).strategyDao()
     private val _showFavoritesOnly = MutableStateFlow(false) // New: State for favorites filter
