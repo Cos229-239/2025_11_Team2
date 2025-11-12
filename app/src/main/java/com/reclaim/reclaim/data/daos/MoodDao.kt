@@ -1,7 +1,7 @@
 package com.reclaim.reclaim.data.daos
 
 import androidx.room.*
-import com.reclaim.data.entities.MoodEntry
+import com.reclaim.reclaim.data.entities.MoodEntry
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
 

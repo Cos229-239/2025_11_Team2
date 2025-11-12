@@ -4,9 +4,9 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.time.LocalDate
 
-@Entity(tableName = "mood_entries")
-data class MoodEntry(
+@Entity(tableName = "milestones")
+data class MilestoneEntity(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
-    val mood: String,
-    val date: LocalDate
+    val dayCount: Long,
+    val dateReached: LocalDate
 )
