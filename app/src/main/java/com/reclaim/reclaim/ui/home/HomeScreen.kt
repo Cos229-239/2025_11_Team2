@@ -6,23 +6,28 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.reclaim.reclaim.ui.components.BottomNavBar
 import com.reclaim.reclaim.ui.components.NavigationGrid
 import com.reclaim.reclaim.ui.components.SoberTimeTracker
+import com.reclaim.reclaim.ui.viewmodels.HomeViewModel
+import com.reclaim.reclaim.model.SoberTime
 import java.time.LocalTime
-import androidx.compose.ui.text.font.FontWeight
-
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 
 @Composable
 fun HomeScreen(
     name: String,
     navController: NavController,
-    viewModel: HomeViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+    viewModel: HomeViewModel = viewModel()
 ) {
     val soberTime by viewModel.soberTime.collectAsState()
     val affirmation by viewModel.affirmation.collectAsState()
+    val mood by viewModel.mood.collectAsState()
 
     val greeting = remember {
         val hour = LocalTime.now().hour
@@ -83,14 +88,21 @@ fun HomeScreen(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             val moods = listOf("😊", "😐", "😢", "😠", "😨", "😴", "❤️", "🤯")
-                            moods.forEach { mood ->
+                            moods.forEach { emoji ->
                                 Text(
-                                    text = mood,
+                                    text = emoji,
                                     style = MaterialTheme.typography.headlineMedium,
-                                    modifier = Modifier.clickable { viewModel.setMood(mood) }
+                                    modifier = Modifier.clickable { viewModel.setMood(emoji) }
                                 )
                             }
                         }
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        Text(
+                            text = "Today's mood: ${mood ?: "Not logged"}",
+                            style = MaterialTheme.typography.bodyMedium
+                        )
                     }
                 }
 
@@ -104,7 +116,10 @@ fun HomeScreen(
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
                         Text("Today’s Reflection", style = MaterialTheme.typography.titleMedium)
-                        Text("What emotion surprised you today?", style = MaterialTheme.typography.bodyMedium)
+                        Text(
+                            "What emotion surprised you today?",
+                            style = MaterialTheme.typography.bodyMedium
+                        )
                     }
                 }
             }

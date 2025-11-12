@@ -14,12 +14,13 @@ import kotlinx.coroutines.launch
 
 
 class CopingStrategiesViewModel(application: Application) : AndroidViewModel(application) {
-    private val dao = AppDatabase.getDatabase(application).strategyDao()
+    private val strategyDao = AppDatabase.getDatabase(application).strategyDao()
+
     private val _showFavoritesOnly = MutableStateFlow(false) // New: State for favorites filter
     val showFavoritesOnly = _showFavoritesOnly.asStateFlow() // New: Public read-only flow
 
-    val strategies: Flow<List<StrategyEntity>> = combine(dao.getAllStrategies(), _showFavoritesOnly) { all, favoritesOnly ->
-        if (favoritesOnly) all.filter { it.isFavorite } else all // New: Reactive filtering in Flow
+    val strategies: Flow<List<StrategyEntity>> = combine(strategyDao.getAllStrategies(), _showFavoritesOnly) { all, favoritesOnly ->
+        if (favoritesOnly) all.filter { strategy -> strategy.isFavorite } else all // New: Reactive filtering in Flow
     }
 
     init {
@@ -28,7 +29,7 @@ class CopingStrategiesViewModel(application: Application) : AndroidViewModel(app
 
     private fun populateStrategiesIfEmpty() {
         viewModelScope.launch {
-            if (dao.getAllStrategies().firstOrNull()?.isEmpty() == true) {
+            if (strategyDao.getAllStrategies().firstOrNull()?.isEmpty() == true) {
                 val initialStrategies = listOf(
                     StrategyEntity(triggerName = "General Stress", strategy = "Prioritize physical, emotional, and mental well-being through balanced diet, adequate sleep, hygiene, and joyful activities to build resilience and reduce stress."),
                     StrategyEntity(triggerName = "Anxiety", strategy = "Employ deep breathing, yoga, meditation, or relaxation exercises to handle anxiety and promote calm, which can prevent cravings from escalating."),
@@ -51,14 +52,14 @@ class CopingStrategiesViewModel(application: Application) : AndroidViewModel(app
                     StrategyEntity(triggerName = "Lack of Purpose", strategy = "Volunteer or sponsor someone to boost your own resilience and sense of purpose."),
                     StrategyEntity(triggerName = "Triggers", strategy = "Take a breath during triggers to avoid impulsivity and make better choices.")
                 )
-                dao.insertAll(initialStrategies)
+                strategyDao.insertAll(initialStrategies)
             }
         }
     }
 
     fun toggleFavorite(strategy: StrategyEntity) { // New: Toggle favorite in DB
         viewModelScope.launch {
-            dao.update(strategy.copy(isFavorite = !strategy.isFavorite))
+            strategyDao.update(strategy.copy(isFavorite = !strategy.isFavorite))
         }
     }
 
