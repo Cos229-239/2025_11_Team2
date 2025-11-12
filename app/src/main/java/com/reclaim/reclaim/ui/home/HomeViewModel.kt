@@ -42,6 +42,10 @@ class HomeViewModel : ViewModel() {
     val mood: StateFlow<String?> = _mood.asStateFlow()
 
     fun setMood(mood: String) {
-        _mood.value = mood
+        mood.value = selectedMood
+        viewModelScope.launch {
+            val today = LocalDate.now()
+            moodDao.insertMood(MoodEntry(mood = selectedMood, date = today))
+        }
     }
 }
