@@ -8,18 +8,23 @@ import androidx.room.TypeConverters
 import com.reclaim.reclaim.data.daos.MilestoneDao
 import com.reclaim.reclaim.data.daos.MoodDao
 import com.reclaim.reclaim.data.daos.StrategyDao
+import com.reclaim.reclaim.data.daos.TriggerDao
 import com.reclaim.reclaim.data.entities.MilestoneEntity
 import com.reclaim.reclaim.data.entities.MoodEntry
 import com.reclaim.reclaim.data.entities.StrategyEntity
+import com.reclaim.reclaim.data.entities.TriggerEntity
 
 
-@Database(entities = [MilestoneEntity::class, MoodEntry::class, StrategyEntity::class], version = 3)
-@TypeConverters(Converters::class) // Only if you're using LocalDate
+
+@Database(entities = [MilestoneEntity::class, MoodEntry::class, StrategyEntity::class, TriggerEntity::class], version = 3)
+@TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun milestoneDao(): MilestoneDao
     abstract fun moodDao(): MoodDao
     abstract fun strategyDao(): StrategyDao
+    abstract fun triggerDao(): TriggerDao
+
 
 
     companion object {
@@ -31,7 +36,7 @@ abstract class AppDatabase : RoomDatabase() {
                     context.applicationContext,
                     AppDatabase::class.java,
                     "reclaim_database"
-                ).fallbackToDestructiveMigration() // Optional: handles version bumps
+                ).fallbackToDestructiveMigration()
                     .build().also { INSTANCE = it }
             }
         }
