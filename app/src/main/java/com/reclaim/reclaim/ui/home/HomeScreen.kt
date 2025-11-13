@@ -1,42 +1,79 @@
 package com.reclaim.reclaim.ui.home
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.reclaim.reclaim.ui.components.BottomNavBar
 import com.reclaim.reclaim.ui.components.NavigationGrid
 import com.reclaim.reclaim.ui.components.SoberTimeTracker
-import androidx.compose.foundation.layout.Column
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
+import java.time.LocalTime
 
 
 @Composable
-fun HomeScreen(navController: NavController, viewModel: HomeViewModel = androidx.lifecycle.viewmodel.compose.viewModel()) {
+fun HomeScreen(
+    navController: NavController,
+    viewModel: HomeViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+) {
     val soberTime by viewModel.soberTime.collectAsState()
     val affirmation by viewModel.affirmation.collectAsState()
+
+    val greeting = remember {
+        val hour = LocalTime.now().hour
+        when {
+            hour < 12 -> "Good morning"
+            hour < 18 -> "Good afternoon"
+            else -> "Good evening"
+        }
+    }
 
     Scaffold(
         bottomBar = { BottomNavBar(navController) }
     ) { padding ->
-        Column(
+        Surface(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(padding)
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+                .padding(padding),
+            color = MaterialTheme.colorScheme.background
         ) {
-            Text(
-                text = "Your affirmation",
-                style = MaterialTheme.typography.headlineSmall // instead of h6 or subtitle1
-            )
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                Text(
+                    text = "$greeting 👋",
+                    style = MaterialTheme.typography.headlineMedium
+                )
 
-            SoberTimeTracker(soberTime)
-            NavigationGrid(navController)
+                Text(
+                    text = "Your affirmation",
+                    style = MaterialTheme.typography.headlineSmall
+                )
+
+                Text(
+                    text = affirmation,
+                    style = MaterialTheme.typography.bodyLarge,
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+
+                SoberTimeTracker(soberTime)
+
+                NavigationGrid(navController)
+
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    elevation = CardDefaults.cardElevation(4.dp)
+                ) {
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        Text("Today’s Reflection", style = MaterialTheme.typography.titleMedium)
+                        Text("What emotion surprised you today?", style = MaterialTheme.typography.bodyMedium)
+                    }
+                }
+            }
         }
     }
 }
