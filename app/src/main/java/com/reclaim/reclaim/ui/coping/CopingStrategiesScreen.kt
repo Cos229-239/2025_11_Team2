@@ -13,6 +13,7 @@ import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Lightbulb
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -29,12 +30,14 @@ fun CopingStrategiesScreen(
 ) {
     val strategies by viewModel.strategies.collectAsState(initial = emptyList())
     val showFavoritesOnly by viewModel.showFavoritesOnly.collectAsState(initial = false)
-    var searchQuery by remember { mutableStateOf("") } // New for search
-    val filteredStrategies = strategies.filter {
-        (if (showFavoritesOnly) it.isFavorite else true) &&
-                (it.triggerName.contains(searchQuery, ignoreCase = true) ||
-                        it.strategy.contains(searchQuery, ignoreCase = true))
-    }
+    var searchQuery by remember { mutableStateOf("") }
+    val filteredStrategies by remember { derivedStateOf { // Optimization: Recompute only when strategies, showFavoritesOnly, or searchQuery changes
+        strategies.filter {
+            (if (showFavoritesOnly) it.isFavorite else true) &&
+                    (it.triggerName.contains(searchQuery, ignoreCase = true) ||
+                            it.strategy.contains(searchQuery, ignoreCase = true))
+        }
+    } }
     val backgroundColor = Color(0xFFA5D6A7)
     val cardColor = Color(0xFFE8F5E9)
 
@@ -52,10 +55,9 @@ fun CopingStrategiesScreen(
                 )
             )
         },
-        containerColor = backgroundColor // Set overall background color
+        containerColor = backgroundColor
     ) { paddingValues ->
         Column(modifier = Modifier.fillMaxSize().padding(paddingValues)) {
-            // New Search Bar
             TextField(
                 value = searchQuery,
                 onValueChange = { searchQuery = it },
@@ -66,7 +68,6 @@ fun CopingStrategiesScreen(
                 singleLine = true
             )
 
-            // New Favorites Toggle
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -93,16 +94,14 @@ fun CopingStrategiesScreen(
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     items(filteredStrategies) { strategyItem ->
-                        var expanded by remember { mutableStateOf(false) }
+                        val expanded = remember { mutableStateOf(false) } // Optimization: Remember expanded per item to avoid recreation
                         Card(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .shadow(4.dp, RoundedCornerShape(16.dp)),
-                            shape = RoundedCornerShape(16.dp), // Rounded corners
-                            colors = CardDefaults.cardColors(
-                                containerColor = cardColor // Lighter green for cards
-                            ),
-                            onClick = { expanded = !expanded }
+                            shape = RoundedCornerShape(16.dp),
+                            colors = CardDefaults.cardColors(containerColor = cardColor),
+                            onClick = { expanded.value = !expanded.value }
                         ) {
                             Row(
                                 modifier = Modifier
@@ -116,7 +115,7 @@ fun CopingStrategiesScreen(
                                     tint = MaterialTheme.colorScheme.primary,
                                     modifier = Modifier.size(24.dp)
                                 )
-                                Spacer(modifier = Modifier.width(12.dp)) // Space after icon
+                                Spacer(modifier = Modifier.width(12.dp))
                                 Column(modifier = Modifier.weight(1f)) {
                                     Text(
                                         text = strategyItem.triggerName,
@@ -124,7 +123,7 @@ fun CopingStrategiesScreen(
                                         color = MaterialTheme.colorScheme.onSurface
                                     )
                                     Spacer(modifier = Modifier.height(4.dp))
-                                    if (expanded) {
+                                    if (expanded.value) {
                                         Text(
                                             text = strategyItem.strategy,
                                             style = MaterialTheme.typography.bodyMedium,
@@ -132,7 +131,6 @@ fun CopingStrategiesScreen(
                                         )
                                     }
                                 }
-                                // New Favorite Toggle
                                 IconButton(onClick = { viewModel.toggleFavorite(strategyItem) }) {
                                     Icon(
                                         imageVector = if (strategyItem.isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
