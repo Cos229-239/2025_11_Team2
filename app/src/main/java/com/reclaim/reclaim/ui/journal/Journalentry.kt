@@ -50,7 +50,7 @@ fun JournalScreen(name: String, navController: NavController)
                     .fillMaxWidth()
                     .weight(1f),
                 shape = RoundedCornerShape(16.dp),
-                placeholder = { Text("Release your thought here", color = Color.Gray) },
+                placeholder = { Text("Release your thoughts here", color = Color.Gray) },
                 minLines = 6
             )
         }

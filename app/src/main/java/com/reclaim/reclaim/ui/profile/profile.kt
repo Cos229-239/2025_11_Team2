@@ -1,55 +1,117 @@
 package com.reclaim.reclaim.ui.profile
 
 
+import androidx.compose.foundation.Image
 import com.reclaim.reclaim.R
-import com.reclaim.reclaim.ui.components.ProfileHeader
 import com.reclaim.reclaim.ui.components.BottomNavBar
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Divider
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.OffsetMapping
+import androidx.compose.ui.text.input.TransformedText
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
-import androidx.navigation.compose.rememberNavController
 import androidx.navigation.NavController
 
+class PhoneNumberVisualTransformation : VisualTransformation {
+    override fun filter(text: AnnotatedString): TransformedText {
+        val trimmed = if (text.text.length >= 10) text.text.substring(0..9) else text.text
+        var out = ""
+        for (i in trimmed.indices) {
+            out += trimmed[i]
+            if (i == 2 || i == 5) {
+                out += "-"
+            }
+        }
+
+        val phoneNumberOffsetTranslator = object : OffsetMapping {
+            override fun originalToTransformed(offset: Int): Int {
+                if (offset <= 2) return offset
+                if (offset <= 5) return offset + 1
+                if (offset <= 10) return offset + 2
+                return 12
+            }
+
+            override fun transformedToOriginal(offset: Int): Int {
+                if (offset <= 3) return offset
+                if (offset <= 7) return offset - 1
+                if (offset <= 12) return offset - 2
+                return 10
+            }
+        }
+
+        return TransformedText(AnnotatedString(out), phoneNumberOffsetTranslator)
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen (
     name: String,
     navController: NavController)
 {
     Scaffold(
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = { Text("Profile") },
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Back"
+                        )
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.background,
+                    titleContentColor = MaterialTheme.colorScheme.onBackground,
+                    navigationIconContentColor = MaterialTheme.colorScheme.onBackground
+                )
+            )
+        },
         bottomBar = { BottomNavBar(navController = navController) }
     ) { innerPadding ->
+        val scrollState = rememberScrollState()
         Column(
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
-                .padding(16.dp)
+                .verticalScroll(scrollState)
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
-            ProfileHeader(
-                name = name,
-                photoRes = R.drawable.user,
-                modifier = Modifier
-                    .align(alignment = Alignment.CenterHorizontally)
-                )
+            
+            Image(
+                painter = painterResource(id = R.drawable.user),
+                contentDescription = "Profile picture",
+                modifier = Modifier.size(128.dp)
+            )
 
             Spacer(Modifier.height(16.dp))
 
             Text(
-                "About me",
-                style = MaterialTheme.typography.headlineLarge,
-                fontWeight = FontWeight.SemiBold,
-                modifier = Modifier
-                    .align(alignment = Alignment.CenterHorizontally)
-                )
+                 text = name,
+                style = MaterialTheme.typography.headlineMedium,
+                fontWeight = FontWeight.SemiBold
+            )
+
+
+            //Spacer(Modifier.height(16.dp))
 
             Spacer(modifier = Modifier.height(16.dp))
             Divider(
@@ -59,8 +121,7 @@ fun ProfileScreen (
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            ContactInformation(modifier = Modifier
-                .align(alignment = Alignment.CenterHorizontally))
+            ContactInformation()
         }
     }
 }
@@ -71,30 +132,14 @@ fun ContactInformation(modifier: Modifier = Modifier) {
     var email by remember { mutableStateOf("william.henry.moody@my-own-personal-domain.com") }
     var hasSponsor by remember { mutableStateOf(true) }
     var sponsorName by remember { mutableStateOf("") }
+    var sponsorPhoneNumber by remember { mutableStateOf("") }
+    var sponsorEmail by remember { mutableStateOf("") }
 
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
-            text = "Contact Information",
-            style = MaterialTheme.typography.headlineMedium,
-            fontWeight = FontWeight.SemiBold,
-            modifier = Modifier
-                .padding(bottom = 8.dp)
-        )
-        Text(
-            text = "Phone number: $phoneNumber",
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier
-                .padding(bottom = 8.dp)
-        )
-        Text(
-            text = "Email: $email",
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier
-                .padding(bottom = 8.dp)
-        )
+
         Row(
             modifier = Modifier.padding(bottom = 8.dp),
             verticalAlignment = Alignment.CenterVertically
@@ -118,6 +163,32 @@ fun ContactInformation(modifier: Modifier = Modifier) {
                     .fillMaxWidth(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
             )
+
+            Spacer(Modifier.height(8.dp))
+
+            OutlinedTextField(
+                value = sponsorPhoneNumber,
+                onValueChange = { 
+                    if (it.length <= 10) {
+                        sponsorPhoneNumber = it.filter { char -> char.isDigit() } 
+                    }
+                },
+                label = { Text("Sponsor's Phone Number") },
+                modifier = Modifier.fillMaxWidth(),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+                visualTransformation = PhoneNumberVisualTransformation()
+            )
+
+            Spacer(Modifier.height(8.dp))
+
+            OutlinedTextField(
+                value = sponsorEmail,
+                onValueChange = { sponsorEmail = it },
+                label = { Text("Sponsor's Email") },
+                modifier = Modifier.fillMaxWidth(),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
+            )
+
         } else {
             Text(
                 text = "No sponsor",
@@ -125,6 +196,57 @@ fun ContactInformation(modifier: Modifier = Modifier) {
                 modifier = Modifier.padding(bottom = 8.dp)
             )
         }
+
+        Divider(
+            thickness = 1.dp,
+            color = Color.LightGray
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Text(
+            text = "Sobriety Improvement",
+            style = MaterialTheme.typography.headlineMedium,
+            fontWeight = FontWeight.SemiBold
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(
+                    text = "Before",
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.padding(bottom = 4.dp)
+                )
+                Image(
+                    painter = painterResource(id = R.drawable.user),
+                    contentDescription = "Before photo placeholder",
+                    modifier = Modifier
+                        .size(120.dp)
+                        .border(1.dp, Color.Gray)
+                )
+            }
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(
+                    text = "Current",
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.padding(bottom = 4.dp)
+                )
+                Image(
+                    painter = painterResource(id = R.drawable.user),
+                    contentDescription = "Current photo placeholder",
+                    modifier = Modifier
+                        .size(120.dp)
+                        .border(1.dp, Color.Gray)
+
+                )
+            }
+        }
+        
+        Spacer(modifier = Modifier.height(16.dp))
+
         Divider(
             thickness = 1.dp,
             color = Color.LightGray
