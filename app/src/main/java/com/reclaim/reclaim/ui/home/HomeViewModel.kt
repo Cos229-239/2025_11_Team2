@@ -31,6 +31,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     val mood = MutableStateFlow<String?>(null)
     val milestoneReached = MutableStateFlow<Long?>(null)
     val moodHistory: Flow<List<MoodEntry>> = moodDao.getAllMoods()
+    val weeklyMoodHistory: Flow<List<MoodEntry>> = moodDao.getMoodsSince(LocalDate.now().minusDays(6))
 
     init {
         val todayIndex = LocalDate.now().dayOfYear % affirmations.size

@@ -1,23 +1,37 @@
 package com.reclaim.reclaim.ui.home
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.reclaim.reclaim.ui.components.BottomNavBar
 import com.reclaim.reclaim.ui.components.NavigationGrid
 import com.reclaim.reclaim.ui.components.SoberTimeTracker
 import com.reclaim.reclaim.ui.viewmodels.HomeViewModel
-import com.reclaim.reclaim.model.SoberTime
 import java.time.LocalTime
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+
 
 @Composable
 fun HomeScreen(
@@ -28,6 +42,7 @@ fun HomeScreen(
     val soberTime by viewModel.soberTime.collectAsState()
     val affirmation by viewModel.affirmation.collectAsState()
     val mood by viewModel.mood.collectAsState()
+    val weeklyMoods by viewModel.weeklyMoodHistory.collectAsState(initial = emptyList())
 
     val greeting = remember {
         val hour = LocalTime.now().hour
@@ -41,48 +56,30 @@ fun HomeScreen(
     Scaffold(
         bottomBar = { BottomNavBar(navController) }
     ) { padding ->
-        Surface(
+        LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding),
-            color = MaterialTheme.colorScheme.background
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            contentPadding = PaddingValues(16.dp)
         ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                Text(
-                    text = "$greeting, $name 👋",
-                    style = MaterialTheme.typography.headlineMedium
-                )
-
-                Text(
-                    text = "Your affirmation",
-                    style = MaterialTheme.typography.headlineSmall
-                )
-
-                Text(
-                    text = affirmation,
-                    style = MaterialTheme.typography.bodyLarge,
-                    modifier = Modifier.padding(bottom = 8.dp)
-                )
-
-                // ✅ Mood Check-In Card
+            item { Text("$greeting, $name 👋", style = MaterialTheme.typography.headlineMedium) }
+            item {
+                Text("Your affirmation", style = MaterialTheme.typography.headlineSmall)
+                Text(affirmation, style = MaterialTheme.typography.bodyLarge)
+            }
+            item {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     elevation = CardDefaults.cardElevation(4.dp)
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
                         Text(
-                            text = "Mood Check-In",
+                            "Mood Check-In",
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.SemiBold
                         )
-
-                        Spacer(modifier = Modifier.height(8.dp))
-
+                        Spacer(Modifier.height(8.dp))
                         Row(
                             horizontalArrangement = Arrangement.spacedBy(12.dp),
                             verticalAlignment = Alignment.CenterVertically
@@ -96,20 +93,18 @@ fun HomeScreen(
                                 )
                             }
                         }
-
-                        Spacer(modifier = Modifier.height(8.dp))
-
+                        Spacer(Modifier.height(8.dp))
                         Text(
-                            text = "Today's mood: ${mood ?: "Not logged"}",
+                            "Today's mood: ${mood ?: "Not logged"}",
                             style = MaterialTheme.typography.bodyMedium
                         )
                     }
                 }
-
-                SoberTimeTracker(soberTime)
-
-                NavigationGrid(navController)
-
+            }
+            item { WeeklyMoodTimeline(weeklyMoods) }
+            item { SoberTimeTracker(soberTime) }
+            item { NavigationGrid(navController) }
+            item {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     elevation = CardDefaults.cardElevation(4.dp)
@@ -123,6 +118,7 @@ fun HomeScreen(
                     }
                 }
             }
+            item { Spacer(modifier = Modifier.height(24.dp)) }
         }
     }
 }
