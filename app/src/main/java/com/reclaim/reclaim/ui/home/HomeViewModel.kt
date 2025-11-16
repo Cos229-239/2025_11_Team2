@@ -12,6 +12,7 @@ import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 import com.reclaim.reclaim.model.SoberTime
+import kotlinx.coroutines.flow.Flow
 
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -22,13 +23,18 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     private val milestoneDays = listOf(1L, 3L, 7L, 30L, 60L, 90L, 180L, 365L, 730L)
 
     private val _soberTime = MutableStateFlow(calculateSoberTime(soberStartDate))
+    private val affirmations = listOf("You are strong and capable.", "Progress, not perfection.", "One day at a time.", "Your resilience inspires others.")
+
     val soberTime: StateFlow<SoberTime> = _soberTime
 
-    val affirmation = MutableStateFlow("You are strong and capable.")
+    val affirmation = MutableStateFlow("")
     val mood = MutableStateFlow<String?>(null)
     val milestoneReached = MutableStateFlow<Long?>(null)
+    val moodHistory: Flow<List<MoodEntry>> = moodDao.getAllMoods()
 
     init {
+        val todayIndex = LocalDate.now().dayOfYear % affirmations.size
+        affirmation.value = affirmations[todayIndex]
         viewModelScope.launch {
             val today = LocalDate.now()
             val saved = moodDao.getMoodByDate(today)
