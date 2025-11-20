@@ -2,12 +2,21 @@ package com.reclaim.reclaim.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Primary = Color(0xFF00A991)
-val PrimaryDark = Color(0xFF006B5E)
-val PrimaryDeep = Color(0xFF003E36)
-val Accent1 = Color(0xFF00B4A0)
-val Accent2 = Color(0xFFFF7766)
-val Background = Color(0xFFF2E5D7)
-val Surface = Color(0xFFFFFFFF)
-val OnPrimary = Color.White
-val OnBackground = Color(0xFF1C1C1C)
+
+val TealPrimary = Color(0xFF00B4A0)
+val TealLight = Color(0xFF4FD3C4)
+val TealDark = Color(0xFF008373)
+
+val PurpleAccent = Color(0xFFA14E89)
+val PurpleDark = Color(0xFF6C2F5C)
+
+val OrangeAccent = Color(0xFFFFA94D)
+val OrangeDark = Color(0xFFCC7C1F)
+
+// Neutrals / backgrounds
+val BeigeBackground = Color(0xFFF7EDE2)
+val SurfaceLight = Color(0xFFFFFFFF)
+val SurfaceDark = Color(0xFF1F1B24)
+
+val TextPrimaryDark = Color(0xFF1C1B1F)
+val TextPrimaryLight = Color(0xFFFFFFFF)
