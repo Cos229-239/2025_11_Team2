@@ -19,6 +19,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,6 +33,8 @@ import com.reclaim.reclaim.ui.components.NavigationGrid
 import com.reclaim.reclaim.ui.components.SoberTimeTracker
 import com.reclaim.reclaim.ui.viewmodels.HomeViewModel
 import java.time.LocalTime
+import com.reclaim.reclaim.ui.components.MilestoneCelebrationCard
+
 
 
 @Composable
@@ -43,7 +47,8 @@ fun HomeScreen(
     val affirmation by viewModel.affirmation.collectAsState()
     val mood by viewModel.mood.collectAsState()
     val weeklyMoods by viewModel.weeklyMoodHistory.collectAsState(initial = emptyList())
-
+    val milestoneReached by viewModel.milestoneReached.collectAsState()
+    var dismissed by remember { mutableStateOf(false) }
     val greeting = remember {
         val hour = LocalTime.now().hour
         when {
@@ -67,6 +72,14 @@ fun HomeScreen(
             item {
                 Text("Your affirmation", style = MaterialTheme.typography.headlineSmall)
                 Text(affirmation, style = MaterialTheme.typography.bodyLarge)
+            }
+            if (milestoneReached != null && !dismissed) {
+                item {
+                    MilestoneCelebrationCard(
+                        milestoneDays = milestoneReached!!,
+                        onDismiss = { dismissed = true }
+                    )
+                }
             }
             item {
                 Card(
