@@ -21,9 +21,13 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.reclaim.reclaim.data.entities.StrategyEntity
 import com.reclaim.reclaim.ui.viewmodels.CopingStrategiesViewModel
+import com.reclaim.reclaim.ui.components.BottomNavBar
+import androidx.navigation.NavController
+
 
 @Composable
 fun CopingStrategiesScreen(
+    navController: NavController,
     onBackClick: () -> Unit,
     viewModel: CopingStrategiesViewModel = viewModel()
 ) {
@@ -54,6 +58,7 @@ fun CopingStrategiesScreen(
                 )
             )
         },
+        bottomBar = { BottomNavBar(navController = navController) },
         containerColor = backgroundColor
     ) { paddingValues ->
         Column(modifier = Modifier

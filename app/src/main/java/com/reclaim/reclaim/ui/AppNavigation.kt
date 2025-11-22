@@ -19,8 +19,11 @@ fun AppNavHost(
         composable("home") {
             HomeScreen(name = name, navController = navController)
         }
-        composable("coping_strategies") {
-            CopingStrategiesScreen(onBackClick = { navController.popBackStack() })
+        composable("coping") {
+            CopingStrategiesScreen(
+                navController = navController,
+                onBackClick = { navController.popBackStack() }
+            )
         }
     }
 }
