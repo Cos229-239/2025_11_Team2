@@ -23,7 +23,8 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         "You are strong and capable.",
         "Progress, not perfection.",
         "One day at a time.",
-        "Your resilience inspires others."
+        "Your resilience inspires others.",
+        "You have an amazing spirit."
     )
 
     private val soberStartDate = LocalDate.of(2024, 8, 25)
