@@ -2,6 +2,7 @@
 
 package com.reclaim.reclaim.ui.coping
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -18,17 +19,26 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.reclaim.reclaim.data.entities.StrategyEntity
 import com.reclaim.reclaim.ui.viewmodels.CopingStrategiesViewModel
+import androidx.navigation.NavController
+import com.reclaim.reclaim.ui.components.BottomNavBar
+
+
+private val SoftBeige = Color(0xFFF8EFE7)
+private val Violet = Color(0xFF7C3AED)
+private val Turquoise = Color(0xFF00B4A0)
 
 @Composable
 fun CopingStrategiesScreen(
     onBackClick: () -> Unit,
+    navController: NavController,
     viewModel: CopingStrategiesViewModel = viewModel()
 ) {
     val strategies by viewModel.strategies.collectAsState(initial = emptyList())
     val showFavoritesOnly by viewModel.showFavoritesOnly.collectAsState(initial = false)
+
     var searchQuery by remember { mutableStateOf("") }
 
     val filteredStrategies = strategies.filter {
@@ -37,16 +47,24 @@ fun CopingStrategiesScreen(
                         it.strategy.contains(searchQuery, ignoreCase = true))
     }
 
-    val backgroundColor = MaterialTheme.colorScheme.background
-    val cardColor = MaterialTheme.colorScheme.surface
+    val backgroundColor = Turquoise
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Coping Strategies") },
+                title = {
+                    Text(
+                        text = "Coping Strategies",
+                        color = Color.White
+                    )
+                },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Back",
+                            tint = Color.White
+                        )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -54,39 +72,72 @@ fun CopingStrategiesScreen(
                 )
             )
         },
-        containerColor = backgroundColor
-    ) { paddingValues ->
-        Column(modifier = Modifier
-            .fillMaxSize()
-            .padding(paddingValues)) {
+        containerColor = backgroundColor,
+        bottomBar = {
+            BottomNavBar(navController = navController)
+        }
+            ) { paddingValues ->
 
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(backgroundColor)
+                .padding(paddingValues)
+        ) {
+
+            // 🔍 Search bar
             TextField(
                 value = searchQuery,
                 onValueChange = { searchQuery = it },
                 label = { Text("Search strategies...") },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp),
-                singleLine = true
+                    .padding(horizontal = 16.dp, vertical = 16.dp),
+                shape = RoundedCornerShape(16.dp),
+                singleLine = true,
+                colors = TextFieldDefaults.colors(
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    focusedContainerColor = SoftBeige,
+                    unfocusedContainerColor = SoftBeige,
+                    focusedLabelColor = Violet,
+                    unfocusedLabelColor = Violet.copy(alpha = 0.7f),
+                    cursorColor = Violet,
+                    focusedTextColor = Violet,
+                    unfocusedTextColor = Violet
+                )
             )
 
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("Show Favorites Only")
-                Spacer(Modifier.weight(1f))
+                Text(
+                    text = "Show Favorites Only",
+                    color = Violet,
+                    fontSize = 16.sp
+                )
+                Spacer(modifier = Modifier.weight(1f))
                 Switch(
                     checked = showFavoritesOnly,
-                    onCheckedChange = { viewModel.toggleShowFavoritesOnly() }
+                    onCheckedChange = { viewModel.toggleShowFavoritesOnly() },
+                    colors = SwitchDefaults.colors(
+                        checkedThumbColor = Color.White,
+                        checkedTrackColor = Violet,
+                        uncheckedThumbColor = Color.White,
+                        uncheckedTrackColor = SoftBeige.copy(alpha = 0.6f)
+                    )
                 )
             }
 
             if (strategies.isEmpty()) {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator(color = Violet)
                 }
             } else {
                 LazyColumn(
@@ -96,50 +147,69 @@ fun CopingStrategiesScreen(
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     items(filteredStrategies) { strategyItem ->
+
                         var expanded by remember { mutableStateOf(false) }
+
                         Card(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .shadow(4.dp, RoundedCornerShape(16.dp)),
+                                .shadow(
+                                    elevation = 6.dp,
+                                    shape = RoundedCornerShape(16.dp)
+                                ),
                             shape = RoundedCornerShape(16.dp),
                             colors = CardDefaults.cardColors(
-                                containerColor = cardColor
+                                containerColor = SoftBeige
                             ),
                             onClick = { expanded = !expanded }
                         ) {
+
                             Row(
                                 modifier = Modifier
-                                    .padding(16.dp)
-                                    .fillMaxWidth(),
+                                    .fillMaxWidth()
+                                    .padding(16.dp),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
+
                                 Icon(
                                     imageVector = Icons.Default.Lightbulb,
                                     contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.primary,
+                                    tint = Turquoise,
                                     modifier = Modifier.size(24.dp)
                                 )
-                                Spacer(modifier = Modifier.width(12.dp))
-                                Column(modifier = Modifier.weight(1f)) {
+
+                                Spacer(Modifier.width(12.dp))
+
+                                Column(
+                                    modifier = Modifier.weight(1f)
+                                ) {
                                     Text(
                                         text = strategyItem.triggerName,
-                                        style = MaterialTheme.typography.labelMedium,
-                                        color = MaterialTheme.colorScheme.onSurface
+                                        color = Violet,
+                                        style = MaterialTheme.typography.labelMedium
                                     )
-                                    Spacer(modifier = Modifier.height(4.dp))
+
+                                    Spacer(Modifier.height(4.dp))
+
                                     if (expanded) {
                                         Text(
                                             text = strategyItem.strategy,
-                                            style = MaterialTheme.typography.bodyMedium,
-                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                            color = Violet.copy(alpha = 0.9f),
+                                            style = MaterialTheme.typography.bodyMedium
                                         )
                                     }
                                 }
-                                IconButton(onClick = { viewModel.toggleFavorite(strategyItem) }) {
+
+                                IconButton(onClick = {
+                                    viewModel.toggleFavorite(strategyItem)
+                                }) {
                                     Icon(
-                                        imageVector = if (strategyItem.isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                                        imageVector = if (strategyItem.isFavorite)
+                                            Icons.Default.Favorite
+                                        else
+                                            Icons.Default.FavoriteBorder,
                                         contentDescription = "Toggle Favorite",
-                                        tint = if (strategyItem.isFavorite) Color.Red else MaterialTheme.colorScheme.onSurface
+                                        tint = if (strategyItem.isFavorite) Color.Red else Violet
                                     )
                                 }
                             }

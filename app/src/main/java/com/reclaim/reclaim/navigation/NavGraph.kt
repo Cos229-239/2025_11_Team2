@@ -28,7 +28,9 @@ fun NavGraph(navController: NavHostController, name: String) {
             TriggerMapScreen(navController = navController)
         }
         composable(Screen.Strategies.route) {
-            CopingStrategiesScreen(onBackClick = { navController.popBackStack() })
+            CopingStrategiesScreen(onBackClick = { navController.popBackStack() },
+                navController = navController
+            )
         }
         composable(Screen.Journal.route) {
             JournalScreen(
