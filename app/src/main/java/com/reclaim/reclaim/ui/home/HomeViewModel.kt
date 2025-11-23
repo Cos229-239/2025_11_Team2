@@ -1,47 +1,105 @@
-package com.reclaim.reclaim.ui.home
+package com.reclaim.reclaim.ui.viewmodels
 
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.flow.*
+import com.reclaim.reclaim.data.db.AppDatabase
+import com.reclaim.reclaim.data.entities.MoodEntry
+import com.reclaim.reclaim.data.entities.MilestoneEntity
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import java.time.LocalDate
-import java.time.Period
 import java.time.temporal.ChronoUnit
 import com.reclaim.reclaim.model.SoberTime
+import kotlinx.coroutines.flow.Flow
 
-class HomeViewModel : ViewModel() {
+class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
-    // ✅ Sober start date
-    private val soberStartDate = LocalDate.of(2024, 8, 25)
+    private val moodDao = AppDatabase.getDatabase(application).moodDao()
+    private val milestoneDao = AppDatabase.getDatabase(application).milestoneDao()
 
-    // ✅ Reactive sober time calculation
-    val soberTime: StateFlow<SoberTime> = flow {
-        val today = LocalDate.now()
-        val period = Period.between(soberStartDate, today)
-        val totalDays = ChronoUnit.DAYS.between(soberStartDate, today)
-
-        emit(
-            SoberTime(
-                years = period.years,
-                months = period.months,
-                days = period.days,
-                totalDays = totalDays
-            )
-        )
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.Eagerly,
-        initialValue = SoberTime(0, 0, 0, 0)
+    private val affirmations = listOf(
+        "You are strong and capable.",
+        "Progress, not perfection.",
+        "One day at a time.",
+        "Your resilience inspires others."
     )
 
-    // ✅ Affirmation
-    private val _affirmation = MutableStateFlow("You're stronger today than yesterday!")
-    val affirmation: StateFlow<String> = _affirmation.asStateFlow()
+    private val soberStartDate = LocalDate.of(2024, 8, 25)
+    private val milestoneDays = listOf(1L, 3L, 7L, 30L, 60L, 90L, 180L, 365L, 730L)
 
-    // ✅ Mood tracking
-    private val _mood = MutableStateFlow<String?>(null)
-    val mood: StateFlow<String?> = _mood.asStateFlow()
+    private val _soberTime = MutableStateFlow(calculateSoberTime(soberStartDate))
+    val soberTime: StateFlow<SoberTime> = _soberTime
 
-    fun setMood(mood: String) {
-        _mood.value = mood
+    val affirmation = MutableStateFlow("")
+    val mood = MutableStateFlow<String?>(null)
+    val milestoneReached = MutableStateFlow<Long?>(null)
+
+    val moodHistory: Flow<List<MoodEntry>> = moodDao.getAllMoods()
+    val weeklyMoodHistory: Flow<List<MoodEntry>> = moodDao.getMoodsSince(LocalDate.now().minusDays(6))
+
+    init {
+        val todayIndex = LocalDate.now().dayOfYear % affirmations.size
+        affirmation.value = affirmations[todayIndex]
+
+        viewModelScope.launch {
+            val today = LocalDate.now()
+            val saved = moodDao.getMoodByDate(today)
+            mood.value = saved?.mood
+            refreshSoberTime() // ✅ recalc and check milestone
+        }
     }
+
+    fun setMood(selectedMood: String) {
+        mood.value = selectedMood
+        viewModelScope.launch {
+            val today = LocalDate.now()
+            moodDao.insertMood(MoodEntry(mood = selectedMood, date = today))
+        }
+    }
+
+    fun refreshSoberTime() {
+        val updated = calculateSoberTime(soberStartDate)
+        _soberTime.value = updated
+        viewModelScope.launch { checkMilestone(updated) }
+    }
+
+    private fun calculateSoberTime(startDate: LocalDate): SoberTime {
+        val now = LocalDate.now()
+        val totalDays = ChronoUnit.DAYS.between(startDate, now)
+
+        val years = totalDays / 365
+        val months = (totalDays % 365) / 30
+        val days = (totalDays % 365) % 30
+
+        return SoberTime(
+            years = years.toInt(),
+            months = months.toInt(),
+            days = days.toInt(),
+            totalDays = totalDays
+        )
+    }
+
+    private suspend fun checkMilestone(soberTime: SoberTime) {
+        val today = LocalDate.now()
+        if (soberTime.totalDays in milestoneDays) {
+            val already = milestoneDao.getMilestoneByDay(soberTime.totalDays)
+            if (already == null) {
+                milestoneDao.insertMilestone(
+                    MilestoneEntity(dayCount = soberTime.totalDays, dateReached = today)
+                )
+                milestoneReached.value = soberTime.totalDays
+            }
+        } else {
+            milestoneReached.value = null
+        }
+    }
+
+    // Debug helper(delete later when not need along with the debug code in HomeScreen.kt)
+    fun triggerMilestone(days: Long) {
+        milestoneReached.value = days
+    }
+
+
 }
