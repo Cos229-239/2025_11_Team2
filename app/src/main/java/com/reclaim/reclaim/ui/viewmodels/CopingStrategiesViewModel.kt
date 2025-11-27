@@ -14,11 +14,11 @@ import kotlinx.coroutines.launch
 
 class CopingStrategiesViewModel(application: Application) : AndroidViewModel(application) {
     private val dao = AppDatabase.getDatabase(application).strategyDao()
-    private val _showFavoritesOnly = MutableStateFlow(false) // New: State for favorites filter
-    val showFavoritesOnly = _showFavoritesOnly.asStateFlow() // New: Public read-only flow
+    private val _showFavoritesOnly = MutableStateFlow(false) // State for favorites filter
+    val showFavoritesOnly = _showFavoritesOnly.asStateFlow() // Public read-only flow
 
     val strategies: Flow<List<StrategyEntity>> = combine(dao.getAllStrategies(), _showFavoritesOnly) { all, favoritesOnly ->
-        if (favoritesOnly) all.filter { it.isFavorite } else all // New: Reactive filtering in Flow
+        if (favoritesOnly) all.filter { it.isFavorite } else all // Reactive filtering in Flow
     }
 
     init {
@@ -55,6 +55,7 @@ class CopingStrategiesViewModel(application: Application) : AndroidViewModel(app
         }
     }
 
+
     fun toggleFavorite(strategy: StrategyEntity) { // New: Toggle favorite in DB
         viewModelScope.launch {
             dao.update(strategy.copy(isFavorite = !strategy.isFavorite))
@@ -63,5 +64,10 @@ class CopingStrategiesViewModel(application: Application) : AndroidViewModel(app
 
     fun toggleShowFavoritesOnly() { // New: Toggle the favorites filter state
         _showFavoritesOnly.value = !_showFavoritesOnly.value
+    }
+
+    // New: Simple function to pick a random strategy from the list - used for showing a quick daily tip without making users scroll
+    fun getRandomStrategy(strategies: List<StrategyEntity>): StrategyEntity? {
+        return if (strategies.isNotEmpty()) strategies.random() else null
     }
 }

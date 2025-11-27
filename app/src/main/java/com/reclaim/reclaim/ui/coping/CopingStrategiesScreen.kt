@@ -17,6 +17,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Lightbulb
+import androidx.compose.material.icons.filled.VolumeUp // Added icon for voice read aloud button
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -30,6 +31,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.reclaim.reclaim.data.entities.StrategyEntity
 import com.reclaim.reclaim.ui.viewmodels.CopingStrategiesViewModel
+import android.speech.tts.TextToSpeech // Android tool to read text out loud
+import androidx.compose.ui.platform.LocalContext // Gets the app context for voice features
+import java.util.Locale // Sets language for voice readout
 
 @Composable
 fun CopingStrategiesScreen(
@@ -48,6 +52,31 @@ fun CopingStrategiesScreen(
     } }
     val backgroundColor = Color(0xFF4CAF50) // More vibrant green background
     val cardColor = Color(0xFFC8E6C9) // Lighter more vibrant green for cards
+    var randomStrategy by remember { mutableStateOf<StrategyEntity?>(null) } // Updated: Quick tip refresh on each button click
+    val context = LocalContext.current // Get the app's context to use for voice readout
+    val tts = remember { TextToSpeech(context, null) } //  Sets up the voice reader tool
+    tts.language = Locale.US // Sets the voice to English (change if needed for other languages)
+    var showQuickTipDialog by remember { mutableStateOf(false) } // Tracks if the quick tip dialog is open
+
+    // Dialog to show the random tip when the button is clicked, keeps it simple and pops up instantly
+    if (showQuickTipDialog && randomStrategy != null) {
+        AlertDialog(
+            onDismissRequest = { showQuickTipDialog = false },
+            title = { Text("Quick Tip") },
+            text = {
+                Column {
+                    Text(randomStrategy!!.triggerName, style = MaterialTheme.typography.labelMedium)
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(randomStrategy!!.strategy, style = MaterialTheme.typography.bodyMedium)
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = { showQuickTipDialog = false }) {
+                    Text("Close")
+                }
+            }
+        )
+    }
 
     Scaffold(
         topBar = {
@@ -101,6 +130,19 @@ fun CopingStrategiesScreen(
                     )
                 }
 
+                // Button for quick random tip - users tap for an instant strategy when they need fast help
+                Button(
+                    onClick = {
+                        randomStrategy = viewModel.getRandomStrategy(filteredStrategies) // Updated: Recomputes a new random tip each click
+                        showQuickTipDialog = true
+                    },
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .padding(16.dp)
+                ) {
+                    Text("Get Quick Tip")
+                }
+
                 if (filteredStrategies.isEmpty()) {
                     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                         CircularProgressIndicator(color = Color.White) // White for contrast on green
@@ -147,11 +189,17 @@ fun CopingStrategiesScreen(
                                             enter = fadeIn() + scaleIn(),
                                             exit = fadeOut() + scaleOut()
                                         ) {
-                                            Text(
-                                                text = strategyItem.strategy,
-                                                style = MaterialTheme.typography.bodyMedium,
-                                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                                            )
+                                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                                Text(
+                                                    text = strategyItem.strategy,
+                                                    style = MaterialTheme.typography.bodyMedium,
+                                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                                    modifier = Modifier.weight(1f)
+                                                )
+                                                IconButton(onClick = { tts.speak(strategyItem.strategy, TextToSpeech.QUEUE_FLUSH, null, null) }) { // Button to read the strategy out loud for hands-free help
+                                                    Icon(Icons.Default.VolumeUp, contentDescription = "Read Aloud")
+                                                }
+                                            }
                                         }
                                     }
                                     IconButton(onClick = { viewModel.toggleFavorite(strategyItem) }) {
