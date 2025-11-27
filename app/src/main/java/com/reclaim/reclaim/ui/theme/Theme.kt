@@ -27,7 +27,7 @@ private val LightColorScheme: ColorScheme = lightColorScheme(
     tertiaryContainer = OrangeDark,
     onTertiaryContainer = TextPrimaryLight,
 
-    background = BeigeBackground,
+    background = Turquoise,
     onBackground = TextPrimaryDark,
 
     surface = SurfaceLight,

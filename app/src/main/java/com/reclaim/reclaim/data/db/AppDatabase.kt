@@ -5,10 +5,12 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import com.reclaim.reclaim.data.daos.JournalDao
 import com.reclaim.reclaim.data.daos.MilestoneDao
 import com.reclaim.reclaim.data.daos.MoodDao
 import com.reclaim.reclaim.data.daos.StrategyDao
 import com.reclaim.reclaim.data.daos.TriggerDao
+import com.reclaim.reclaim.data.entities.JournalEntity
 import com.reclaim.reclaim.data.entities.MilestoneEntity
 import com.reclaim.reclaim.data.entities.MoodEntry
 import com.reclaim.reclaim.data.entities.StrategyEntity
@@ -16,7 +18,7 @@ import com.reclaim.reclaim.data.entities.TriggerEntity
 
 
 
-@Database(entities = [MilestoneEntity::class, MoodEntry::class, StrategyEntity::class, TriggerEntity::class], version = 3)
+@Database(entities = [JournalEntity::class, MilestoneEntity::class, MoodEntry::class, StrategyEntity::class, TriggerEntity::class], version = 4, exportSchema = true)
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
 
@@ -24,6 +26,8 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun moodDao(): MoodDao
     abstract fun strategyDao(): StrategyDao
     abstract fun triggerDao(): TriggerDao
+    abstract fun journalDao(): JournalDao
+
 
 
 
