@@ -11,6 +11,14 @@ import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
 
+/**
+ * TriggerMapViewModel
+ * -------------------
+ * ViewModel for managing trigger-related state.
+ * - Annotated with @HiltViewModel for DI.
+ * - Injects TriggerDao via constructor.
+ */
+
 @HiltViewModel
 class TriggerMapViewModel @Inject constructor(
     private val dao: TriggerDao

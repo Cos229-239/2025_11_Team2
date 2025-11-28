@@ -6,6 +6,19 @@ import androidx.room.Query
 import com.reclaim.reclaim.data.entities.JournalEntity
 import kotlinx.coroutines.flow.Flow
 
+/**
+ * JournalDao
+ * ----------
+ * Data Access Object for JournalEntity.
+ * - Defines database operations for journal entries.
+ * - Injected into ViewModels via Hilt.
+ *
+ * TODO:
+ * - Add queries for filtering by date, mood, or tags.
+ * - Add ordering (e.g., newest first).
+ * - Consider pagination for large datasets.
+ */
+
 @Dao
 interface JournalDao {
     @Query("SELECT * FROM journals ORDER BY id DESC")

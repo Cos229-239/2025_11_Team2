@@ -40,6 +40,22 @@ import com.reclaim.reclaim.ui.viewmodels.SavedJournals
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
+/**
+ * JournalScreen
+ * -------------
+ * Displays the user’s journal entries.
+ * - Intended for daily reflections, mood tracking, and recovery notes.
+ * - Will integrate with JournalEntity + JournalDao via Hilt.
+ *
+ * TODO:
+ * - Fetch journal entries from Room using Hilt-injected ViewModel.
+ * - Add UI for creating new entries (text field, save button).
+ * - Display list of past entries with timestamps.
+ * - Support editing/deleting entries.
+ * - Add filtering (by date, mood, or tags).
+ * - Consider adding AI-assisted suggestions for reflection prompts.
+ * - Ensure accessibility (large text scaling, voice input).
+ */
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

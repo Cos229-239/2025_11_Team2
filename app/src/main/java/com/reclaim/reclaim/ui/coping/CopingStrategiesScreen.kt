@@ -26,6 +26,21 @@ import androidx.navigation.NavController
 import com.reclaim.reclaim.ui.theme.WhiteTextFieldColors
 
 
+/**
+ * StrategiesScreen
+ * ----------------
+ * Displays coping strategies and allows linking them to triggers.
+ * - Intended for recovery support and journaling context.
+ * - Will integrate with StrategyEntity + StrategyDao via Hilt.
+ *
+ * TODO:
+ * - Show list of strategies from database.
+ * - Add ability to create, edit, and delete strategies.
+ * - Link strategies to triggers (many-to-many relationship).
+ * - Add color-coded categories for clarity.
+ * - Provide quick actions (favorite, mark as effective).
+ */
+
 @Composable
 fun CopingStrategiesScreen(
     navController: NavController,

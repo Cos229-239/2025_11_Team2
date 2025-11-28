@@ -75,7 +75,18 @@ fun WhiteTextFieldColors() = TextFieldDefaults.colors(
     unfocusedIndicatorColor = MaterialTheme.colorScheme.secondary
 )
 
-
+/**
+ * ReclaimTheme
+ * ------------
+ * Global Material3 theme for the app.
+ * - Wraps all composables.
+ * - Provides consistent colors, typography, and shapes.
+ *
+ * TODO:
+ * - Define custom color palette for recovery context.
+ * - Add typography styles for journaling and emotional clarity.
+ * - Ensure accessibility (contrast ratios, font scaling).
+ */
 
 
 @Composable

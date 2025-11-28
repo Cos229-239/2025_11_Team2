@@ -4,6 +4,18 @@ import androidx.room.*
 import com.reclaim.reclaim.data.entities.TriggerEntity
 import kotlinx.coroutines.flow.Flow
 
+/**
+ * TriggerDao
+ * ----------
+ * Data Access Object for TriggerEntity.
+ * - Defines database operations for triggers.
+ * - Used by ViewModels via Hilt injection.
+ *
+ * TODO:
+ * - Add update/delete methods for triggers.
+ * - Add queries for filtering triggers by category or date.
+ */
+
 @Dao
 interface TriggerDao {
 

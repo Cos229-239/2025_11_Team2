@@ -16,7 +16,14 @@ import com.reclaim.reclaim.data.entities.MoodEntry
 import com.reclaim.reclaim.data.entities.StrategyEntity
 import com.reclaim.reclaim.data.entities.TriggerEntity
 
-
+/**
+ * AppDatabase
+ * -----------
+ * Central Room database definition.
+ * - Declares all entities (Journal, Milestone, Mood, Strategy, Trigger).
+ * - Provides DAOs for each entity.
+ * - Singleton instance managed via getDatabase().
+ */
 
 @Database(entities = [JournalEntity::class, MilestoneEntity::class, MoodEntry::class, StrategyEntity::class, TriggerEntity::class], version = 5, exportSchema = true)
 @TypeConverters(Converters::class)

@@ -31,6 +31,20 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.reclaim.reclaim.ui.theme.WhiteTextFieldColors
 
+/**
+ * ProfileScreen
+ * -------------
+ * Displays user profile information.
+ * - Intended for showing recovery progress, milestones, and personal details.
+ * - Will eventually integrate with Room/Hilt to pull user data.
+ *
+ * TODO:
+ * - Connect to a UserEntity in Room for persistent profile data.
+ * - Add editing functionality (name, avatar, recovery goals).
+ * - Display linked strategies and mood history.
+ * - Add accessibility features (large text scaling, color contrast).
+ */
+
 class PhoneNumberVisualTransformation : VisualTransformation {
     override fun filter(text: AnnotatedString): TransformedText {
         val trimmed = if (text.text.length >= 10) text.text.substring(0..9) else text.text
@@ -67,6 +81,7 @@ class PhoneNumberVisualTransformation : VisualTransformation {
 fun ProfileScreen (
     name: String,
     navController: NavController)
+// TODO: Replace placeholder with actual profile UI
 {
     Scaffold(
         topBar = {

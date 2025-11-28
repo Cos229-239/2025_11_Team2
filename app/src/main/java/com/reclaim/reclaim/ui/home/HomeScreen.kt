@@ -36,7 +36,20 @@ import com.reclaim.reclaim.ui.viewmodels.HomeViewModel
 import java.time.LocalTime
 import com.reclaim.reclaim.ui.components.MilestoneCelebrationCard
 
-
+/**
+ * HomeScreen
+ * ----------
+ * Landing screen for the app.
+ * - Provides navigation to Profile, Strategies, Journal, Mood, and Trigger Map.
+ * - Acts as the central hub for recovery features.
+ *
+ * TODO:
+ * - Add navigation buttons/cards for each feature.
+ * - Display summary widgets (latest journal entry, mood trend, milestone progress).
+ * - Integrate with NavController for routing.
+ * - Add motivational quotes or supportive prompts.
+ * - Ensure responsive layout for tablets/phones.
+ */
 
 
 @Composable

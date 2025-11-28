@@ -11,6 +11,15 @@ import com.reclaim.reclaim.navigation.NavGraph
 import com.reclaim.reclaim.ui.theme.ReclaimTheme
 import dagger.hilt.android.AndroidEntryPoint   // 👈 import this
 
+/**
+ * MainActivity
+ * ------------
+ * Root activity hosting the Compose UI.
+ * - Annotated with @AndroidEntryPoint so Hilt can inject ViewModels.
+ * - Sets up NavController and passes it into NavGraph.
+ */
+
+
 @AndroidEntryPoint   // 👈 required for Hilt injection
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

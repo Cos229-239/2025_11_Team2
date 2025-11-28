@@ -11,6 +11,15 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
+/**
+ * AppModule
+ * ---------
+ * Hilt DI module providing database + DAO instances.
+ * - Installed in SingletonComponent (application-wide scope).
+ * - Ensures single AppDatabase instance.
+ * - Exposes TriggerDao for injection into ViewModels.
+ */
+
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
