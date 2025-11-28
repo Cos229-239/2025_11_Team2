@@ -1,8 +1,9 @@
 plugins {
-    alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
-    id("kotlin-kapt")
-    alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.android.application)   // Android application plugin
+    alias(libs.plugins.kotlin.android)        // Kotlin Android support
+    id("kotlin-kapt")                         // Annotation processing (needed for Room + Hilt)
+    alias(libs.plugins.kotlin.compose)        // Compose compiler plugin
+    id("dagger.hilt.android.plugin")          // Hilt plugin
 }
 
 android {
@@ -18,6 +19,7 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
+        // Room annotation processor options
         javaCompileOptions {
             annotationProcessorOptions {
                 arguments += mapOf(
@@ -66,10 +68,10 @@ dependencies {
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.runtime)
-    implementation(libs.androidx.foundation)
+    implementation(libs.androidx.compose.foundation)
     implementation(libs.androidx.runtime)
 
-    implementation("androidx.compose.material3:material3:1.4.0")
+    implementation(libs.androidx.compose.material3)
 
     // Navigation
     implementation("androidx.navigation:navigation-compose:2.9.5")
@@ -88,6 +90,11 @@ dependencies {
 
     // Material icons (extended set)
     implementation("androidx.compose.material:material-icons-extended")
+
+    // Hilt (DI)
+    implementation("com.google.dagger:hilt-android:2.51.1")
+    kapt("com.google.dagger:hilt-compiler:2.51.1")
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
 
     // Testing
     testImplementation(libs.junit)

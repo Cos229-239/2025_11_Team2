@@ -9,7 +9,9 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.reclaim.reclaim.navigation.NavGraph
 import com.reclaim.reclaim.ui.theme.ReclaimTheme
+import dagger.hilt.android.AndroidEntryPoint   // 👈 import this
 
+@AndroidEntryPoint   // 👈 required for Hilt injection
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,6 +25,5 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-
     }
 }

@@ -6,15 +6,34 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface TriggerDao {
-    @Query("SELECT * FROM triggers")
+
+    // --- Core queries ---
+    @Query("SELECT * FROM triggers ORDER BY id DESC")
     fun getAllTriggers(): Flow<List<TriggerEntity>>
 
+    @Query("SELECT * FROM triggers WHERE id = :id")
+    suspend fun getTriggerById(id: Int): TriggerEntity?
+
+    // Because LocalDate is stored as a String via Converters
+    @Query("SELECT * FROM triggers WHERE date = :date")
+    fun getTriggersForDate(date: String): Flow<List<TriggerEntity>>
+
+    // --- Insert / Update / Delete ---
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(trigger: TriggerEntity)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(triggers: List<TriggerEntity>)
 
     @Update
     suspend fun update(trigger: TriggerEntity)
 
     @Delete
     suspend fun delete(trigger: TriggerEntity)
+
+    @Query("DELETE FROM triggers WHERE id = :id")
+    suspend fun deleteById(id: Int)
+
+    @Query("DELETE FROM triggers")
+    suspend fun clearAll()
 }
