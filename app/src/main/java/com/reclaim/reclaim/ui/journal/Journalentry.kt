@@ -10,6 +10,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -65,11 +66,14 @@ fun JournalScreen(
                     TextButton(
                         onClick = {
                             if (entry.isNotBlank()) {
-                                viewModel.addEntry(entry, date) // <-- persist to Room
-                                navController.navigateUp()
+                                viewModel.addEntry(entry, date)
+                                navController.navigate("saved_journals")
                             }
                         },
-                        enabled = entry.isNotBlank()
+                        enabled = entry.isNotBlank(),
+                        colors = ButtonDefaults.textButtonColors(
+                            contentColor = MaterialTheme.colorScheme.onPrimary
+                        )
                     ) {
                         Text("Save")
                     }
