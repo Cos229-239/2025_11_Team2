@@ -11,7 +11,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Divider
+import androidx.compose.material3.Divider
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
@@ -29,6 +29,7 @@ import androidx.compose.ui.text.input.TransformedText
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.reclaim.reclaim.ui.theme.WhiteTextFieldColors
 
 class PhoneNumberVisualTransformation : VisualTransformation {
     override fun filter(text: AnnotatedString): TransformedText {
@@ -165,7 +166,9 @@ fun ContactInformation(modifier: Modifier = Modifier) {
                 label = { Text("Sponsor's Name") },
                 modifier = Modifier
                     .fillMaxWidth(),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+                colors = WhiteTextFieldColors()
+
             )
 
             Spacer(Modifier.height(8.dp))
@@ -180,7 +183,8 @@ fun ContactInformation(modifier: Modifier = Modifier) {
                 label = { Text("Sponsor's Phone Number") },
                 modifier = Modifier.fillMaxWidth(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
-                visualTransformation = PhoneNumberVisualTransformation()
+                visualTransformation = PhoneNumberVisualTransformation(),
+                colors = WhiteTextFieldColors()
             )
 
             Spacer(Modifier.height(8.dp))
@@ -190,7 +194,8 @@ fun ContactInformation(modifier: Modifier = Modifier) {
                 onValueChange = { sponsorEmail = it },
                 label = { Text("Sponsor's Email") },
                 modifier = Modifier.fillMaxWidth(),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+                colors = WhiteTextFieldColors()
             )
 
         } else {

@@ -23,6 +23,7 @@ import com.reclaim.reclaim.data.entities.StrategyEntity
 import com.reclaim.reclaim.ui.viewmodels.CopingStrategiesViewModel
 import com.reclaim.reclaim.ui.components.BottomNavBar
 import androidx.navigation.NavController
+import com.reclaim.reclaim.ui.theme.WhiteTextFieldColors
 
 
 @Composable
@@ -72,7 +73,9 @@ fun CopingStrategiesScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp),
-                singleLine = true
+                singleLine = true,
+                colors = WhiteTextFieldColors()
+
             )
 
             Row(

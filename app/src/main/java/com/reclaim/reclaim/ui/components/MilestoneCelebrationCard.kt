@@ -6,6 +6,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.reclaim.reclaim.data.affirmations
+import kotlin.random.Random
 
 @Composable
 fun MilestoneCelebrationCard(
@@ -39,7 +41,7 @@ fun MilestoneCelebrationCard(
             )
             Spacer(Modifier.height(8.dp))
             Text(
-                text = "Keep going — your resilience is inspiring!",
+                text = affirmations[Random.nextInt(affirmations.size)],
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onPrimaryContainer
             )

@@ -103,7 +103,6 @@ fun TriggerMapScreen(
     val triggersForSelectedDate = dailyTriggers[selectedDate].orEmpty()
 
     Scaffold(
-        containerColor = Turquoise,
         bottomBar = {
             BottomNavBar(navController = navController)
         }
