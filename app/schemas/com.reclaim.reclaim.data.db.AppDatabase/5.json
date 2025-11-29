@@ -1,8 +1,8 @@
 {
   "formatVersion": 1,
   "database": {
-    "version": 3,
-    "identityHash": "08d0cae4dc571d796df7c097de02be70",
+    "version": 5,
+    "identityHash": "b38bf0d1c3e5e37afaab96ad2042daf8",
     "entities": [
       {
         "tableName": "journals",
@@ -146,7 +146,7 @@
       },
       {
         "tableName": "triggers",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `description` TEXT, `linkedStrategyIds` TEXT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `date` TEXT NOT NULL, `type` TEXT NOT NULL, `description` TEXT, `linkedStrategyIds` TEXT NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -155,8 +155,14 @@
             "notNull": true
           },
           {
-            "fieldPath": "name",
-            "columnName": "name",
+            "fieldPath": "date",
+            "columnName": "date",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "type",
+            "columnName": "type",
             "affinity": "TEXT",
             "notNull": true
           },
@@ -186,7 +192,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '08d0cae4dc571d796df7c097de02be70')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'b38bf0d1c3e5e37afaab96ad2042daf8')"
     ]
   }
 }

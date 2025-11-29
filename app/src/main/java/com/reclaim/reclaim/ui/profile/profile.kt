@@ -11,7 +11,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Divider
+import androidx.compose.material3.Divider
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
@@ -29,6 +29,21 @@ import androidx.compose.ui.text.input.TransformedText
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.reclaim.reclaim.ui.theme.WhiteTextFieldColors
+
+/**
+ * ProfileScreen
+ * -------------
+ * Displays user profile information.
+ * - Intended for showing recovery progress, milestones, and personal details.
+ * - Will eventually integrate with Room/Hilt to pull user data.
+ *
+ * TODO:
+ * - Connect to a UserEntity in Room for persistent profile data.
+ * - Add editing functionality (name, avatar, recovery goals).
+ * - Display linked strategies and mood history.
+ * - Add accessibility features (large text scaling, color contrast).
+ */
 
 class PhoneNumberVisualTransformation : VisualTransformation {
     override fun filter(text: AnnotatedString): TransformedText {
@@ -66,6 +81,7 @@ class PhoneNumberVisualTransformation : VisualTransformation {
 fun ProfileScreen (
     name: String,
     navController: NavController)
+// TODO: Replace placeholder with actual profile UI
 {
     Scaffold(
         topBar = {
@@ -165,7 +181,9 @@ fun ContactInformation(modifier: Modifier = Modifier) {
                 label = { Text("Sponsor's Name") },
                 modifier = Modifier
                     .fillMaxWidth(),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+                colors = WhiteTextFieldColors()
+
             )
 
             Spacer(Modifier.height(8.dp))
@@ -180,7 +198,8 @@ fun ContactInformation(modifier: Modifier = Modifier) {
                 label = { Text("Sponsor's Phone Number") },
                 modifier = Modifier.fillMaxWidth(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
-                visualTransformation = PhoneNumberVisualTransformation()
+                visualTransformation = PhoneNumberVisualTransformation(),
+                colors = WhiteTextFieldColors()
             )
 
             Spacer(Modifier.height(8.dp))
@@ -190,7 +209,8 @@ fun ContactInformation(modifier: Modifier = Modifier) {
                 onValueChange = { sponsorEmail = it },
                 label = { Text("Sponsor's Email") },
                 modifier = Modifier.fillMaxWidth(),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+                colors = WhiteTextFieldColors()
             )
 
         } else {

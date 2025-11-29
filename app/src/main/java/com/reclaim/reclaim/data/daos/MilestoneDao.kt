@@ -11,4 +11,7 @@ interface MilestoneDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertMilestone(milestone: MilestoneEntity)
+
+    @Query("SELECT * FROM milestones WHERE dayCount = :day LIMIT 1")
+    suspend fun getMilestoneByDay(day: Long): MilestoneEntity?
 }
