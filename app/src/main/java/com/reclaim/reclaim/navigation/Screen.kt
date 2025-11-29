@@ -3,6 +3,7 @@ package com.reclaim.reclaim.navigation
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.material.icons.filled.List
 
 sealed class Screen(val route: String, val label: String, val icon: ImageVector) {
     object Home : Screen("home", "Home", Icons.Default.Home)
@@ -10,4 +11,10 @@ sealed class Screen(val route: String, val label: String, val icon: ImageVector)
     object Strategies : Screen("strategies", "Strategies", Icons.Default.Lightbulb)
     object Journal : Screen("journal", "Journal", Icons.Default.Edit)
     object Profile : Screen("profile", "Profile", Icons.Default.Person)
+
+    object SavedJournals : Screen(
+        route = "saved_journals",
+        label = "Saved",
+        icon = Icons.Default.List
+    )
 }

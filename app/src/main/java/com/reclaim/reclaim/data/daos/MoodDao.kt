@@ -16,5 +16,8 @@ interface MoodDao{
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMood(mood: MoodEntry)
 
+    @Query("SELECT * FROM mood_entries WHERE date >= :startDate ORDER BY date ASC")
+    fun getMoodsSince(startDate: LocalDate): Flow<List<MoodEntry>>
+
 
 }

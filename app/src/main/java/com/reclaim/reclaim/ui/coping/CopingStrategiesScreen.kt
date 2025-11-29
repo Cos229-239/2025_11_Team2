@@ -21,9 +21,29 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.reclaim.reclaim.data.entities.StrategyEntity
 import com.reclaim.reclaim.ui.viewmodels.CopingStrategiesViewModel
+import com.reclaim.reclaim.ui.components.BottomNavBar
+import androidx.navigation.NavController
+import com.reclaim.reclaim.ui.theme.WhiteTextFieldColors
+
+
+/**
+ * StrategiesScreen
+ * ----------------
+ * Displays coping strategies and allows linking them to triggers.
+ * - Intended for recovery support and journaling context.
+ * - Will integrate with StrategyEntity + StrategyDao via Hilt.
+ *
+ * TODO:
+ * - Show list of strategies from database.
+ * - Add ability to create, edit, and delete strategies.
+ * - Link strategies to triggers (many-to-many relationship).
+ * - Add color-coded categories for clarity.
+ * - Provide quick actions (favorite, mark as effective).
+ */
 
 @Composable
 fun CopingStrategiesScreen(
+    navController: NavController,
     onBackClick: () -> Unit,
     viewModel: CopingStrategiesViewModel = viewModel()
 ) {
@@ -54,6 +74,7 @@ fun CopingStrategiesScreen(
                 )
             )
         },
+        bottomBar = { BottomNavBar(navController = navController) },
         containerColor = backgroundColor
     ) { paddingValues ->
         Column(modifier = Modifier
@@ -67,7 +88,9 @@ fun CopingStrategiesScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp),
-                singleLine = true
+                singleLine = true,
+                colors = WhiteTextFieldColors()
+
             )
 
             Row(
