@@ -6,17 +6,13 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.reclaim.reclaim.ui.components.SplashScreen
-import com.reclaim.reclaim.ui.components.JournalScreen
 import com.reclaim.reclaim.ui.coping.CopingStrategiesScreen
 import com.reclaim.reclaim.ui.home.HomeScreen
-import com.reclaim.reclaim.ui.trigger.TriggerMapScreen
-import com.reclaim.reclaim.ui.coping.CopingStrategiesScreen
 import com.reclaim.reclaim.ui.journal.JournalScreen
 import com.reclaim.reclaim.ui.journal.SavedJournalsScreen
 import com.reclaim.reclaim.ui.profile.ProfileScreen
 import com.reclaim.reclaim.ui.trigger.TriggerMapScreen
 import com.reclaim.reclaim.ui.viewmodels.SavedJournals
-
 
 @Composable
 fun NavGraph(
@@ -33,7 +29,7 @@ fun NavGraph(
         composable(Screen.Splash.route) {
             SplashScreen(
                 onSplashFinished = {
-                    navController.navigate(Screen.Home.route) {
+                    navController.navigate(Screen.Home.route){
                         popUpTo(Screen.Splash.route) { inclusive = true }
                     }
                 }
@@ -82,5 +78,4 @@ fun NavGraph(
             )
         }
     }
-
 }

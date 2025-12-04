@@ -50,6 +50,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.reclaim.reclaim.data.model.TriggerType
 import com.reclaim.reclaim.ui.components.HamburgerMenu
 import kotlinx.coroutines.launch
 import java.time.LocalDate

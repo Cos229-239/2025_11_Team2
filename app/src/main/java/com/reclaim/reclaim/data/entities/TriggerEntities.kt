@@ -2,7 +2,7 @@ package com.reclaim.reclaim.data.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.reclaim.reclaim.ui.trigger.TriggerType
+import com.reclaim.reclaim.data.model.TriggerType
 import java.time.LocalDate
 
 /**

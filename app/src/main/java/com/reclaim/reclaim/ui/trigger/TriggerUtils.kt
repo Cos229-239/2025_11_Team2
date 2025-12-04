@@ -3,6 +3,7 @@ package com.reclaim.reclaim.ui.trigger
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import com.reclaim.reclaim.data.model.TriggerType
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -15,6 +16,11 @@ fun TriggerType.prettyName(): String = when (this) {
     TriggerType.SOCIAL_EVENTS-> "Social events"
     TriggerType.HEALTH       -> "Health"
     TriggerType.LIFE_CHANGES -> "Life changes"
+    TriggerType.EMOTIONAL -> TODO()
+    TriggerType.PHYSICAL -> TODO()
+    TriggerType.ENVIRONMENTAL -> TODO()
+    TriggerType.SOCIAL -> TODO()
+    TriggerType.COGNITIVE -> TODO()
 }
 
 /**
@@ -33,6 +39,11 @@ fun triggerColor(trigger: TriggerType): Color {
         TriggerType.SOCIAL_EVENTS -> scheme.outline
         TriggerType.HEALTH        -> scheme.secondary.copy(alpha = 0.8f)
         TriggerType.LIFE_CHANGES  -> scheme.surfaceVariant
+        TriggerType.EMOTIONAL -> TODO()
+        TriggerType.PHYSICAL -> TODO()
+        TriggerType.ENVIRONMENTAL -> TODO()
+        TriggerType.SOCIAL -> TODO()
+        TriggerType.COGNITIVE -> TODO()
     }
 }
 

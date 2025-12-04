@@ -61,6 +61,8 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
+    implementation("com.google.code.gson:gson:2.10.1")
+
 
     // Compose BOM ensures consistent versions
     implementation(platform(libs.androidx.compose.bom))
