@@ -1,20 +1,29 @@
 package com.reclaim.reclaim.ui.profile
 
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.FileProvider
+import coil.compose.rememberAsyncImagePainter
+import java.io.File
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import com.reclaim.reclaim.R
 import com.reclaim.reclaim.ui.components.BottomNavBar
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Divider
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.*
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,6 +39,11 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.reclaim.reclaim.ui.theme.WhiteTextFieldColors
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.reclaim.reclaim.ui.viewmodels.ProfileViewModel
+import androidx.compose.material.icons.filled.Check
 
 /**
  * ProfileScreen
@@ -79,10 +93,58 @@ class PhoneNumberVisualTransformation : VisualTransformation {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen (
-    name: String,
-    navController: NavController)
+    navController: NavController,
+    viewModel: ProfileViewModel = hiltViewModel()
+)
 // TODO: Replace placeholder with actual profile UI
 {
+    val uiState by viewModel.uiState.collectAsState()
+//    var nameState by remember { mutableStateOf(name) }
+//    var isEditing by remember { mutableStateOf(false) }
+//
+//    var imageUri by remember { mutableStateOf<Uri?>(null) }
+    var showDialog by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+
+    val galleryLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent(),
+        onResult = { uri: Uri? ->
+            viewModel.onProfilePictureChanged(uri)
+            showDialog = false
+        }
+    )
+
+    val cameraImageUri: Uri = remember {
+        val file = File(context.cacheDir, "camera_photo.jpg")
+        FileProvider.getUriForFile(context, "com.reclaim.reclaim.fileprovider", file)
+    }
+
+    val cameraLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.TakePicture(),
+        onResult = { success ->
+            if(success) {
+                viewModel.onProfilePictureChanged(cameraImageUri)
+            }
+            showDialog = false
+        }
+    )
+if(showDialog) {
+    AlertDialog(
+        onDismissRequest = { showDialog = false },
+        title = { Text("Update Profile Picture") },
+        text = { Text("Choose an option to update your profile picture") },
+        confirmButton = {
+            Button(onClick = { galleryLauncher.launch("image/*") }) {
+                Text("From Gallery")
+            }
+        },
+        dismissButton = {
+            Button(onClick = { cameraLauncher.launch(cameraImageUri) }) {
+                Text("From Camera")
+            }
+        }
+    )
+}
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -113,21 +175,49 @@ fun ProfileScreen (
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            
-            Image(
-                painter = painterResource(id = R.drawable.reclaimcurrentpicture),
-                contentDescription = "Profile picture",
-                modifier = Modifier.size(128.dp)
-                    .clip(CircleShape)
-                    .border(2.dp, Color.Gray, CircleShape)
-            )
+            Box(contentAlignment = Alignment.BottomEnd) {
+                Image(
+                    painter = rememberAsyncImagePainter(
+                        model = uiState.profilePictureUri ?: R.drawable.reclaimcurrentpicture
+                    ),
+                    contentDescription = "Profile picture",
+                    modifier = Modifier
+                        .size(120.dp)
+                        .clip(CircleShape)
+                        .border(2.dp, Color.Gray, CircleShape),
+                )
 
+                IconButton(
+                    onClick = { showDialog = true },
+                    modifier = Modifier
+                        .size(30.dp)
+                        .clip(CircleShape)
+                        .background(MaterialTheme.colorScheme.primary)
+                ) {
+                    Icon (
+                        imageVector = Icons.Default.Edit,
+                        contentDescription = "Edit",
+                        tint = MaterialTheme.colorScheme.onPrimary
+                )
+            }
+        }
             Spacer(Modifier.height(16.dp))
 
-            Text(
-                 text = name,
-                style = MaterialTheme.typography.headlineMedium,
-                fontWeight = FontWeight.SemiBold
+            OutlinedTextField(
+                value = uiState.userName,
+                onValueChange = { newName -> viewModel.onNameChange(newName) },
+                label = { Text("Name") },
+                readOnly = !uiState.isEditingName,
+                modifier = Modifier.fillMaxWidth(),
+                colors = WhiteTextFieldColors(),
+                trailingIcon = {
+                    IconButton(onClick = { viewModel.onEditModeChange(!uiState.isEditingName) }) {
+                        Icon(
+                            imageVector = if (uiState.isEditingName) Icons.Default.Edit else Icons.Default.Edit,
+                            contentDescription = if (uiState.isEditingName) "Save Name" else "Edit Name"
+                        )
+                    }
+                }
             )
 
 
@@ -190,9 +280,9 @@ fun ContactInformation(modifier: Modifier = Modifier) {
 
             OutlinedTextField(
                 value = sponsorPhoneNumber,
-                onValueChange = { 
+                onValueChange = {
                     if (it.length <= 10) {
-                        sponsorPhoneNumber = it.filter { char -> char.isDigit() } 
+                        sponsorPhoneNumber = it.filter { char -> char.isDigit() }
                     }
                 },
                 label = { Text("Sponsor's Phone Number") },
@@ -228,6 +318,49 @@ fun ContactInformation(modifier: Modifier = Modifier) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        var imageUri by remember { mutableStateOf<Uri?>(null) }
+        var showDialog by remember { mutableStateOf(false) }
+        val context = LocalContext.current
+
+        val galleryLauncher = rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.GetContent(),
+            onResult = { uri: Uri? ->
+                imageUri = uri
+                showDialog = false
+            }
+        )
+
+        val cameraImageUri: Uri = remember {
+            val file = File(context.cacheDir, "camera_photo.jpg")
+            FileProvider.getUriForFile(context, "com.reclaim.reclaim.fileprovider", file)
+        }
+
+        val cameraLauncher = rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.TakePicture(),
+            onResult = { success ->
+                if (success) {
+                    imageUri = cameraImageUri
+                }
+                showDialog = false
+            }
+        )
+        if (showDialog) {
+            AlertDialog(
+                onDismissRequest = { showDialog = false },
+                title = { Text("Update Profile Picture") },
+                text = { Text("Choose an option to update your profile picture") },
+                confirmButton = {
+                    Button(onClick = { galleryLauncher.launch("image/*") }) {
+                        Text("From Gallery")
+                    }
+                },
+                dismissButton = {
+                    Button(onClick = { cameraLauncher.launch(cameraImageUri) }) {
+                        Text("From Camera")
+                    }
+                }
+            )
+        }
         Text(
             text = "Sobriety Improvement",
             style = MaterialTheme.typography.headlineMedium,
@@ -258,53 +391,72 @@ fun ContactInformation(modifier: Modifier = Modifier) {
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.padding(bottom = 4.dp)
                 )
-                Image(
-                    painter = painterResource(id = R.drawable.reclaimcurrentpicture),
-                    contentDescription = "Current photo placeholder",
-                    modifier = Modifier
-                        .size(120.dp)
-                        .border(1.dp, Color.Gray)
+                Box(contentAlignment = Alignment.BottomEnd) {
+                    Image(
+                        painter = rememberAsyncImagePainter(
+                            model = imageUri ?: R.drawable.reclaimcurrentpicture
+                        ),
+                        contentDescription = "Profile picture",
+                        modifier = Modifier
+                            .size(120.dp)
+                            .clip(CircleShape)
+                            .border(2.dp, Color.Gray, CircleShape),
+                    )
 
+                    IconButton(
+                        onClick = { showDialog = true },
+                        modifier = Modifier
+                            .size(30.dp)
+                            .clip(CircleShape)
+                            .background(MaterialTheme.colorScheme.primary)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Edit,
+                            contentDescription = "Edit",
+                            tint = MaterialTheme.colorScheme.onPrimary
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Divider(
+                    thickness = 1.dp,
+                    color = Color.LightGray
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Text(
+                    text = "Emergency Contacts",
+                    style = MaterialTheme.typography.headlineMedium,
+                    fontWeight = FontWeight.SemiBold,
+                    modifier = Modifier
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Text(
+                    text = "Suicide Hotline: 1-800-273-8255",
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier
+                        .padding(bottom = 8.dp)
+                )
+                Text(
+                    text = "Mental Health Helpline: 1-800-273-8255",
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier
+                        .padding(bottom = 8.dp)
+                )
+
+
+                Text(
+                    text = "Substance Abuse Helpline: 1-800-273-8255",
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier
+                        .padding(bottom = 8.dp)
                 )
             }
         }
-        
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Divider(
-            thickness = 1.dp,
-            color = Color.LightGray
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Text(
-            text = "Emergency Contacts",
-            style = MaterialTheme.typography.headlineMedium,
-            fontWeight = FontWeight.SemiBold,
-            modifier = Modifier)
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Text(
-            text = "Suicide Hotline: 1-800-273-8255",
-            style = MaterialTheme.typography.bodySmall,
-            modifier = Modifier
-                .padding(bottom = 8.dp)
-        )
-        Text(
-            text = "Mental Health Helpline: 1-800-273-8255",
-            style = MaterialTheme.typography.bodySmall,
-            modifier = Modifier
-                .padding(bottom = 8.dp)
-        )
-
-
-        Text(
-            text = "Substance Abuse Helpline: 1-800-273-8255",
-            style = MaterialTheme.typography.bodySmall,
-            modifier = Modifier
-                .padding(bottom = 8.dp)
-        )
     }
 }

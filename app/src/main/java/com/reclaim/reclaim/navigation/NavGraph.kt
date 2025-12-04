@@ -41,7 +41,7 @@ fun NavGraph(navController: NavHostController, name: String) {
             )
         }
         composable(Screen.Profile.route) {
-            ProfileScreen(name = name, navController = navController)
+            ProfileScreen(navController = navController)
         }
         composable(Screen.SavedJournals.route) {
             SavedJournalsScreen(

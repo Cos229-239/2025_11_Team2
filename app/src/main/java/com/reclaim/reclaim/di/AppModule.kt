@@ -10,6 +10,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
+import com.reclaim.reclaim.data.daos.UserDao
 
 /**
  * AppModule
@@ -36,4 +37,7 @@ object AppModule {
 
     @Provides
     fun provideTriggerDao(db: AppDatabase): TriggerDao = db.triggerDao()
+
+    @Provides
+    fun provideUserDao(db: AppDatabase): UserDao = db.userDao()
 }
