@@ -16,11 +16,11 @@ fun TriggerType.prettyName(): String = when (this) {
     TriggerType.SOCIAL_EVENTS-> "Social events"
     TriggerType.HEALTH       -> "Health"
     TriggerType.LIFE_CHANGES -> "Life changes"
-    TriggerType.EMOTIONAL -> TODO()
-    TriggerType.PHYSICAL -> TODO()
-    TriggerType.ENVIRONMENTAL -> TODO()
-    TriggerType.SOCIAL -> TODO()
-    TriggerType.COGNITIVE -> TODO()
+    TriggerType.EMOTIONAL -> "Emotional"
+    TriggerType.PHYSICAL -> "Physical"
+    TriggerType.ENVIRONMENTAL -> "Environmental"
+    TriggerType.SOCIAL -> "Social"
+    TriggerType.COGNITIVE -> "Cognitive"
 }
 
 /**
