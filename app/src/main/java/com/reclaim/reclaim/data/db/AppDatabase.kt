@@ -1,5 +1,6 @@
 package com.reclaim.reclaim.data.db
 
+
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
@@ -10,11 +11,13 @@ import com.reclaim.reclaim.data.daos.MilestoneDao
 import com.reclaim.reclaim.data.daos.MoodDao
 import com.reclaim.reclaim.data.daos.StrategyDao
 import com.reclaim.reclaim.data.daos.TriggerDao
+import com.reclaim.reclaim.data.daos.UserDao
 import com.reclaim.reclaim.data.entities.JournalEntity
 import com.reclaim.reclaim.data.entities.MilestoneEntity
 import com.reclaim.reclaim.data.entities.MoodEntry
 import com.reclaim.reclaim.data.entities.StrategyEntity
 import com.reclaim.reclaim.data.entities.TriggerEntity
+import com.reclaim.reclaim.data.entities.User
 
 /**
  * AppDatabase
@@ -25,7 +28,7 @@ import com.reclaim.reclaim.data.entities.TriggerEntity
  * - Singleton instance managed via getDatabase().
  */
 
-@Database(entities = [JournalEntity::class, MilestoneEntity::class, MoodEntry::class, StrategyEntity::class, TriggerEntity::class], version = 5, exportSchema = true)
+@Database(entities = [JournalEntity::class, MilestoneEntity::class, MoodEntry::class, StrategyEntity::class, TriggerEntity::class, User::class], version = 6, exportSchema = true)
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
 
@@ -34,6 +37,8 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun strategyDao(): StrategyDao
     abstract fun triggerDao(): TriggerDao
     abstract fun journalDao(): JournalDao
+    abstract fun userDao(): UserDao
+
 
 
 
