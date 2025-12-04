@@ -1,39 +1,45 @@
 package com.reclaim.reclaim.ui.trigger
 
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import com.reclaim.reclaim.ui.theme.*
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
-enum class TriggerType {
-    STRESS,
-    LONELINESS,
-    DEPRESSION,
-    BOREDOM,
-    SOCIAL_EVENTS,
-    HEALTH,
-    LIFE_CHANGES
-}
-
+// Nicely formatted names for each trigger type
 fun TriggerType.prettyName(): String = when (this) {
-    TriggerType.STRESS -> "Stress"
-    TriggerType.LONELINESS -> "Loneliness"
-    TriggerType.DEPRESSION -> "Depression"
-    TriggerType.BOREDOM -> "Boredom"
-    TriggerType.SOCIAL_EVENTS -> "Social events"
-    TriggerType.HEALTH -> "Health"
+    TriggerType.STRESS       -> "Stress"
+    TriggerType.LONELINESS   -> "Loneliness"
+    TriggerType.DEPRESSION   -> "Depression"
+    TriggerType.BOREDOM      -> "Boredom"
+    TriggerType.SOCIAL_EVENTS-> "Social events"
+    TriggerType.HEALTH       -> "Health"
     TriggerType.LIFE_CHANGES -> "Life changes"
 }
 
-fun triggerColor(trigger: TriggerType): Color = when (trigger) {
-    TriggerType.STRESS -> Red
-    TriggerType.LONELINESS -> Blue
-    TriggerType.DEPRESSION -> Violet
-    TriggerType.BOREDOM -> Orange
-    TriggerType.SOCIAL_EVENTS -> Turquoise
-    TriggerType.HEALTH -> Green
-    TriggerType.LIFE_CHANGES -> PurpleAccent // or another theme color
+/**
+ * Color used for the little dots under each day in the calendar.
+ * Now uses your Material theme instead of hard-coded Red/Blue/etc.
+ */
+@Composable
+fun triggerColor(trigger: TriggerType): Color {
+    val scheme = MaterialTheme.colorScheme
+
+    return when (trigger) {
+        TriggerType.STRESS        -> scheme.primary
+        TriggerType.LONELINESS    -> scheme.secondary
+        TriggerType.DEPRESSION    -> scheme.primary.copy(alpha = 0.7f)
+        TriggerType.BOREDOM       -> scheme.surfaceVariant
+        TriggerType.SOCIAL_EVENTS -> scheme.outline
+        TriggerType.HEALTH        -> scheme.secondary.copy(alpha = 0.8f)
+        TriggerType.LIFE_CHANGES  -> scheme.surfaceVariant
+    }
 }
 
-fun java.time.LocalDate.toPrettyString(): String {
-    val monthName = month.name.lowercase().replaceFirstChar { it.uppercase() }
-    return "$dayOfMonth $monthName $year"
+/**
+ * Formats a LocalDate like: "November 30, 2025"
+ */
+fun LocalDate.toPrettyString(): String {
+    val formatter = DateTimeFormatter.ofPattern("MMMM d, yyyy")
+    return this.format(formatter)
 }

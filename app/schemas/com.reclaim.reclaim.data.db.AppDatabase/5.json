@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 5,
-    "identityHash": "b38bf0d1c3e5e37afaab96ad2042daf8",
+    "identityHash": "041ef8b41c34fd5f355a2554788d2982",
     "entities": [
       {
         "tableName": "journals",
@@ -44,7 +44,7 @@
       },
       {
         "tableName": "milestones",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `dayCount` INTEGER NOT NULL, `dateReached` TEXT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `dayCount` INTEGER NOT NULL, `dateReached` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -61,7 +61,7 @@
           {
             "fieldPath": "dateReached",
             "columnName": "dateReached",
-            "affinity": "TEXT",
+            "affinity": "INTEGER",
             "notNull": true
           }
         ],
@@ -76,7 +76,7 @@
       },
       {
         "tableName": "mood_entries",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `mood` TEXT NOT NULL, `date` TEXT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `mood` TEXT NOT NULL, `date` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -93,7 +93,7 @@
           {
             "fieldPath": "date",
             "columnName": "date",
-            "affinity": "TEXT",
+            "affinity": "INTEGER",
             "notNull": true
           }
         ],
@@ -146,7 +146,7 @@
       },
       {
         "tableName": "triggers",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `date` TEXT NOT NULL, `type` TEXT NOT NULL, `description` TEXT, `linkedStrategyIds` TEXT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `date` INTEGER NOT NULL, `type` TEXT NOT NULL, `description` TEXT, `linkedStrategyIds` TEXT NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -157,7 +157,7 @@
           {
             "fieldPath": "date",
             "columnName": "date",
-            "affinity": "TEXT",
+            "affinity": "INTEGER",
             "notNull": true
           },
           {
@@ -192,7 +192,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'b38bf0d1c3e5e37afaab96ad2042daf8')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '041ef8b41c34fd5f355a2554788d2982')"
     ]
   }
 }

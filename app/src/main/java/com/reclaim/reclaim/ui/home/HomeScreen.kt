@@ -29,7 +29,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.reclaim.reclaim.ui.components.BottomNavBar
 import com.reclaim.reclaim.ui.components.NavigationGrid
 import com.reclaim.reclaim.ui.components.SoberTimeTracker
 import com.reclaim.reclaim.ui.viewmodels.HomeViewModel
@@ -74,7 +73,6 @@ fun HomeScreen(
     }
 
     Scaffold(
-        bottomBar = { BottomNavBar(navController) }
     ) { padding ->
         LazyColumn(
             modifier = Modifier

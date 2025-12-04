@@ -7,7 +7,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Lightbulb
@@ -15,15 +14,24 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.reclaim.reclaim.data.entities.StrategyEntity
 import com.reclaim.reclaim.ui.viewmodels.CopingStrategiesViewModel
-import com.reclaim.reclaim.ui.components.BottomNavBar
-import androidx.navigation.NavController
 import com.reclaim.reclaim.ui.theme.WhiteTextFieldColors
+import androidx.navigation.NavHostController
+import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.rememberDrawerState
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
+import androidx.compose.material3.Scaffold
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.runtime.rememberCoroutineScope
+import kotlinx.coroutines.launch
+import com.reclaim.reclaim.ui.components.HamburgerMenu
 
 
 /**
@@ -43,7 +51,7 @@ import com.reclaim.reclaim.ui.theme.WhiteTextFieldColors
 
 @Composable
 fun CopingStrategiesScreen(
-    navController: NavController,
+    navController: NavHostController,
     onBackClick: () -> Unit,
     viewModel: CopingStrategiesViewModel = viewModel()
 ) {
@@ -60,110 +68,153 @@ fun CopingStrategiesScreen(
     val backgroundColor = MaterialTheme.colorScheme.background
     val cardColor = MaterialTheme.colorScheme.surface
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("Coping Strategies") },
-                navigationIcon = {
-                    IconButton(onClick = onBackClick) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = backgroundColor
-                )
+    val scope = rememberCoroutineScope()
+    val drawerState = rememberDrawerState(DrawerValue.Closed)
+
+    ModalNavigationDrawer(
+        drawerState = drawerState,
+        drawerContent = {
+            HamburgerMenu(
+                navController = navController,
+                currentRoute = "coping",
+                onClose = { scope.launch { drawerState.close() } }
             )
-        },
-        bottomBar = { BottomNavBar(navController = navController) },
-        containerColor = backgroundColor
-    ) { paddingValues ->
-        Column(modifier = Modifier
-            .fillMaxSize()
-            .padding(paddingValues)) {
-
-            TextField(
-                value = searchQuery,
-                onValueChange = { searchQuery = it },
-                label = { Text("Search strategies...") },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                singleLine = true,
-                colors = WhiteTextFieldColors()
-
-            )
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text("Show Favorites Only")
-                Spacer(Modifier.weight(1f))
-                Switch(
-                    checked = showFavoritesOnly,
-                    onCheckedChange = { viewModel.toggleShowFavoritesOnly() }
-                )
-            }
-
-            if (strategies.isEmpty()) {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
-                }
-            } else {
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = 16.dp, vertical = 8.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    items(filteredStrategies) { strategyItem ->
-                        var expanded by remember { mutableStateOf(false) }
-                        Card(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .shadow(4.dp, RoundedCornerShape(16.dp)),
-                            shape = RoundedCornerShape(16.dp),
-                            colors = CardDefaults.cardColors(
-                                containerColor = cardColor
-                            ),
-                            onClick = { expanded = !expanded }
+        }
+    ) {
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = { Text(text = "Coping Strategies") },
+                    navigationIcon = {
+                        IconButton(
+                            onClick = { scope.launch { drawerState.open() } }
                         ) {
-                            Row(
-                                modifier = Modifier
-                                    .padding(16.dp)
-                                    .fillMaxWidth(),
-                                verticalAlignment = Alignment.CenterVertically
+                            Icon(
+                                imageVector = Icons.Default.Menu,
+                                contentDescription = "Menu"
+                            )
+                        }
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = backgroundColor
+                    )
+                )
+            },
+            containerColor = backgroundColor
+        ) { paddingValues ->
+
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+            ) {
+
+                TextField(
+                    value = searchQuery,
+                    onValueChange = { searchQuery = it },
+                    label = { Text("Search strategies...") },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(all = 16.dp),
+                    singleLine = true,
+                    colors = WhiteTextFieldColors()
+
+                )
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(text = "Show Favorites Only")
+                    Spacer(Modifier.weight(1f))
+                    Switch(
+                        checked = showFavoritesOnly,
+                        onCheckedChange = { viewModel.toggleShowFavoritesOnly() }
+                    )
+                }
+
+                if (strategies.isEmpty()) {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator(
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                } else {
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(horizontal = 16.dp, vertical = 8.dp),
+                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        items(filteredStrategies) { strategyItem ->
+                            var expanded by remember { mutableStateOf(false) }
+
+                            Card(
+                                modifier = Modifier.fillMaxWidth(),
+                                elevation = CardDefaults.cardElevation(4.dp),
+                                shape = RoundedCornerShape(16.dp),
+                                colors = CardDefaults.cardColors(
+                                    containerColor = cardColor
+                                ),
+                                onClick = { expanded = !expanded }
                             ) {
-                                Icon(
-                                    imageVector = Icons.Default.Lightbulb,
-                                    contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.primary,
-                                    modifier = Modifier.size(24.dp)
-                                )
-                                Spacer(modifier = Modifier.width(12.dp))
-                                Column(modifier = Modifier.weight(1f)) {
-                                    Text(
-                                        text = strategyItem.triggerName,
-                                        style = MaterialTheme.typography.labelMedium,
-                                        color = MaterialTheme.colorScheme.onSurface
+                                Row(
+                                    modifier = Modifier
+                                        .padding(all = 16.dp)
+                                        .fillMaxWidth(),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Lightbulb,
+                                        contentDescription = null,
+                                        tint = MaterialTheme.colorScheme.primary,
+                                        modifier = Modifier.size(24.dp)
                                     )
-                                    Spacer(modifier = Modifier.height(4.dp))
-                                    if (expanded) {
+
+                                    Spacer(Modifier.width(12.dp))
+
+                                    Column(
+                                        modifier = Modifier.weight(1f)
+                                    ) {
                                         Text(
-                                            text = strategyItem.strategy,
-                                            style = MaterialTheme.typography.bodyMedium,
-                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                            text = strategyItem.triggerName,
+                                            style = MaterialTheme.typography.labelMedium,
+                                            color = MaterialTheme.colorScheme.onSurface
+                                        )
+
+                                        Spacer(Modifier.height(4.dp))
+
+                                        if (expanded) {
+                                            Text(
+                                                text = strategyItem.strategy,
+                                                style = MaterialTheme.typography.bodyMedium,
+                                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                            )
+                                        }
+                                    }
+
+                                    IconButton(
+                                        onClick = {
+                                            viewModel.toggleFavorite(strategyItem)
+                                        }
+                                    ) {
+                                        Icon(
+                                            imageVector = if (strategyItem.isFavorite)
+                                                Icons.Default.Favorite
+                                            else
+                                                Icons.Default.FavoriteBorder,
+                                            contentDescription = "Toggle Favorite",
+                                            tint = if (strategyItem.isFavorite)
+                                                MaterialTheme.colorScheme.primary
+                                            else
+                                                MaterialTheme.colorScheme.onSurfaceVariant
                                         )
                                     }
-                                }
-                                IconButton(onClick = { viewModel.toggleFavorite(strategyItem) }) {
-                                    Icon(
-                                        imageVector = if (strategyItem.isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
-                                        contentDescription = "Toggle Favorite",
-                                        tint = if (strategyItem.isFavorite) Color.Red else MaterialTheme.colorScheme.onSurface
-                                    )
                                 }
                             }
                         }
