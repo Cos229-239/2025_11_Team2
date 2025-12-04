@@ -261,32 +261,21 @@ private fun TriggerCalendar(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-// --- Build the days for this month based on currentMonth ---
-
-// 1st of the month
         val firstOfMonth = currentMonth.atDay(1)
-// How many days in this month
         val daysInMonth = currentMonth.lengthOfMonth()
-// DayOfWeek.value: Monday=1 … Sunday=7 → we want Sunday index 0
         val firstDayOfWeekIndex = (firstOfMonth.dayOfWeek.value % 7)
 
-// Build a flat list of cells: leading nulls for empty boxes, then real dates
         val baseCells: List<LocalDate?> =
             List(firstDayOfWeekIndex) { null } +
                     (1..daysInMonth).map { day ->
                         currentMonth.atDay(day)
                     }
-
-        // ✅ Pad to multiple of 7 (fixes wonky bottom row)
         val remainder = baseCells.size % 7
         val dayCells =
             if (remainder == 0) baseCells
             else baseCells + List(7 - remainder) { null }
 
         val weeks = dayCells.chunked(7)
-
-// --- Render the calendar grid ---
-
         weeks.forEach { week ->
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -392,7 +381,6 @@ private fun DaySummarySection(
 
             Spacer(Modifier.height(4.dp))
 
-            // group & count like before, but rows are clickable now
             triggers
                 .groupingBy { it }
                 .eachCount()
