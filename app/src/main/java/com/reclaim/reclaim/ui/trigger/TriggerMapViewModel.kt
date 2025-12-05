@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.reclaim.reclaim.data.daos.TriggerDao
 import com.reclaim.reclaim.data.entities.TriggerEntity
+import com.reclaim.reclaim.data.model.TriggerType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map

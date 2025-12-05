@@ -2,7 +2,6 @@
   "formatVersion": 1,
   "database": {
     "version": 6,
-    "identityHash": "218d603b4d2bef239c4bef492079e621",
     "entities": [
       {
         "tableName": "journals",
@@ -44,7 +43,6 @@
       },
       {
         "tableName": "milestones",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `dayCount` INTEGER NOT NULL, `dateReached` TEXT NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -61,7 +59,6 @@
           {
             "fieldPath": "dateReached",
             "columnName": "dateReached",
-            "affinity": "TEXT",
             "notNull": true
           }
         ],
@@ -76,7 +73,6 @@
       },
       {
         "tableName": "mood_entries",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `mood` TEXT NOT NULL, `date` TEXT NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -93,7 +89,6 @@
           {
             "fieldPath": "date",
             "columnName": "date",
-            "affinity": "TEXT",
             "notNull": true
           }
         ],
@@ -146,7 +141,6 @@
       },
       {
         "tableName": "triggers",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `date` TEXT NOT NULL, `type` TEXT NOT NULL, `description` TEXT, `linkedStrategyIds` TEXT NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -157,7 +151,6 @@
           {
             "fieldPath": "date",
             "columnName": "date",
-            "affinity": "TEXT",
             "notNull": true
           },
           {
@@ -224,7 +217,6 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '218d603b4d2bef239c4bef492079e621')"
     ]
   }
 }
