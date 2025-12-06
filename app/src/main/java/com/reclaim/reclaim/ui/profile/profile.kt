@@ -94,6 +94,7 @@ class PhoneNumberVisualTransformation : VisualTransformation {
 @Composable
 fun ProfileScreen (
     navController: NavController,
+    name: String,
     viewModel: ProfileViewModel = hiltViewModel()
 )
 // TODO: Replace placeholder with actual profile UI

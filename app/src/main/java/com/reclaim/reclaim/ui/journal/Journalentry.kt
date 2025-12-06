@@ -1,5 +1,6 @@
 package com.reclaim.reclaim.ui.journal
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,7 +9,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -19,7 +19,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -31,14 +30,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
 import com.reclaim.reclaim.R
-import com.reclaim.reclaim.ui.components.BottomNavBar
 import com.reclaim.reclaim.ui.components.ProfileHeader
 import com.reclaim.reclaim.ui.theme.WhiteTextFieldColors
 import com.reclaim.reclaim.ui.viewmodels.SavedJournals
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import androidx.compose.material3.*
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
+import androidx.navigation.NavHostController
+import com.reclaim.reclaim.ui.components.HamburgerMenu
+import kotlinx.coroutines.launch
+
 
 /**
  * JournalScreen
@@ -61,80 +66,113 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun JournalScreen(
     name: String,
-    navController: NavController,
-    viewModel: SavedJournals = viewModel() // <-- now backed by Room
+    navController: NavHostController,
+    viewModel: SavedJournals = viewModel()
 ) {
+    val scope = rememberCoroutineScope()
+    val drawerState = rememberDrawerState(DrawerValue.Closed)
+
     var entry by remember { mutableStateOf("") }
-    val date = LocalDate.now().format(DateTimeFormatter.ofPattern("EEEE, MMM d"))
+    val date = LocalDate.now().format(
+        DateTimeFormatter.ofPattern("EEEE, MMM d")
+    )
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text("Journal Entry", style = MaterialTheme.typography.titleLarge)
-                },
-                navigationIcon = {
-                    IconButton(onClick = { navController.navigateUp() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
-                    }
-                },
-                actions = {
-                    TextButton(
-                        onClick = {
-                            if (entry.isNotBlank()) {
-                                viewModel.addEntry(entry, date)
-                                navController.navigate("saved_journals")
-                            }
-                        },
-                        enabled = entry.isNotBlank(),
-                        colors = ButtonDefaults.textButtonColors(
-                            contentColor = MaterialTheme.colorScheme.onPrimary
-                        )
-                    ) {
-                        Text("Save")
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    titleContentColor = MaterialTheme.colorScheme.onPrimary
+    ModalNavigationDrawer(
+        drawerState = drawerState,
+        drawerContent = {
+            HamburgerMenu(
+                navController = navController,
+                currentRoute = "journal",
+                onClose = { scope.launch { drawerState.close() } }
+            )
+        }
+    ) {
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = {},
+                    navigationIcon = {
+                        IconButton(
+                            onClick = { scope.launch { drawerState.open() } }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Menu,
+                                contentDescription = "Menu",
+                                tint = Color.Black
+                            )
+                        }
+                    },
+                    actions = {
+                        TextButton(
+                            onClick = {
+                                if (entry.isNotBlank()) {
+                                    viewModel.addEntry(entry, date)
+                                    navController.navigate("saved_journals")
+                                }
+                            },
+                            enabled = entry.isNotBlank(),
+                            colors = ButtonDefaults.textButtonColors(
+                                contentColor = MaterialTheme.colorScheme.secondary
+                            )
+                        ) {
+                            Text("Save")
+                        }
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = Color(0xFFB59E7D),
+                        navigationIconContentColor = Color.Black
+                    )
                 )
-            )
-        },
-        bottomBar = { BottomNavBar(navController = navController) }
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .padding(innerPadding)
-                .fillMaxSize()
-                .padding(16.dp)
-        ) {
-            ProfileHeader(name = name, photoRes = R.drawable.user)
-
-            Spacer(Modifier.height(16.dp))
-
-            Text("Journal Entry", style = MaterialTheme.typography.headlineSmall)
-            Text(date, style = MaterialTheme.typography.bodyMedium)
-
-            Spacer(Modifier.height(16.dp))
-
-            OutlinedTextField(
-                value = entry,
-                onValueChange = { entry = it },
-                modifier = Modifier.fillMaxWidth(),
-                placeholder = { Text("Release your thoughts here") },
-                colors = WhiteTextFieldColors()
-
-            )
-
-
-            Spacer(Modifier.height(16.dp))
-
-            Button(
-                onClick = { navController.navigate("saved_journals") },
-                modifier = Modifier.fillMaxWidth()
+            }
+        ) { innerPadding ->
+            Column(
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .fillMaxSize()
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text("View saved journals")
+                ProfileHeader(
+                    name = name,
+                    photoRes = R.drawable.user
+                )
+
+                Spacer(Modifier.height(12.dp))
+
+                Text(
+                    text = "Journal Entry",
+                    style = MaterialTheme.typography.headlineSmall
+                )
+
+                Text(
+                    text = date,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+
+                OutlinedTextField(
+                    value = entry,
+                    onValueChange = { entry = it },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f),
+                    placeholder = { Text("Release your thoughts here") },
+                    colors = WhiteTextFieldColors(),
+                    maxLines = Int.MAX_VALUE
+                )
+
+                Spacer(Modifier.height(16.dp))
+
+                Button(
+                    onClick = { navController.navigate("saved_journals") },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(52.dp),
+                    shape = RoundedCornerShape(24.dp)
+                ) {
+                    Text("View saved journals")
+                }
             }
         }
     }
 }
+

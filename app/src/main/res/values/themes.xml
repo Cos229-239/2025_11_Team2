@@ -2,7 +2,7 @@
 <resources>
     <style name="Theme.Reclaim" parent="android:Theme.Material.Light.NoActionBar" />
     <style name="Theme.Reclaim.Splash" parent="android:Theme.Material.Light.NoActionBar">
-        <item name="android:windowBackground">@drawable/splash_logo</item>
+        <item name="android:windowBackground">@drawable/splash</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowFullscreen">true</item>
     </style>
