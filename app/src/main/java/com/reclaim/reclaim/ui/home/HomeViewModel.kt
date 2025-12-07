@@ -3,6 +3,7 @@ package com.reclaim.reclaim.ui.viewmodels
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.reclaim.reclaim.data.affirmations
 import com.reclaim.reclaim.data.db.AppDatabase
 import com.reclaim.reclaim.data.entities.MoodEntry
 import com.reclaim.reclaim.data.entities.MilestoneEntity
@@ -18,20 +19,13 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     private val moodDao = AppDatabase.getDatabase(application).moodDao()
     private val milestoneDao = AppDatabase.getDatabase(application).milestoneDao()
-
-    private val affirmations = listOf(
-        "You are strong and capable.",
-        "Progress, not perfection.",
-        "One day at a time.",
-        "Your resilience inspires others."
-    )
-
     private val soberStartDate = LocalDate.of(2024, 8, 25)
     private val milestoneDays = listOf(1L, 3L, 7L, 30L, 60L, 90L, 180L, 365L, 730L)
 
     private val _soberTime = MutableStateFlow(calculateSoberTime(soberStartDate))
     val soberTime: StateFlow<SoberTime> = _soberTime
 
+    val affirmationsList = affirmations
     val affirmation = MutableStateFlow("")
     val mood = MutableStateFlow<String?>(null)
     val milestoneReached = MutableStateFlow<Long?>(null)

@@ -4,29 +4,32 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.reclaim.reclaim.model.JournalEntry
+import androidx.room.Delete
+import com.reclaim.reclaim.data.entities.JournalEntity
 import com.reclaim.reclaim.ui.components.BottomNavBar
 import com.reclaim.reclaim.ui.viewmodels.SavedJournals
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.ui.graphics.Color
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SavedJournalsScreen(
     navController: NavController,
-    viewModel: SavedJournals
+    viewModel: SavedJournals = viewModel()
 ) {
-    val entries by viewModel.entries.collectAsState()
+    val entries by viewModel.entries.collectAsState(initial = emptyList())
 
     Scaffold(
         topBar = {
@@ -74,8 +77,9 @@ fun SavedJournalsScreen(
                     JournalListItem(
                         entry = entry,
                         onClick = {
-
-                        }
+                            // optional: navigate to detail screen
+                        },
+                        onDelete = { viewModel.deleteEntry(entry.id) }
                     )
                 }
             }
@@ -85,8 +89,9 @@ fun SavedJournalsScreen(
 
 @Composable
 private fun JournalListItem(
-    entry: JournalEntry,
-    onClick: () -> Unit
+    entry: JournalEntity,
+    onClick: () -> Unit,
+    onDelete: () -> Unit
 ) {
     Card(
         modifier = Modifier
@@ -98,21 +103,26 @@ private fun JournalListItem(
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-
             Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    text = entry.date,
-                    style = MaterialTheme.typography.labelMedium,
-                    fontWeight = FontWeight.SemiBold,
-                    color = MaterialTheme.colorScheme.secondary
-                )
-                Text(
-                    text = entry.time,
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.tertiary
-                )
+                Column {
+                    Text(
+                        text = entry.date,
+                        style = MaterialTheme.typography.labelMedium,
+                        fontWeight = FontWeight.SemiBold,
+                        color = MaterialTheme.colorScheme.secondary
+                    )
+                    Text(
+                        text = entry.time,
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.tertiary
+                    )
+                }
+                IconButton(onClick = onDelete) {
+                    Icon(Icons.Default.Delete, contentDescription = "Delete entry")
+                }
             }
 
             Spacer(modifier = Modifier.height(4.dp))
