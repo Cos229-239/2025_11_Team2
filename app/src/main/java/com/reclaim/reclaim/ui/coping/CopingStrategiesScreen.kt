@@ -1,7 +1,5 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
-
 package com.reclaim.reclaim.ui.coping
-
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -14,11 +12,12 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Add // NEW: Icon for add button
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Lightbulb
-import androidx.compose.material.icons.filled.VolumeUp // Added icon for voice read aloud button
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.VolumeUp
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -32,10 +31,12 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.reclaim.reclaim.data.entities.StrategyEntity
 import com.reclaim.reclaim.ui.viewmodels.CopingStrategiesViewModel
-import android.speech.tts.TextToSpeech // Android tool to read text out loud
-import androidx.compose.ui.platform.LocalContext // Gets the app context for voice features
-import java.util.Locale // Sets language for voice readout
+import android.speech.tts.TextToSpeech
+import androidx.compose.ui.platform.LocalContext
+import java.util.Locale
 import kotlinx.coroutines.flow.collectLatest
+
+
 
 @Composable
 fun CopingStrategiesScreen(
