@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 
@@ -21,6 +22,11 @@ class CopingStrategiesViewModel(application: Application) : AndroidViewModel(app
 
     val strategies: Flow<List<StrategyEntity>> = combine(strategyDao.getAllStrategies(), _showFavoritesOnly) { all, favoritesOnly ->
         if (favoritesOnly) all.filter { strategy -> strategy.isFavorite } else all // New: Reactive filtering in Flow
+    }
+    val stats: Flow<Pair<Int, Int>> = strategies.map { list ->
+        val total = list.size
+        val favorites = list.count { it.isFavorite }
+        total to favorites
     }
 
     init {
@@ -65,5 +71,15 @@ class CopingStrategiesViewModel(application: Application) : AndroidViewModel(app
 
     fun toggleShowFavoritesOnly() { // New: Toggle the favorites filter state
         _showFavoritesOnly.value = !_showFavoritesOnly.value
+    }
+    fun addCustomStrategy(triggerName: String, strategy: String) {
+        viewModelScope.launch {
+            val entity = StrategyEntity(triggerName = triggerName, strategy = strategy, isFavorite = false)
+            strategyDao.insert(entity)
+        }
+    }
+
+    fun getRandomStrategy(list: List<StrategyEntity>): StrategyEntity? {
+        return if (list.isNotEmpty()) list.random() else null
     }
 }

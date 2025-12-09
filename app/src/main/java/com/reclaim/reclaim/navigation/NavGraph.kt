@@ -12,12 +12,14 @@ import com.reclaim.reclaim.ui.journal.JournalScreen
 import com.reclaim.reclaim.ui.journal.SavedJournalsScreen
 import com.reclaim.reclaim.ui.profile.ProfileScreen
 import com.reclaim.reclaim.ui.trigger.TriggerMapScreen
+import com.reclaim.reclaim.ui.viewmodels.HomeViewModel
 import com.reclaim.reclaim.ui.viewmodels.SavedJournals
 
 @Composable
 fun NavGraph(
     navController: NavHostController,
-    name: String
+    name: String,
+    viewModel: HomeViewModel = viewModel()
 ) {
     val savedJournalsViewModel: SavedJournals = viewModel()
 
