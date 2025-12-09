@@ -95,7 +95,7 @@ dependencies {
 
     // Material icons (extended set)
     implementation("androidx.compose.material:material-icons-extended")
-
+    implementation("androidx.glance:glance-appwidget:1.0.0")
     // Hilt (DI)
     implementation("com.google.dagger:hilt-android:2.51.1")
     kapt("com.google.dagger:hilt-compiler:2.51.1")
