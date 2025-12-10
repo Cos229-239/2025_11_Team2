@@ -41,13 +41,13 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3e3e4e22-4395-422b-83cf-f6a32f180c4f" name="Changes" comment="Added a sober time widget with SoberTimeWidget.kt, SoberTimeWidgetReceiver.kt, and sober_time_widget_info.xml along with code to set the current sober time. and a rounded_card.xml to display for the widget">
+    <list default="true" id="3e3e4e22-4395-422b-83cf-f6a32f180c4f" name="Changes" comment="Fixed slight bug in the Date picker, user is unable to select future date">
       <change beforePath="$PROJECT_DIR$/.gradle/8.13/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.13/executionHistory/executionHistory.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/8.13/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.13/fileHashes/fileHashes.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/8.13/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.13/fileHashes/fileHashes.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/reclaim/reclaim/ui/home/HomeScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/reclaim/reclaim/ui/home/HomeScreen.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/splash.webp" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -508,7 +508,15 @@
       <option name="project" value="LOCAL" />
       <updated>1765257370087</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="Fixed slight bug in the Date picker, user is unable to select future date">
+      <option name="closed" value="true" />
+      <created>1765337058770</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1765337058770</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -529,33 +537,20 @@
     <MESSAGE value="Added File description on most files and TODO's" />
     <MESSAGE value="Fixed errors from merge" />
     <MESSAGE value="Added a sober time widget with SoberTimeWidget.kt, SoberTimeWidgetReceiver.kt, and sober_time_widget_info.xml along with code to set the current sober time. and a rounded_card.xml to display for the widget" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added a sober time widget with SoberTimeWidget.kt, SoberTimeWidgetReceiver.kt, and sober_time_widget_info.xml along with code to set the current sober time. and a rounded_card.xml to display for the widget" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/reclaim/reclaim/ui/components/SplashScreen.kt</url>
-          <line>22</line>
-          <properties>
-            <option name="lambda-ordinal" value="-1" />
-          </properties>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
+    <MESSAGE value="Fixed slight bug in the Date picker, user is unable to select future date" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed slight bug in the Date picker, user is unable to select future date" />
   </component>
   <component name="play_dynamic_filters_status">
     <option name="appIdToCheckInfo">
       <map>
         <entry key="com.reclaim.reclaim">
           <value>
-            <CheckInfo lastCheckTimestamp="1765244451921" />
+            <CheckInfo lastCheckTimestamp="1765375770226" />
           </value>
         </entry>
         <entry key="com.reclaim.reclaim.test">
           <value>
-            <CheckInfo lastCheckTimestamp="1765244451922" />
+            <CheckInfo lastCheckTimestamp="1765375770229" />
           </value>
         </entry>
       </map>
