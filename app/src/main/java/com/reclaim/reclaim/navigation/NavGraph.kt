@@ -9,11 +9,14 @@ import com.reclaim.reclaim.ui.components.SplashScreen
 import com.reclaim.reclaim.ui.components.JournalScreen
 import com.reclaim.reclaim.ui.coping.CopingStrategiesScreen
 import com.reclaim.reclaim.ui.home.HomeScreen
+import com.reclaim.reclaim.ui.trigger.TriggerMapScreen
+import com.reclaim.reclaim.ui.coping.CopingStrategiesScreen
 import com.reclaim.reclaim.ui.journal.JournalScreen
 import com.reclaim.reclaim.ui.journal.SavedJournalsScreen
 import com.reclaim.reclaim.ui.profile.ProfileScreen
 import com.reclaim.reclaim.ui.trigger.TriggerMapScreen
 import com.reclaim.reclaim.ui.viewmodels.SavedJournals
+
 
 @Composable
 fun NavGraph(
@@ -79,4 +82,5 @@ fun NavGraph(
             )
         }
     }
+
 }
