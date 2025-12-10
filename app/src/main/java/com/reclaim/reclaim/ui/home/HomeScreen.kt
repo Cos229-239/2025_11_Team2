@@ -1,6 +1,7 @@
 package com.reclaim.reclaim.ui.home
 
 import android.os.Build
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -34,6 +35,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.reclaim.reclaim.ui.components.MilestoneCelebrationCard
@@ -42,6 +44,7 @@ import com.reclaim.reclaim.ui.components.SoberTimeTracker
 import com.reclaim.reclaim.ui.viewmodels.HomeViewModel
 import kotlinx.coroutines.launch
 import java.time.Instant
+import java.time.LocalDate
 import java.time.LocalTime
 import java.time.ZoneId
 
@@ -60,6 +63,7 @@ fun HomeScreen(
     var dismissed by remember { mutableStateOf(false) }
     var showDatePicker by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
+    val context = LocalContext.current
 
     val greeting = remember {
         val hour = LocalTime.now().hour
@@ -179,8 +183,14 @@ fun HomeScreen(
                         val localDate = Instant.ofEpochMilli(selectedDate)
                             .atZone(ZoneId.systemDefault())
                             .toLocalDate()
-                        coroutineScope.launch {
-                            viewModel.saveSoberStart(localDate)
+
+                        val today = LocalDate.now()
+                        if (!localDate.isAfter(today)) {   // reject future dates
+                            coroutineScope.launch {
+                                viewModel.saveSoberStart(localDate)
+                            }
+                        } else {
+                            Toast.makeText(context, "Please select a date today or earlier", Toast.LENGTH_SHORT).show()
                         }
                     }
                 }) {
@@ -196,4 +206,5 @@ fun HomeScreen(
             DatePicker(state = datePickerState)
         }
     }
+
 }
