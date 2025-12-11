@@ -305,51 +305,51 @@ private fun TriggerCalendar(
     }
 }
 
-        @Composable
-        private fun DayCell(
-            date: LocalDate,
-            isSelected: Boolean,
-            triggers: List<TriggerType>,
-            onClick: () -> Unit
-        ) {
-            val backgroundColor =
-                if (isSelected) MaterialTheme.colorScheme.secondary else Color.Transparent
-            val textColor =
-                if (isSelected) MaterialTheme.colorScheme.onSecondary else MaterialTheme.colorScheme.onSurface
+@Composable
+private fun DayCell(
+    date: LocalDate,
+    isSelected: Boolean,
+    triggers: List<TriggerType>,
+    onClick: () -> Unit
+) {
+    val backgroundColor =
+        if (isSelected) MaterialTheme.colorScheme.secondary else Color.Transparent
+    val textColor =
+        if (isSelected) MaterialTheme.colorScheme.onSecondary else MaterialTheme.colorScheme.onSurface
 
-            Column(
-                modifier = Modifier
-                    .padding(2.dp)
-                    .clip(RoundedCornerShape(999.dp))
-                    .clickable { onClick() }
-                    .background(backgroundColor),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
+    Column(
+        modifier = Modifier
+            .padding(2.dp)
+            .clip(RoundedCornerShape(999.dp))
+            .clickable { onClick() }
+            .background(backgroundColor),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(
+            text = date.dayOfMonth.toString(),
+            color = textColor,
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Medium
+        )
+        if (triggers.isNotEmpty()) {
+            Spacer(Modifier.height(2.dp))
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(2.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    text = date.dayOfMonth.toString(),
-                    color = textColor,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Medium
-                )
-                if (triggers.isNotEmpty()) {
-                    Spacer(Modifier.height(2.dp))
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(2.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        triggers.take(3).forEach { trigger ->
-                            Box(
-                                modifier = Modifier
-                                    .size(5.dp)
-                                    .clip(CircleShape)
-                                    .background(triggerColor(trigger))
-                            )
-                        }
-                    }
+                triggers.take(3).forEach { trigger ->
+                    Box(
+                        modifier = Modifier
+                            .size(5.dp)
+                            .clip(CircleShape)
+                            .background(triggerColor(trigger))
+                    )
                 }
             }
         }
+    }
+}
 
 @Composable
 private fun DaySummarySection(

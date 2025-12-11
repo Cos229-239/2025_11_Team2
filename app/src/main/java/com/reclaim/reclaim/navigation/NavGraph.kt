@@ -5,7 +5,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.reclaim.reclaim.ui.components.SplashScreen
+import com.reclaim.reclaim.ui.splash.SplashScreen
 import com.reclaim.reclaim.ui.components.JournalScreen
 import com.reclaim.reclaim.ui.coping.CopingStrategiesScreen
 import com.reclaim.reclaim.ui.home.HomeScreen
