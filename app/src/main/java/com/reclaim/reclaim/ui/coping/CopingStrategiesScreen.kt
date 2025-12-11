@@ -53,8 +53,6 @@ fun CopingStrategiesScreen(
                             it.strategy.contains(searchQuery, ignoreCase = true))
         }
     } }
-    val backgroundColor = Color(0xFF4CAF50) // More vibrant green background
-    val cardColor = Color(0xFFC8E6C9) // Lighter more vibrant green for cards
     var randomStrategy by remember { mutableStateOf<StrategyEntity?>(null) }  // Now mutable, starts as null; updates on button click for fresh random each time
     val context = LocalContext.current // Get app's context to use for voice readout
     val tts = remember { TextToSpeech(context, null) } //  Sets up the voice reader tool
