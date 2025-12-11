@@ -6,6 +6,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -14,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.reclaim.reclaim.navigation.Screen
 import com.google.accompanist.flowlayout.FlowRow
+import com.google.accompanist.flowlayout.FlowMainAxisAlignment
 
 @Composable
 fun NavigationGrid(navController: NavController) {
@@ -22,6 +24,7 @@ fun NavigationGrid(navController: NavController) {
     FlowRow(
         mainAxisSpacing = 16.dp,
         crossAxisSpacing = 16.dp,
+        mainAxisAlignment = FlowMainAxisAlignment.Center,
         modifier = Modifier.fillMaxWidth()
     ) {
         items.forEach { item ->
@@ -30,7 +33,11 @@ fun NavigationGrid(navController: NavController) {
                     .width(150.dp) // fixed width so two fit per row
                     .clickable { navController.navigate(item.route) },
                 elevation = CardDefaults.cardElevation(4.dp),
-                shape = RoundedCornerShape(12.dp)
+                shape = RoundedCornerShape(12.dp),
+                        colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.secondary,
+                contentColor = MaterialTheme.colorScheme.onSecondary
+            )
             ) {
                 Column(
                     modifier = Modifier.padding(16.dp),

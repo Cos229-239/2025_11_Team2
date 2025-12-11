@@ -10,7 +10,18 @@ val PeachCream = Color(0xFFEFE7DA)
 val Tobacco   = Color(0xFFB59E7D)
 
 @Composable
-fun WhiteTextFieldColors(): TextFieldColors =
+fun WhiteTextFieldColors(
+    focusedContainerColor: Color,
+    unfocusedContainerColor: Color,
+    disabledContainerColor: Color,
+    focusedIndicatorColor: Color,
+    unfocusedIndicatorColor: Color,
+    cursorColor: Color,
+    focusedTextColor: Color,
+    unfocusedTextColor: Color,
+    focusedPlaceholderColor: Color,
+    unfocusedPlaceholderColor: Color
+): TextFieldColors =
     TextFieldDefaults.colors(
         focusedContainerColor = PeachCream,
         unfocusedContainerColor = PeachCream,
