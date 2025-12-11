@@ -11,7 +11,6 @@ import java.io.File
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import com.reclaim.reclaim.R
-import com.reclaim.reclaim.ui.components.BottomNavBar
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -43,7 +42,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.reclaim.reclaim.ui.viewmodels.ProfileViewModel
-import androidx.compose.material.icons.filled.Check
 
 /**
  * ProfileScreen
@@ -165,7 +163,6 @@ if(showDialog) {
                 )
             )
         },
-        bottomBar = { BottomNavBar(navController = navController) }
     ) { innerPadding ->
         val scrollState = rememberScrollState()
         Column(
@@ -210,7 +207,22 @@ if(showDialog) {
                 label = { Text("Name") },
                 readOnly = !uiState.isEditingName,
                 modifier = Modifier.fillMaxWidth(),
-                colors = WhiteTextFieldColors(),
+                colors = WhiteTextFieldColors(
+                    focusedContainerColor = MaterialTheme.colorScheme.background,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.background,
+                    disabledContainerColor = MaterialTheme.colorScheme.background,
+
+                    focusedIndicatorColor = MaterialTheme.colorScheme.secondary,
+                    unfocusedIndicatorColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.5f),
+
+                    cursorColor = MaterialTheme.colorScheme.secondary,
+
+                    focusedTextColor = MaterialTheme.colorScheme.onBackground,
+                    unfocusedTextColor = MaterialTheme.colorScheme.onBackground,
+
+                    focusedPlaceholderColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f),
+                    unfocusedPlaceholderColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.4f)
+                ),
                 trailingIcon = {
                     IconButton(onClick = { viewModel.onEditModeChange(!uiState.isEditingName) }) {
                         Icon(
@@ -273,7 +285,22 @@ fun ContactInformation(modifier: Modifier = Modifier) {
                 modifier = Modifier
                     .fillMaxWidth(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-                colors = WhiteTextFieldColors()
+                colors = WhiteTextFieldColors(
+                    focusedContainerColor = MaterialTheme.colorScheme.background,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.background,
+                    disabledContainerColor = MaterialTheme.colorScheme.background,
+
+                    focusedIndicatorColor = MaterialTheme.colorScheme.secondary,
+                    unfocusedIndicatorColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.5f),
+
+                    cursorColor = MaterialTheme.colorScheme.secondary,
+
+                    focusedTextColor = MaterialTheme.colorScheme.onBackground,
+                    unfocusedTextColor = MaterialTheme.colorScheme.onBackground,
+
+                    focusedPlaceholderColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f),
+                    unfocusedPlaceholderColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.4f)
+                )
 
             )
 
@@ -290,7 +317,20 @@ fun ContactInformation(modifier: Modifier = Modifier) {
                 modifier = Modifier.fillMaxWidth(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
                 visualTransformation = PhoneNumberVisualTransformation(),
-                colors = WhiteTextFieldColors()
+                colors = WhiteTextFieldColors( focusedContainerColor = MaterialTheme.colorScheme.background,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.background,
+                    disabledContainerColor = MaterialTheme.colorScheme.background,
+
+                    focusedIndicatorColor = MaterialTheme.colorScheme.secondary,
+                    unfocusedIndicatorColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.5f),
+
+                    cursorColor = MaterialTheme.colorScheme.secondary,
+
+                    focusedTextColor = MaterialTheme.colorScheme.onBackground,
+                    unfocusedTextColor = MaterialTheme.colorScheme.onBackground,
+
+                    focusedPlaceholderColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f),
+                    unfocusedPlaceholderColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.4f))
             )
 
             Spacer(Modifier.height(8.dp))
@@ -301,7 +341,20 @@ fun ContactInformation(modifier: Modifier = Modifier) {
                 label = { Text("Sponsor's Email") },
                 modifier = Modifier.fillMaxWidth(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-                colors = WhiteTextFieldColors()
+                colors = WhiteTextFieldColors( focusedContainerColor = MaterialTheme.colorScheme.background,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.background,
+                    disabledContainerColor = MaterialTheme.colorScheme.background,
+
+                    focusedIndicatorColor = MaterialTheme.colorScheme.secondary,
+                    unfocusedIndicatorColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.5f),
+
+                    cursorColor = MaterialTheme.colorScheme.secondary,
+
+                    focusedTextColor = MaterialTheme.colorScheme.onBackground,
+                    unfocusedTextColor = MaterialTheme.colorScheme.onBackground,
+
+                    focusedPlaceholderColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f),
+                    unfocusedPlaceholderColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.4f))
             )
 
         } else {

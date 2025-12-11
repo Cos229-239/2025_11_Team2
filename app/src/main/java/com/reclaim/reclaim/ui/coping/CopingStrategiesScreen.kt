@@ -66,7 +66,7 @@ fun CopingStrategiesScreen(
     }
 
     val backgroundColor = MaterialTheme.colorScheme.background
-    val cardColor = MaterialTheme.colorScheme.surface
+    val cardColor = MaterialTheme.colorScheme.secondary
 
     val scope = rememberCoroutineScope()
     val drawerState = rememberDrawerState(DrawerValue.Closed)
@@ -117,7 +117,22 @@ fun CopingStrategiesScreen(
                         .fillMaxWidth()
                         .padding(all = 16.dp),
                     singleLine = true,
-                    colors = WhiteTextFieldColors()
+                    colors = WhiteTextFieldColors(
+                        focusedContainerColor = MaterialTheme.colorScheme.background,
+                        unfocusedContainerColor = MaterialTheme.colorScheme.background,
+                        disabledContainerColor = MaterialTheme.colorScheme.background,
+
+                        focusedIndicatorColor = MaterialTheme.colorScheme.secondary,
+                        unfocusedIndicatorColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.5f),
+
+                        cursorColor = MaterialTheme.colorScheme.secondary,
+
+                        focusedTextColor = MaterialTheme.colorScheme.onBackground,
+                        unfocusedTextColor = MaterialTheme.colorScheme.onBackground,
+
+                        focusedPlaceholderColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f),
+                        unfocusedPlaceholderColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.4f)
+                    )
 
                 )
 
@@ -172,7 +187,7 @@ fun CopingStrategiesScreen(
                                     Icon(
                                         imageVector = Icons.Default.Lightbulb,
                                         contentDescription = null,
-                                        tint = MaterialTheme.colorScheme.primary,
+                                        tint = MaterialTheme.colorScheme.surfaceVariant,
                                         modifier = Modifier.size(24.dp)
                                     )
 
@@ -212,7 +227,7 @@ fun CopingStrategiesScreen(
                                             tint = if (strategyItem.isFavorite)
                                                 MaterialTheme.colorScheme.primary
                                             else
-                                                MaterialTheme.colorScheme.onSurfaceVariant
+                                                MaterialTheme.colorScheme.surfaceVariant
                                         )
                                     }
                                 }

@@ -1,12 +1,15 @@
 package com.reclaim.reclaim.ui.journal
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material3.Button
@@ -40,9 +43,16 @@ import androidx.compose.material3.*
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.draw.clip
 import androidx.navigation.NavHostController
+import coil.compose.rememberAsyncImagePainter
 import com.reclaim.reclaim.ui.components.HamburgerMenu
 import kotlinx.coroutines.launch
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
+import com.reclaim.reclaim.ui.theme.CormorantGaramond
 
 
 /**
@@ -112,14 +122,14 @@ fun JournalScreen(
                             },
                             enabled = entry.isNotBlank(),
                             colors = ButtonDefaults.textButtonColors(
-                                contentColor = MaterialTheme.colorScheme.secondary
+                                contentColor = MaterialTheme.colorScheme.primary
                             )
                         ) {
                             Text("Save")
                         }
                     },
                     colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = Color(0xFFB59E7D),
+                        containerColor = MaterialTheme.colorScheme.background,
                         navigationIconContentColor = Color.Black
                     )
                 )
@@ -132,9 +142,15 @@ fun JournalScreen(
                     .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                ProfileHeader(
-                    name = name,
-                    photoRes = R.drawable.user
+                Image(
+                    painter = rememberAsyncImagePainter(
+                        model = R.drawable.reclaimcurrentpicture
+                    ),
+                    contentDescription = "Profile picture",
+                    modifier = Modifier
+                        .size(120.dp)
+                        .clip(CircleShape)
+                        .border(2.dp, Color.Gray, CircleShape),
                 )
 
                 Spacer(Modifier.height(12.dp))
@@ -154,13 +170,33 @@ fun JournalScreen(
                     onValueChange = { entry = it },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .weight(1f),
-                    placeholder = { Text("Release your thoughts here") },
-                    colors = WhiteTextFieldColors(),
-                    maxLines = Int.MAX_VALUE
+                        .height(260.dp)   // give it a nice box height
+                        .padding(top = 16.dp),
+                    placeholder = {
+                        Text(
+                            text = "Release your thoughts here",
+                            color = Color.Gray
+                        )
+                    },
+                    shape = RoundedCornerShape(16.dp),
+                    minLines = 6,
+                    colors = TextFieldDefaults.colors(
+                        focusedIndicatorColor = MaterialTheme.colorScheme.secondary,
+                        unfocusedIndicatorColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.7f),
+                        disabledIndicatorColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.3f),
+                        focusedContainerColor = MaterialTheme.colorScheme.background,
+                        unfocusedContainerColor = MaterialTheme.colorScheme.background,
+                        disabledContainerColor = MaterialTheme.colorScheme.background,
+                        focusedTextColor = MaterialTheme.colorScheme.onBackground,
+                        unfocusedTextColor = MaterialTheme.colorScheme.onBackground,
+                        cursorColor = MaterialTheme.colorScheme.secondary,
+                        focusedPlaceholderColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f),
+                        unfocusedPlaceholderColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.4f)
+                    )
                 )
 
-                Spacer(Modifier.height(16.dp))
+
+                            Spacer(Modifier.height(16.dp))
 
                 Button(
                     onClick = { navController.navigate("saved_journals") },
@@ -169,7 +205,11 @@ fun JournalScreen(
                         .height(52.dp),
                     shape = RoundedCornerShape(24.dp)
                 ) {
-                    Text("View saved journals")
+                    Text(
+                        text = "View saved journals",
+                        fontFamily = CormorantGaramond,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 18.sp)
                 }
             }
         }

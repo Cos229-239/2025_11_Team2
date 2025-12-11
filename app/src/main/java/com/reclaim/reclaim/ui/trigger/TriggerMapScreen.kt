@@ -185,8 +185,8 @@ private fun QuickActionsRow(
                 .shadow(elevation = 8.dp, shape = RoundedCornerShape(20.dp)),
             shape = RoundedCornerShape(20.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.surface,
-                contentColor = MaterialTheme.colorScheme.onSurface
+                containerColor = MaterialTheme.colorScheme.secondary,
+                contentColor = MaterialTheme.colorScheme.onSecondary
             )
         ) {
             Text(text = "Meditation")
@@ -199,8 +199,8 @@ private fun QuickActionsRow(
                 .shadow(elevation = 8.dp, shape = RoundedCornerShape(20.dp)),
             shape = RoundedCornerShape(20.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.surface,
-                contentColor = MaterialTheme.colorScheme.onSurface
+                containerColor = MaterialTheme.colorScheme.secondary,
+                contentColor = MaterialTheme.colorScheme.onSecondary
             )
         ) {
             Text(text = "Journaling")
@@ -235,8 +235,7 @@ private fun TriggerCalendar(
                     currentMonth.month.name.lowercase().replaceFirstChar { it.uppercase() }
                 } ${currentMonth.year}",
                 style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.SemiBold,
-                color = MaterialTheme.colorScheme.primary
+                fontWeight = FontWeight.SemiBold
             )
             Spacer(Modifier.weight(1f))
             TextButton(onClick = { onMonthChange(currentMonth.plusMonths(1)) }) { Text(">") }
@@ -314,9 +313,9 @@ private fun TriggerCalendar(
             onClick: () -> Unit
         ) {
             val backgroundColor =
-                if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent
+                if (isSelected) MaterialTheme.colorScheme.secondary else Color.Transparent
             val textColor =
-                if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface
+                if (isSelected) MaterialTheme.colorScheme.onSecondary else MaterialTheme.colorScheme.onSurface
 
             Column(
                 modifier = Modifier
@@ -443,8 +442,8 @@ private fun LogTriggerButton(
             .height(52.dp),
         shape = RoundedCornerShape(24.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colorScheme.primary,
-            contentColor = MaterialTheme.colorScheme.onPrimary
+            containerColor = MaterialTheme.colorScheme.secondary,
+            contentColor = MaterialTheme.colorScheme.onSecondary
         )
     ) {
         Text("Log trigger for this date")
