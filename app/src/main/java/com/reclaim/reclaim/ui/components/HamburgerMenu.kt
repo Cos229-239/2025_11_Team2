@@ -57,5 +57,14 @@ fun HamburgerMenu(
                 onClose()
             }
         )
+
+        NavigationDrawerItem(
+            label = { Text("Profile") },
+            selected = currentRoute == "Profile",
+            onClick = {
+                navController.navigate("Profile")
+                onClose()
+            }
+        )
     }
 }

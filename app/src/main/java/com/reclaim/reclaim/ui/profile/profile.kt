@@ -1,34 +1,31 @@
 package com.reclaim.reclaim.ui.profile
 
-
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.ui.platform.LocalContext
-import androidx.core.content.FileProvider
-import coil.compose.rememberAsyncImagePainter
-import java.io.File
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import com.reclaim.reclaim.R
-import com.reclaim.reclaim.ui.components.BottomNavBar
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Divider
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
-import androidx.compose.material3.Icon
 import androidx.compose.runtime.*
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -37,27 +34,26 @@ import androidx.compose.ui.text.input.OffsetMapping
 import androidx.compose.ui.text.input.TransformedText
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import com.reclaim.reclaim.ui.theme.WhiteTextFieldColors
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.core.content.FileProvider
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavHostController
+import coil.compose.rememberAsyncImagePainter
+import com.reclaim.reclaim.R
+import com.reclaim.reclaim.navigation.Screen
+import com.reclaim.reclaim.ui.components.HamburgerMenu
+import com.reclaim.reclaim.ui.theme.WhiteTextFieldColors
 import com.reclaim.reclaim.ui.viewmodels.ProfileViewModel
-import androidx.compose.material.icons.filled.Check
+import kotlinx.coroutines.launch
+import java.io.File
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Logout
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material.icons.filled.Notifications
+//import androidx.compose.material.icons.filled.Settings
 
-/**
- * ProfileScreen
- * -------------
- * Displays user profile information.
- * - Intended for showing recovery progress, milestones, and personal details.
- * - Will eventually integrate with Room/Hilt to pull user data.
- *
- * TODO:
- * - Connect to a UserEntity in Room for persistent profile data.
- * - Add editing functionality (name, avatar, recovery goals).
- * - Display linked strategies and mood history.
- * - Add accessibility features (large text scaling, color contrast).
- */
 
 class PhoneNumberVisualTransformation : VisualTransformation {
     override fun filter(text: AnnotatedString): TransformedText {
@@ -97,13 +93,10 @@ fun ProfileScreen (
     name: String,
     viewModel: ProfileViewModel = hiltViewModel()
 )
-// TODO: Replace placeholder with actual profile UI
 {
     val uiState by viewModel.uiState.collectAsState()
-//    var nameState by remember { mutableStateOf(name) }
-//    var isEditing by remember { mutableStateOf(false) }
-//
-//    var imageUri by remember { mutableStateOf<Uri?>(null) }
+    var showMenu by remember { mutableStateOf(false) } // State for the dropdown menu
+    var notificationsEnabled by remember { mutableStateOf(true)}
     var showDialog by remember { mutableStateOf(false) }
     val context = LocalContext.current
 
@@ -129,118 +122,177 @@ fun ProfileScreen (
             showDialog = false
         }
     )
-if(showDialog) {
-    AlertDialog(
-        onDismissRequest = { showDialog = false },
-        title = { Text("Update Profile Picture") },
-        text = { Text("Choose an option to update your profile picture") },
-        confirmButton = {
-            Button(onClick = { galleryLauncher.launch("image/*") }) {
-                Text("From Gallery")
+    if(showDialog) {
+        AlertDialog(
+            onDismissRequest = { showDialog = false },
+            title = { Text("Update Profile Picture") },
+            text = { Text("Choose an option to update your profile picture") },
+            confirmButton = {
+                Button(onClick = { galleryLauncher.launch("image/*") }) {
+                    Text("From Gallery")
+                }
+            },
+            dismissButton = {
+                Button(onClick = { cameraLauncher.launch(cameraImageUri) }) {
+                    Text("From Camera")
+                }
             }
-        },
-        dismissButton = {
-            Button(onClick = { cameraLauncher.launch(cameraImageUri) }) {
-                Text("From Camera")
-            }
-        }
-    )
-}
-    Scaffold(
-        topBar = {
-            CenterAlignedTopAppBar(
-                title = { Text("Profile") },
-                navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back"
-                        )
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background,
-                    titleContentColor = MaterialTheme.colorScheme.onBackground,
-                    navigationIconContentColor = MaterialTheme.colorScheme.onBackground
-                )
+        )
+    }
+    val scope = rememberCoroutineScope()
+    val drawerState = rememberDrawerState(DrawerValue.Closed)
+
+    ModalNavigationDrawer(
+        drawerState = drawerState,
+        drawerContent = {
+            HamburgerMenu(
+                navController = navController as NavHostController,
+                currentRoute = Screen.Profile.route,
+                onClose = { scope.launch { drawerState.close() } }
             )
-        },
-        bottomBar = { BottomNavBar(navController = navController) }
-    ) { innerPadding ->
-        val scrollState = rememberScrollState()
-        Column(
-            modifier = Modifier
-                .padding(innerPadding)
-                .fillMaxSize()
-                .verticalScroll(scrollState)
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Box(contentAlignment = Alignment.BottomEnd) {
-                Image(
-                    painter = rememberAsyncImagePainter(
-                        model = uiState.profilePictureUri ?: R.drawable.reclaimcurrentpicture
-                    ),
-                    contentDescription = "Profile picture",
-                    modifier = Modifier
-                        .size(120.dp)
-                        .clip(CircleShape)
-                        .border(2.dp, Color.Gray, CircleShape),
-                )
+        }
+    ) {
+        Scaffold(
+            topBar = {
+                CenterAlignedTopAppBar(
+                    title = { Text("Profile") },
+                    navigationIcon = {
+                        IconButton(onClick = { scope.launch { drawerState.open() } }) {
+                            Icon(
+                                imageVector = Icons.Default.Menu,
+                                contentDescription = "Menu"
+                            )
+                        }
+                    },
+                    actions = {
+                        IconButton(onClick = { showMenu = true }) {
+                            Icon(Icons.Default.Settings, contentDescription = "Settings menu")
+                        }
+                        // This is the dropdown menu itself
+                        DropdownMenu(
+                            expanded = showMenu,
+                            onDismissRequest = { showMenu = false }
+                        ) { DropdownMenuItem(
+                            text = { Text("Push Notifications") },
+                            // The onClick for the item itself does nothing, as the switch handles the action.
+                            onClick = { notificationsEnabled = !notificationsEnabled },
+                            leadingIcon = {
+                                Icon(
+                                    Icons.Default.Notifications,
+                                    contentDescription = "Notifications Icon"
+                                )
+                            },
+                            // The trailingIcon is where we place the Switch.
+                            trailingIcon = {
+                                Switch(
+                                    checked = notificationsEnabled,
+                                    onCheckedChange = { notificationsEnabled = it }
+                                )
+                            }
+                        )
+                            // The "Logout" menu item
+                            DropdownMenuItem(
+                                text = { Text("Logout") },
+                                onClick = {
+                                    // Close the menu
+                                    showMenu = false
+                                    // Navigate to the login screen and clear the app's back stack
+                                    navController.navigate(Screen.Login.route) {
+                                        popUpTo(navController.graph.findStartDestination().id) {
+                                            inclusive = true
+                                        }
+                                    }
+                                },
+                                leadingIcon = {
+                                    Icon(
+                                        Icons.Default.Logout,
+                                        contentDescription = "Logout Icon"
+                                    )
+                                }
 
-                IconButton(
-                    onClick = { showDialog = true },
-                    modifier = Modifier
-                        .size(30.dp)
-                        .clip(CircleShape)
-                        .background(MaterialTheme.colorScheme.primary)
-                ) {
-                    Icon (
-                        imageVector = Icons.Default.Edit,
-                        contentDescription = "Edit",
-                        tint = MaterialTheme.colorScheme.onPrimary
+                            )
+                            // You can add more DropdownMenuItems here later (e.g., for a "Settings" screen)
+                        }
+                    },
+                    // --- END OF NEW PART ---
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.background,
+                        titleContentColor = MaterialTheme.colorScheme.onBackground,
+                        navigationIconContentColor = MaterialTheme.colorScheme.onBackground
+                    )
                 )
             }
-        }
-            Spacer(Modifier.height(16.dp))
+        ) { innerPadding ->
+            val scrollState = rememberScrollState()
+            Column(
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .fillMaxSize()
+                    .verticalScroll(scrollState)
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Box(contentAlignment = Alignment.BottomEnd) {
+                    Image(
+                        painter = rememberAsyncImagePainter(
+                            model = uiState.profilePictureUri ?: R.drawable.reclaimcurrentpicture
+                        ),
+                        contentDescription = "Profile picture",
+                        modifier = Modifier
+                            .size(120.dp)
+                            .clip(CircleShape)
+                            .border(2.dp, Color.Gray, CircleShape),
+                    )
 
-            OutlinedTextField(
-                value = uiState.userName,
-                onValueChange = { newName -> viewModel.onNameChange(newName) },
-                label = { Text("Name") },
-                readOnly = !uiState.isEditingName,
-                modifier = Modifier.fillMaxWidth(),
-                colors = WhiteTextFieldColors(),
-                trailingIcon = {
-                    IconButton(onClick = { viewModel.onEditModeChange(!uiState.isEditingName) }) {
-                        Icon(
-                            imageVector = if (uiState.isEditingName) Icons.Default.Edit else Icons.Default.Edit,
-                            contentDescription = if (uiState.isEditingName) "Save Name" else "Edit Name"
+                    IconButton(
+                        onClick = { showDialog = true },
+                        modifier = Modifier
+                            .size(30.dp)
+                            .clip(CircleShape)
+                            .background(MaterialTheme.colorScheme.primary)
+                    ) {
+                        Icon (
+                            imageVector = Icons.Default.Edit,
+                            contentDescription = "Edit",
+                            tint = MaterialTheme.colorScheme.onPrimary
                         )
                     }
                 }
-            )
+                Spacer(Modifier.height(16.dp))
 
+                OutlinedTextField(
+                    value = uiState.userName,
+                    onValueChange = { newName -> viewModel.onNameChange(newName) },
+                    label = { Text("Name") },
+                    readOnly = !uiState.isEditingName,
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = WhiteTextFieldColors(),
+                    trailingIcon = {
+                        IconButton(onClick = { viewModel.onEditModeChange(!uiState.isEditingName) }) {
+                            Icon(
+                                imageVector = if (uiState.isEditingName) Icons.Default.Check else Icons.Default.Edit,
+                                contentDescription = if (uiState.isEditingName) "Save Name" else "Edit Name"
+                            )
+                        }
+                    }
+                )
 
-            //Spacer(Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(16.dp))
+                Divider(
+                    thickness = 1.dp,
+                    color = Color.LightGray
+                )
 
-            Spacer(modifier = Modifier.height(16.dp))
-            Divider(
-                thickness = 1.dp,
-                color = Color.LightGray
-            )
+                Spacer(modifier = Modifier.height(16.dp))
 
-            Spacer(modifier = Modifier.height(16.dp))
-
-            ContactInformation()
+                ContactInformation()
+            }
         }
     }
 }
 
 @Composable
 fun ContactInformation(modifier: Modifier = Modifier) {
-    var phoneNumber by remember { mutableStateOf("867-5309") }
-    var email by remember { mutableStateOf("william.henry.moody@my-own-personal-domain.com") }
     var hasSponsor by remember { mutableStateOf(true) }
     var sponsorName by remember { mutableStateOf("") }
     var sponsorPhoneNumber by remember { mutableStateOf("") }
@@ -319,49 +371,6 @@ fun ContactInformation(modifier: Modifier = Modifier) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        var imageUri by remember { mutableStateOf<Uri?>(null) }
-        var showDialog by remember { mutableStateOf(false) }
-        val context = LocalContext.current
-
-        val galleryLauncher = rememberLauncherForActivityResult(
-            contract = ActivityResultContracts.GetContent(),
-            onResult = { uri: Uri? ->
-                imageUri = uri
-                showDialog = false
-            }
-        )
-
-        val cameraImageUri: Uri = remember {
-            val file = File(context.cacheDir, "camera_photo.jpg")
-            FileProvider.getUriForFile(context, "com.reclaim.reclaim.fileprovider", file)
-        }
-
-        val cameraLauncher = rememberLauncherForActivityResult(
-            contract = ActivityResultContracts.TakePicture(),
-            onResult = { success ->
-                if (success) {
-                    imageUri = cameraImageUri
-                }
-                showDialog = false
-            }
-        )
-        if (showDialog) {
-            AlertDialog(
-                onDismissRequest = { showDialog = false },
-                title = { Text("Update Profile Picture") },
-                text = { Text("Choose an option to update your profile picture") },
-                confirmButton = {
-                    Button(onClick = { galleryLauncher.launch("image/*") }) {
-                        Text("From Gallery")
-                    }
-                },
-                dismissButton = {
-                    Button(onClick = { cameraLauncher.launch(cameraImageUri) }) {
-                        Text("From Camera")
-                    }
-                }
-            )
-        }
         Text(
             text = "Sobriety Improvement",
             style = MaterialTheme.typography.headlineMedium,
@@ -392,72 +401,51 @@ fun ContactInformation(modifier: Modifier = Modifier) {
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.padding(bottom = 4.dp)
                 )
-                Box(contentAlignment = Alignment.BottomEnd) {
-                    Image(
-                        painter = rememberAsyncImagePainter(
-                            model = imageUri ?: R.drawable.reclaimcurrentpicture
-                        ),
-                        contentDescription = "Profile picture",
-                        modifier = Modifier
-                            .size(120.dp)
-                            .clip(CircleShape)
-                            .border(2.dp, Color.Gray, CircleShape),
-                    )
-
-                    IconButton(
-                        onClick = { showDialog = true },
-                        modifier = Modifier
-                            .size(30.dp)
-                            .clip(CircleShape)
-                            .background(MaterialTheme.colorScheme.primary)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Edit,
-                            contentDescription = "Edit",
-                            tint = MaterialTheme.colorScheme.onPrimary
-                        )
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Divider(
-                    thickness = 1.dp,
-                    color = Color.LightGray
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Text(
-                    text = "Emergency Contacts",
-                    style = MaterialTheme.typography.headlineMedium,
-                    fontWeight = FontWeight.SemiBold,
+                Image(
+                    painter = painterResource(id = R.drawable.reclaimcurrentpicture),
+                    contentDescription = "Current photo placeholder",
                     modifier = Modifier
-                )
+                        .size(120.dp)
+                        .border(1.dp, Color.Gray)
 
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Text(
-                    text = "Suicide Hotline: 1-800-273-8255",
-                    style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier
-                        .padding(bottom = 8.dp)
-                )
-                Text(
-                    text = "Mental Health Helpline: 1-800-273-8255",
-                    style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier
-                        .padding(bottom = 8.dp)
-                )
-
-
-                Text(
-                    text = "Substance Abuse Helpline: 1-800-273-8255",
-                    style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier
-                        .padding(bottom = 8.dp)
                 )
             }
         }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Divider(
+            thickness = 1.dp,
+            color = Color.LightGray
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Text(
+            text = "Emergency Contacts",
+            style = MaterialTheme.typography.headlineMedium,
+            fontWeight = FontWeight.SemiBold,
+            modifier = Modifier
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Text(
+            text = "Suicide Hotline: 1-800-273-8255",
+            style = MaterialTheme.typography.bodySmall,
+            modifier = Modifier.padding(bottom = 8.dp)
+        )
+        Text(
+            text = "Mental Health Helpline: 1-800-273-8255",
+            style = MaterialTheme.typography.bodySmall,
+            modifier = Modifier.padding(bottom = 8.dp)
+        )
+
+
+        Text(
+            text = "Substance Abuse Helpline: 1-800-273-8255",
+            style = MaterialTheme.typography.bodySmall,
+            modifier = Modifier.padding(bottom = 8.dp)
+        )
     }
 }

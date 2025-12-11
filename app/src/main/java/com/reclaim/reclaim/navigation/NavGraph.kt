@@ -5,12 +5,14 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.reclaim.reclaim.ui.components.LoginScreen
 import com.reclaim.reclaim.ui.components.SplashScreen
 import com.reclaim.reclaim.ui.coping.CopingStrategiesScreen
 import com.reclaim.reclaim.ui.home.HomeScreen
 import com.reclaim.reclaim.ui.journal.JournalScreen
 import com.reclaim.reclaim.ui.journal.SavedJournalsScreen
 import com.reclaim.reclaim.ui.profile.ProfileScreen
+import com.reclaim.reclaim.ui.settings.SettingsScreen
 import com.reclaim.reclaim.ui.trigger.TriggerMapScreen
 import com.reclaim.reclaim.ui.viewmodels.SavedJournals
 
@@ -23,7 +25,7 @@ fun NavGraph(
 
     NavHost(
         navController = navController,
-        startDestination = Screen.Splash.route
+        startDestination = Screen.Login.route
     ) {
         // ---------- Splash ----------
         composable(Screen.Splash.route) {
@@ -76,6 +78,15 @@ fun NavGraph(
                 navController = navController,
                 viewModel = savedJournalsViewModel
             )
+        }
+
+        composable(Screen.Settings.route) {
+            SettingsScreen(
+                navController = navController
+            )
+        }
+        composable(Screen.Login.route) {
+            LoginScreen(navController = navController)
         }
     }
 }

@@ -7,6 +7,7 @@ import androidx.compose.material.icons.filled.List
 
 sealed class Screen(val route: String, val label: String, val icon: ImageVector) {
 
+    object Login: Screen(route = "login", label = "Login", icon = Icons.Default.Login)
     object Splash : Screen(route = "splash", label = "Splash", icon = Icons.Default.Home
     )
     object Home : Screen("home", "Home", Icons.Default.Home)
@@ -20,4 +21,5 @@ sealed class Screen(val route: String, val label: String, val icon: ImageVector)
         label = "Saved",
         icon = Icons.Default.List
     )
+    object Settings : Screen("settings", "Settings", Icons.Default.Settings)
 }
