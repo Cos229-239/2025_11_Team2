@@ -21,9 +21,10 @@ fun AppNavHost(
         }
         composable("coping") {
             CopingStrategiesScreen(
-                navController = navController,
                 onBackClick = { navController.popBackStack() }
             )
         }
+
+
     }
 }

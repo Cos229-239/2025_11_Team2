@@ -51,7 +51,6 @@ fun NavGraph(
 
         composable(Screen.Strategies.route) {
             CopingStrategiesScreen(
-                navController = navController,
                 onBackClick = { navController.popBackStack() }
             )
         }

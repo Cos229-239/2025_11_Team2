@@ -1,5 +1,7 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
+
 package com.reclaim.reclaim.ui.coping
+
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -16,8 +18,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Lightbulb
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.VolumeUp
+import androidx.compose.material.icons.automirrored.filled.VolumeUp
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -36,8 +37,6 @@ import androidx.compose.ui.platform.LocalContext
 import java.util.Locale
 import kotlinx.coroutines.flow.collectLatest
 
-
-
 @Composable
 fun CopingStrategiesScreen(
     onBackClick: () -> Unit,
@@ -46,27 +45,28 @@ fun CopingStrategiesScreen(
     val strategies by viewModel.strategies.collectAsState(initial = emptyList())
     val showFavoritesOnly by viewModel.showFavoritesOnly.collectAsState(initial = false)
     var searchQuery by remember { mutableStateOf("") }
-    val filteredStrategies by remember { derivedStateOf {
-        strategies.filter {
-            (if (showFavoritesOnly) it.isFavorite else true) &&
-                    (it.triggerName.contains(searchQuery, ignoreCase = true) ||
-                            it.strategy.contains(searchQuery, ignoreCase = true))
+    val filteredStrategies by remember {
+        derivedStateOf {
+            strategies.filter {
+                (if (showFavoritesOnly) it.isFavorite else true) &&
+                        (it.triggerName.contains(searchQuery, ignoreCase = true) ||
+                                it.strategy.contains(searchQuery, ignoreCase = true))
+            }
         }
-    } }
-    var randomStrategy by remember { mutableStateOf<StrategyEntity?>(null) }  // Now mutable, starts as null; updates on button click for fresh random each time
-    val context = LocalContext.current // Get app's context to use for voice readout
-    val tts = remember { TextToSpeech(context, null) } //  Sets up the voice reader tool
-    tts.language = Locale.US // Sets the voice to English (change if needed for other languages)
-    var showQuickTipDialog by remember { mutableStateOf(false) } // Tracks if the quick tip dialog is open
-    var showAddDialog by remember { mutableStateOf(false) } // New: Tracks if the add custom strategy dialog is open
-    var newTriggerName by remember { mutableStateOf("") } // New: Holds user input for new trigger name
-    var newStrategy by remember { mutableStateOf("") } // New: Holds user input for new strategy description
-    var stats by remember { mutableStateOf(Pair(0, 0)) }  // New: for total and favorites
+    }
+    var randomStrategy by remember { mutableStateOf<StrategyEntity?>(null) }
+    val context = LocalContext.current
+    val tts = remember { TextToSpeech(context, null) }
+    tts.language = Locale.US
+    var showQuickTipDialog by remember { mutableStateOf(false) }
+    var showAddDialog by remember { mutableStateOf(false) }
+    var newTriggerName by remember { mutableStateOf("") }
+    var newStrategy by remember { mutableStateOf("") }
+    var stats by remember { mutableStateOf<Pair<Int, Int>>(Pair(0, 0)) }
     LaunchedEffect(Unit) {
         viewModel.stats.collectLatest { stats = it }
     }
 
-    // Dialog to show the random tip when the button is clicked, keeps it simple and pops up instantly
     if (showQuickTipDialog && randomStrategy != null) {
         AlertDialog(
             onDismissRequest = { showQuickTipDialog = false },
@@ -86,7 +86,6 @@ fun CopingStrategiesScreen(
         )
     }
 
-    // NEW: Dialog for adding custom strategies. Users can enter their own trigger and tip to save to the list
     if (showAddDialog) {
         AlertDialog(
             onDismissRequest = { showAddDialog = false },
@@ -110,7 +109,7 @@ fun CopingStrategiesScreen(
                 Button(
                     onClick = {
                         if (newTriggerName.isNotBlank() && newStrategy.isNotBlank()) {
-                            viewModel.addCustomStrategy(newTriggerName, newStrategy)  // Pass strings directly and ViewModel creates the entity
+                            viewModel.addCustomStrategy(newTriggerName, newStrategy)
                             showAddDialog = false
                             newTriggerName = ""
                             newStrategy = ""
@@ -132,7 +131,7 @@ fun CopingStrategiesScreen(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = backgroundColor
+                    containerColor = MaterialTheme.colorScheme.primary
                 )
             )
         },
@@ -140,10 +139,10 @@ fun CopingStrategiesScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { showAddDialog = true },
-                containerColor = Color(0xFF4CAF50),
-                contentColor = Color.White
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary
             ) {
-                Icon(Icons.Default.Add, contentDescription = "Add Custom Strategy")
+                Icon(Icons.Filled.Add, contentDescription = "Add Custom Strategy")
             }
         }
     ) { paddingValues ->
@@ -152,7 +151,10 @@ fun CopingStrategiesScreen(
                 .fillMaxSize()
                 .background(
                     brush = Brush.verticalGradient(
-                        colors = listOf(backgroundColor, Color(0xFF81C784))
+                        colors = listOf(
+                            MaterialTheme.colorScheme.primary,
+                            MaterialTheme.colorScheme.primaryContainer
+                        )
                     )
                 )
                 .padding(paddingValues)
@@ -205,7 +207,7 @@ fun CopingStrategiesScreen(
 
                 if (filteredStrategies.isEmpty()) {
                     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        CircularProgressIndicator(color = Color.White)
+                        CircularProgressIndicator(color = MaterialTheme.colorScheme.onBackground)
                     }
                 } else {
                     LazyColumn(
@@ -221,7 +223,7 @@ fun CopingStrategiesScreen(
                                     .fillMaxWidth()
                                     .shadow(6.dp, RoundedCornerShape(20.dp)),
                                 shape = RoundedCornerShape(20.dp),
-                                colors = CardDefaults.cardColors(containerColor = cardColor),
+                                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
                                 onClick = { expanded = !expanded }
                             ) {
                                 Row(
@@ -231,16 +233,18 @@ fun CopingStrategiesScreen(
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
                                     Icon(
-                                        imageVector = Icons.Default.Lightbulb,
+                                        imageVector = Icons.Filled.Lightbulb,
                                         contentDescription = null,
-                                        tint = backgroundColor,
+                                        tint = MaterialTheme.colorScheme.primary,
                                         modifier = Modifier.size(28.dp)
                                     )
                                     Spacer(modifier = Modifier.width(12.dp))
                                     Column(modifier = Modifier.weight(1f)) {
                                         Text(
                                             text = strategyItem.triggerName,
-                                            style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold),
+                                            style = MaterialTheme.typography.labelLarge.copy(
+                                                fontWeight = FontWeight.Bold
+                                            ),
                                             color = MaterialTheme.colorScheme.onSurface
                                         )
                                         Spacer(modifier = Modifier.height(4.dp))
@@ -256,17 +260,27 @@ fun CopingStrategiesScreen(
                                                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                                                     modifier = Modifier.weight(1f)
                                                 )
-                                                IconButton(onClick = { tts.speak(strategyItem.strategy, TextToSpeech.QUEUE_FLUSH, null, null) }) {
-                                                    Icon(Icons.Default.VolumeUp, contentDescription = "Read Aloud")
+                                                IconButton(onClick = {
+                                                    tts.speak(
+                                                        strategyItem.strategy,
+                                                        TextToSpeech.QUEUE_FLUSH,
+                                                        null,
+                                                        null
+                                                    )
+                                                }) {
+                                                    Icon(
+                                                        Icons.AutoMirrored.Filled.VolumeUp,
+                                                        contentDescription = "Read Aloud"
+                                                    )
                                                 }
                                             }
                                         }
                                     }
                                     IconButton(onClick = { viewModel.toggleFavorite(strategyItem) }) {
                                         Icon(
-                                            imageVector = if (strategyItem.isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                                            imageVector = if (strategyItem.isFavorite) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
                                             contentDescription = "Toggle Favorite",
-                                            tint = if (strategyItem.isFavorite) Color(0xFFE57373) else MaterialTheme.colorScheme.onSurface
+                                            tint = if (strategyItem.isFavorite) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurface
                                         )
                                     }
                                 }
@@ -278,3 +292,4 @@ fun CopingStrategiesScreen(
         }
     }
 }
+
