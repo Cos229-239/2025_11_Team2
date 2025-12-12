@@ -186,8 +186,8 @@ private fun QuickActionsRow(
                 .shadow(elevation = 8.dp, shape = RoundedCornerShape(20.dp)),
             shape = RoundedCornerShape(20.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.surface,
-                contentColor = MaterialTheme.colorScheme.onSurface
+                containerColor = MaterialTheme.colorScheme.secondary,
+                contentColor = MaterialTheme.colorScheme.onSecondary
             )
         ) {
             Text(text = "Meditation")
@@ -200,8 +200,8 @@ private fun QuickActionsRow(
                 .shadow(elevation = 8.dp, shape = RoundedCornerShape(20.dp)),
             shape = RoundedCornerShape(20.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.surface,
-                contentColor = MaterialTheme.colorScheme.onSurface
+                containerColor = MaterialTheme.colorScheme.secondary,
+                contentColor = MaterialTheme.colorScheme.onSecondary
             )
         ) {
             Text(text = "Journaling")
@@ -236,8 +236,7 @@ private fun TriggerCalendar(
                     currentMonth.month.name.lowercase().replaceFirstChar { it.uppercase() }
                 } ${currentMonth.year}",
                 style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.SemiBold,
-                color = MaterialTheme.colorScheme.primary
+                fontWeight = FontWeight.SemiBold
             )
             Spacer(Modifier.weight(1f))
             TextButton(onClick = { onMonthChange(currentMonth.plusMonths(1)) }) { Text(">") }
@@ -262,32 +261,21 @@ private fun TriggerCalendar(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-// --- Build the days for this month based on currentMonth ---
-
-// 1st of the month
         val firstOfMonth = currentMonth.atDay(1)
-// How many days in this month
         val daysInMonth = currentMonth.lengthOfMonth()
-// DayOfWeek.value: Monday=1 … Sunday=7 → we want Sunday index 0
         val firstDayOfWeekIndex = (firstOfMonth.dayOfWeek.value % 7)
 
-// Build a flat list of cells: leading nulls for empty boxes, then real dates
         val baseCells: List<LocalDate?> =
             List(firstDayOfWeekIndex) { null } +
                     (1..daysInMonth).map { day ->
                         currentMonth.atDay(day)
                     }
-
-        // ✅ Pad to multiple of 7 (fixes wonky bottom row)
         val remainder = baseCells.size % 7
         val dayCells =
             if (remainder == 0) baseCells
             else baseCells + List(7 - remainder) { null }
 
         val weeks = dayCells.chunked(7)
-
-// --- Render the calendar grid ---
-
         weeks.forEach { week ->
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -318,51 +306,51 @@ private fun TriggerCalendar(
     }
 }
 
-        @Composable
-        private fun DayCell(
-            date: LocalDate,
-            isSelected: Boolean,
-            triggers: List<TriggerType>,
-            onClick: () -> Unit
-        ) {
-            val backgroundColor =
-                if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent
-            val textColor =
-                if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface
+@Composable
+private fun DayCell(
+    date: LocalDate,
+    isSelected: Boolean,
+    triggers: List<TriggerType>,
+    onClick: () -> Unit
+) {
+    val backgroundColor =
+        if (isSelected) MaterialTheme.colorScheme.secondary else Color.Transparent
+    val textColor =
+        if (isSelected) MaterialTheme.colorScheme.onSecondary else MaterialTheme.colorScheme.onSurface
 
-            Column(
-                modifier = Modifier
-                    .padding(2.dp)
-                    .clip(RoundedCornerShape(999.dp))
-                    .clickable { onClick() }
-                    .background(backgroundColor),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
+    Column(
+        modifier = Modifier
+            .padding(2.dp)
+            .clip(RoundedCornerShape(999.dp))
+            .clickable { onClick() }
+            .background(backgroundColor),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(
+            text = date.dayOfMonth.toString(),
+            color = textColor,
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Medium
+        )
+        if (triggers.isNotEmpty()) {
+            Spacer(Modifier.height(2.dp))
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(2.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    text = date.dayOfMonth.toString(),
-                    color = textColor,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Medium
-                )
-                if (triggers.isNotEmpty()) {
-                    Spacer(Modifier.height(2.dp))
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(2.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        triggers.take(3).forEach { trigger ->
-                            Box(
-                                modifier = Modifier
-                                    .size(5.dp)
-                                    .clip(CircleShape)
-                                    .background(triggerColor(trigger))
-                            )
-                        }
-                    }
+                triggers.take(3).forEach { trigger ->
+                    Box(
+                        modifier = Modifier
+                            .size(5.dp)
+                            .clip(CircleShape)
+                            .background(triggerColor(trigger))
+                    )
                 }
             }
         }
+    }
+}
 
 @Composable
 private fun DaySummarySection(
@@ -393,7 +381,6 @@ private fun DaySummarySection(
 
             Spacer(Modifier.height(4.dp))
 
-            // group & count like before, but rows are clickable now
             triggers
                 .groupingBy { it }
                 .eachCount()
@@ -456,8 +443,8 @@ private fun LogTriggerButton(
             .height(52.dp),
         shape = RoundedCornerShape(24.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colorScheme.primary,
-            contentColor = MaterialTheme.colorScheme.onPrimary
+            containerColor = MaterialTheme.colorScheme.secondary,
+            contentColor = MaterialTheme.colorScheme.onSecondary
         )
     ) {
         Text("Log trigger for this date")
