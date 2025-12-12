@@ -92,7 +92,7 @@ fun LoginScreen(navController: NavController) {
 
         // Optional: Add a "Sign Up" button or link
         TextButton(
-            onClick = { /* TODO: Navigate to a sign-up screen */ },
+            onClick = { navController.navigate(Screen.SignUp.route) },
             modifier = Modifier.padding(top = 16.dp)
         ) {
             Text("Don't have an account? Sign Up")

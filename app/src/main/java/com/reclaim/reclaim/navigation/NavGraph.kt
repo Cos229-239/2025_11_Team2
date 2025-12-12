@@ -15,6 +15,8 @@ import com.reclaim.reclaim.ui.profile.ProfileScreen
 import com.reclaim.reclaim.ui.settings.SettingsScreen
 import com.reclaim.reclaim.ui.trigger.TriggerMapScreen
 import com.reclaim.reclaim.ui.viewmodels.SavedJournals
+import com.reclaim.reclaim.ui.components.SignUpScreen // <-- Import the new screen
+
 
 @Composable
 fun NavGraph(
@@ -87,6 +89,9 @@ fun NavGraph(
         }
         composable(Screen.Login.route) {
             LoginScreen(navController = navController)
+        }
+        composable(Screen.SignUp.route) {
+            SignUpScreen(navController = navController)
         }
     }
 }

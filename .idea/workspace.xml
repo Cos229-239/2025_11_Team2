@@ -36,23 +36,17 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3e3e4e22-4395-422b-83cf-f6a32f180c4f" name="Changes" comment="Added a sober time widget with SoberTimeWidget.kt, SoberTimeWidgetReceiver.kt, and sober_time_widget_info.xml along with code to set the current sober time. and a rounded_card.xml to display for the widget">
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/reclaim/reclaim/ui/components/LoginScreen.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/reclaim/reclaim/ui/settings/SettingsScreen.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/8.13/checksums/checksums.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.13/checksums/checksums.lock" afterDir="false" />
+    <list default="true" id="3e3e4e22-4395-422b-83cf-f6a32f180c4f" name="Changes" comment="updated the profile page with the menu button and added a settings menu, i also added a login page and added a logout button to the settings menu on the profile page">
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/reclaim/reclaim/ui/components/SignUpScreen.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/reclaim/reclaim/ui/viewmodels/LoginViewModel.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/8.13/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.13/executionHistory/executionHistory.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/8.13/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.13/fileHashes/fileHashes.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/8.13/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.13/fileHashes/fileHashes.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/caches/deviceStreaming.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/deviceStreaming.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/reclaim/reclaim/data/db/AppDatabase.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/reclaim/reclaim/data/db/AppDatabase.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/reclaim/reclaim/navigation/NavGraph.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/reclaim/reclaim/navigation/NavGraph.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/reclaim/reclaim/navigation/Screen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/reclaim/reclaim/navigation/Screen.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/reclaim/reclaim/ui/components/HamburgerMenu.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/reclaim/reclaim/ui/components/HamburgerMenu.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/reclaim/reclaim/ui/profile/profile.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/reclaim/reclaim/ui/profile/profile.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/local.properties" beforeDir="false" afterPath="$PROJECT_DIR$/local.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/reclaim/reclaim/ui/components/LoginScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/reclaim/reclaim/ui/components/LoginScreen.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -126,12 +120,12 @@
     &quot;assignee&quot;: &quot;bschreckhise1987&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/Cos229-239/2025_11_Team2.git",
-    "accountId": "874f6b63-da77-4735-9dae-8e91cae8ee88"
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/Cos229-239/2025_11_Team2.git&quot;,
+    &quot;accountId&quot;: &quot;874f6b63-da77-4735-9dae-8e91cae8ee88&quot;
   }
-}]]></component>
+}</component>
   <component name="GradleScriptDefinitionsStorage" workingDir="$PROJECT_DIR$" gradleHome="C:\Users\trueb\.gradle\wrapper\dists\gradle-8.13-bin\5xuhj0ry160q40clulazy9h7d\gradle-8.13" javaHome="C:\Program Files\Android\Android Studio\jbr" gradleVersion="8.13" />
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
@@ -514,7 +508,15 @@
       <option name="project" value="LOCAL" />
       <updated>1765257370087</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="updated the profile page with the menu button and added a settings menu, i also added a login page and added a logout button to the settings menu on the profile page">
+      <option name="closed" value="true" />
+      <created>1765475625701</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1765475625701</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -535,7 +537,8 @@
     <MESSAGE value="Added File description on most files and TODO's" />
     <MESSAGE value="Fixed errors from merge" />
     <MESSAGE value="Added a sober time widget with SoberTimeWidget.kt, SoberTimeWidgetReceiver.kt, and sober_time_widget_info.xml along with code to set the current sober time. and a rounded_card.xml to display for the widget" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added a sober time widget with SoberTimeWidget.kt, SoberTimeWidgetReceiver.kt, and sober_time_widget_info.xml along with code to set the current sober time. and a rounded_card.xml to display for the widget" />
+    <MESSAGE value="updated the profile page with the menu button and added a settings menu, i also added a login page and added a logout button to the settings menu on the profile page" />
+    <option name="LAST_COMMIT_MESSAGE" value="updated the profile page with the menu button and added a settings menu, i also added a login page and added a logout button to the settings menu on the profile page" />
   </component>
   <component name="play_dynamic_filters_status">
     <option name="appIdToCheckInfo">
