@@ -5,7 +5,7 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
-val FieldsAfar = Color(0xFFABB18C)
+val FieldsAfar = Color(0xFF365437)
 val PeachCream = Color(0xFFEFE7DA)
 val Tobacco   = Color(0xFFB59E7D)
 

@@ -5,22 +5,20 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import com.reclaim.reclaim.ui.theme.AppTypography
-
 
 
 
 private val LightColorScheme = lightColorScheme(
-    primary =FieldsAfar ,
+    primary = FieldsAfar,
     onPrimary = Color(0xFF202618),
 
-    secondary = Tobacco,
+    secondary = PeachCream,
     onSecondary = Color(0xFF2A2218),
 
-    background = PeachCream,
+    background = Tobacco,
     onBackground = Color(0xFF22170E),
 
-    surface = FieldsAfar,
+    surface = PeachCream,
     onSurface = Color(0xFF2A2218),
 
     surfaceVariant = PeachCream,
@@ -59,7 +57,6 @@ fun ReclaimTheme(
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = AppTypography,
         content = content
     )
 }

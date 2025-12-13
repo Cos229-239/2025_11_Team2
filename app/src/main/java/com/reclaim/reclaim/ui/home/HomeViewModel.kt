@@ -1,32 +1,38 @@
 package com.reclaim.reclaim.ui.viewmodels
 
-import android.app.Application
+import android.content.Context
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
-import androidx.lifecycle.AndroidViewModel
+import androidx.glance.appwidget.updateAll
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import android.content.Context
+import com.reclaim.reclaim.data.AuthRepository
 import com.reclaim.reclaim.data.affirmations
-import com.reclaim.reclaim.data.db.AppDatabase
+import com.reclaim.reclaim.data.daos.MilestoneDao
+import com.reclaim.reclaim.data.daos.MoodDao
 import com.reclaim.reclaim.data.entities.MilestoneEntity
 import com.reclaim.reclaim.data.entities.MoodEntry
 import com.reclaim.reclaim.model.SoberTime
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.map
+import com.reclaim.reclaim.ui.widget.SoberTimeWidget
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
+import javax.inject.Inject
 
-// DataStore extension
 val Context.dataStore by preferencesDataStore(name = "settings")
 
-class HomeViewModel(application: Application) : AndroidViewModel(application) {
+@HiltViewModel
+class HomeViewModel @Inject constructor(
+    private val authRepository: AuthRepository,
+    private val moodDao: MoodDao,
+    private val milestoneDao: MilestoneDao,
+    @ApplicationContext private val appContext: Context
+) : ViewModel() {
 
-    private val moodDao = AppDatabase.getDatabase(application).moodDao()
-    private val milestoneDao = AppDatabase.getDatabase(application).milestoneDao()
     private val milestoneDays = listOf(1L, 3L, 7L, 30L, 60L, 90L, 180L, 365L, 730L)
 
     object PreferencesKeys {
@@ -35,13 +41,10 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     // Flow of sober start date from DataStore
     private val soberStartDateFlow: Flow<LocalDate?> =
-        application.dataStore.data.map { prefs ->
-            prefs[PreferencesKeys.SOBER_START_DATE]?.let {
-                LocalDate.ofEpochDay(it)
-            }
+        appContext.dataStore.data.map { prefs ->
+            prefs[PreferencesKeys.SOBER_START_DATE]?.let { LocalDate.ofEpochDay(it) }
         }
 
-    // Expose sober time as a StateFlow
     private val _soberTime = MutableStateFlow(SoberTime(0, 0, 0, 0))
     val soberTime: StateFlow<SoberTime> = _soberTime
 
@@ -56,16 +59,15 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     init {
         val todayIndex = LocalDate.now().dayOfYear % affirmations.size
-        affirmation.value = affirmations[todayIndex].toString()
+        affirmation.value = affirmations[todayIndex]
 
         viewModelScope.launch {
             val today = LocalDate.now()
             val saved = moodDao.getMoodByDate(today)
             mood.value = saved?.mood
 
-            // Observe sober start date and recalc sober time
             soberStartDateFlow.collect { startDate ->
-                val effectiveDate = startDate ?: LocalDate.now() // fallback
+                val effectiveDate = startDate ?: LocalDate.now()
                 val updated = calculateSoberTime(effectiveDate)
                 _soberTime.value = updated
                 checkMilestone(updated)
@@ -81,29 +83,26 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun saveSoberStart(date: LocalDate) {
+    fun saveSoberStart(context: Context, date: LocalDate) {
         viewModelScope.launch {
-            getApplication<Application>().dataStore.edit { prefs ->
-                prefs[PreferencesKeys.SOBER_START_DATE] = date.toEpochDay()
+            val uid = authRepository.currentUid() ?: return@launch
+            val result = authRepository.updateSoberStart(uid, date)
+            result.onSuccess {
+                context.dataStore.edit { prefs ->
+                    prefs[PreferencesKeys.SOBER_START_DATE] = date.toEpochDay()
+                }
+                SoberTimeWidget().updateAll(context)
             }
         }
     }
 
-
     private fun calculateSoberTime(startDate: LocalDate): SoberTime {
         val now = LocalDate.now()
         val totalDays = ChronoUnit.DAYS.between(startDate, now)
-
         val years = totalDays / 365
         val months = (totalDays % 365) / 30
         val days = (totalDays % 365) % 30
-
-        return SoberTime(
-            years = years.toInt(),
-            months = months.toInt(),
-            days = days.toInt(),
-            totalDays = totalDays
-        )
+        return SoberTime(years.toInt(), months.toInt(), days.toInt(), totalDays)
     }
 
     private suspend fun checkMilestone(soberTime: SoberTime) {
@@ -121,7 +120,6 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    // Debug helper
     fun triggerMilestone(days: Long) {
         milestoneReached.value = days
     }

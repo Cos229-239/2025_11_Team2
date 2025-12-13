@@ -4,6 +4,8 @@ plugins {
     id("kotlin-kapt")                         // Annotation processing (needed for Room + Hilt)
     alias(libs.plugins.kotlin.compose)        // Compose compiler plugin
     id("dagger.hilt.android.plugin")          // Hilt plugin
+    id("com.google.gms.google-services")     // Google services plugin
+
 }
 
 android {
@@ -63,6 +65,12 @@ dependencies {
     implementation(libs.androidx.activity.compose)
     implementation("com.google.code.gson:gson:2.10.1")
     implementation("androidx.work:work-runtime-ktx:2.9.0")
+
+    //Firebase
+    implementation (platform("com.google.firebase:firebase-bom:33.4.0"))
+    implementation ("com.google.firebase:firebase-auth-ktx")
+    implementation ("com.google.firebase:firebase-firestore-ktx")
+
 
     // Compose BOM ensures consistent versions
     implementation(platform(libs.androidx.compose.bom))

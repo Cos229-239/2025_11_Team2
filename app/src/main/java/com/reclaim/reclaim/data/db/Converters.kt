@@ -6,19 +6,6 @@ import com.reclaim.reclaim.data.entities.TriggerEntity
 import com.reclaim.reclaim.data.model.TriggerType
 import java.time.LocalDate
 
-/**
- * Converters
- * ----------
- * Room type converters for unsupported types.
- * - Converts List<Int> ↔ String
- * - Converts LocalDate ↔ Long (epochDay)
- * - Converts TriggerType enum ↔ String
- * - Converts TriggerEntity ↔ JSON String (via Gson)
- *
- * TODO:
- * - Add converters for other entities (MoodEntry, StrategyEntity, etc.)
- * - Consider switching to Kotlinx Serialization for type safety.
- */
 class Converters {
 
     private val gson = Gson()
@@ -32,7 +19,7 @@ class Converters {
     fun toIntList(data: String?): List<Int> =
         data?.split(",")?.mapNotNull { it.toIntOrNull() } ?: emptyList()
 
-    // LocalDate ↔ Long
+    // LocalDate ↔ Long (epochDay)
     @TypeConverter
     fun fromLocalDate(date: LocalDate?): Long? =
         date?.toEpochDay()

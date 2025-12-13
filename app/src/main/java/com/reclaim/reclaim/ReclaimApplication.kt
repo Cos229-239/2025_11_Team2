@@ -1,6 +1,7 @@
 package com.reclaim.reclaim
 
 import android.app.Application
+import com.google.firebase.FirebaseApp
 import dagger.hilt.android.HiltAndroidApp
 
 /**
@@ -12,4 +13,9 @@ import dagger.hilt.android.HiltAndroidApp
  */
 
 @HiltAndroidApp
-class ReclaimApplication : Application()
+class ReclaimApplication : Application(){
+    override fun onCreate() {
+        super.onCreate()
+        FirebaseApp.initializeApp(this)
+    }
+}

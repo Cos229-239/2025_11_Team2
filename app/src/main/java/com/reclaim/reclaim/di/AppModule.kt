@@ -26,16 +26,6 @@ import com.reclaim.reclaim.data.daos.UserDao
 object AppModule {
 
     @Provides
-    @Singleton
-    fun provideDatabase(@ApplicationContext context: Context): AppDatabase =
-        Room.databaseBuilder(
-            context,
-            AppDatabase::class.java,
-            "reclaim_database"
-        ).fallbackToDestructiveMigration()
-            .build()
-
-    @Provides
     fun provideTriggerDao(db: AppDatabase): TriggerDao = db.triggerDao()
 
     @Provides

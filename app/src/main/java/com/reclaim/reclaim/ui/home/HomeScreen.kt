@@ -37,6 +37,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.platform.LocalContext
 import androidx.glance.appwidget.updateAll
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.reclaim.reclaim.ui.components.MilestoneCelebrationCard
@@ -55,7 +56,7 @@ import java.time.ZoneId
 fun HomeScreen(
     name: String,
     navController: NavController,
-    viewModel: HomeViewModel = viewModel()
+    viewModel: HomeViewModel = hiltViewModel()
 ) {
     val soberTime by viewModel.soberTime.collectAsState()
     val affirmation by viewModel.affirmation.collectAsState()
@@ -189,7 +190,7 @@ fun HomeScreen(
                         val today = LocalDate.now()
                         if (!localDate.isAfter(today)) {   // reject future dates
                             coroutineScope.launch {
-                                viewModel.saveSoberStart(localDate)
+                                viewModel.saveSoberStart(context, localDate)
                                 SoberTimeWidget().updateAll(context)
                             }
                         } else {
