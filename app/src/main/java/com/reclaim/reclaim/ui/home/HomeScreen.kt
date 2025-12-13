@@ -36,12 +36,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.platform.LocalContext
+import androidx.glance.appwidget.updateAll
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.reclaim.reclaim.ui.components.MilestoneCelebrationCard
 import com.reclaim.reclaim.ui.components.NavigationGrid
 import com.reclaim.reclaim.ui.components.SoberTimeTracker
 import com.reclaim.reclaim.ui.viewmodels.HomeViewModel
+import com.reclaim.reclaim.ui.widget.SoberTimeWidget
 import kotlinx.coroutines.launch
 import java.time.Instant
 import java.time.LocalDate
@@ -188,6 +190,7 @@ fun HomeScreen(
                         if (!localDate.isAfter(today)) {   // reject future dates
                             coroutineScope.launch {
                                 viewModel.saveSoberStart(localDate)
+                                SoberTimeWidget().updateAll(context)
                             }
                         } else {
                             Toast.makeText(context, "Please select a date today or earlier", Toast.LENGTH_SHORT).show()
