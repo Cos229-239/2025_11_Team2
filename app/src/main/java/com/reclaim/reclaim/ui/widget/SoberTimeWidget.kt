@@ -19,6 +19,7 @@ import androidx.glance.layout.padding
 import androidx.glance.layout.wrapContentHeight
 import androidx.glance.text.Text
 import com.reclaim.reclaim.R
+import com.reclaim.reclaim.data.affirmations
 import com.reclaim.reclaim.ui.viewmodels.HomeViewModel
 import com.reclaim.reclaim.ui.viewmodels.dataStore
 import kotlinx.coroutines.flow.first
@@ -70,7 +71,13 @@ class SoberTimeWidget : GlanceAppWidget() {
                 )
                 Text(
                     text = "$totalDays total days sober",
-                    modifier = GlanceModifier.padding(top = 4.dp)
+                    modifier = GlanceModifier.padding(top = 8.dp)
+
+                )
+                Text(
+                    text = "${affirmations.random()}",
+                    modifier = GlanceModifier.padding(top = 8.dp),
+                    maxLines = 2
                 )
             }
         }
