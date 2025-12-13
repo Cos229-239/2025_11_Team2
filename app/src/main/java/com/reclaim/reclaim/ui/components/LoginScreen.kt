@@ -69,7 +69,7 @@ fun LoginScreen(
 
         Button(
             onClick = {
-                viewModel.loginUser(email, password) { success ->
+                viewModel.loginUser(email, password, context) { success ->
                     if (success) {
                         coroutineScope.launch {
                             SoberTimeWidget().updateAll(context)

@@ -58,14 +58,17 @@ class AuthRepository @Inject constructor(
 
     suspend fun updateSoberStart(uid: String, date: LocalDate): Result<Unit> {
         return try {
-            val userDoc = FirebaseFirestore.getInstance().collection("users").document(uid)
-            userDoc.update("soberStart", date.toString()).await()
+            val userDoc = users.document(uid)
+            userDoc.update("soberStartDate", date.toEpochDay()).await() // ✅ store epoch day
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)
         }
     }
 
-
     fun currentUid(): String? = auth.currentUser?.uid
+
+    fun logout() {
+        auth.signOut()
+    }
 }
