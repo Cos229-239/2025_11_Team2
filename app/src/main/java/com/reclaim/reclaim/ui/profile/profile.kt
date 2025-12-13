@@ -266,7 +266,15 @@ fun ProfileScreen (
                     label = { Text("Name") },
                     readOnly = !uiState.isEditingName,
                     modifier = Modifier.fillMaxWidth(),
-                    colors = WhiteTextFieldColors(),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        // You can customize colors here if you want
+                        focusedBorderColor = MaterialTheme.colorScheme.primary,
+                        unfocusedBorderColor = Color.Gray,
+                        // The container color is the background of the text field
+                        focusedContainerColor = Color.Transparent,
+                        unfocusedContainerColor = Color.Transparent,
+                        disabledContainerColor = Color.Transparent
+                    ),
                     trailingIcon = {
                         IconButton(onClick = { viewModel.onEditModeChange(!uiState.isEditingName) }) {
                             Icon(
@@ -325,7 +333,15 @@ fun ContactInformation(modifier: Modifier = Modifier) {
                 modifier = Modifier
                     .fillMaxWidth(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-                colors = WhiteTextFieldColors()
+                colors = OutlinedTextFieldDefaults.colors(
+                    // You can customize colors here if you want
+                    focusedBorderColor = MaterialTheme.colorScheme.primary,
+                    unfocusedBorderColor = Color.Gray,
+                    // The container color is the background of the text field
+                    focusedContainerColor = Color.Transparent,
+                    unfocusedContainerColor = Color.Transparent,
+                    disabledContainerColor = Color.Transparent
+                )
 
             )
 
@@ -342,7 +358,15 @@ fun ContactInformation(modifier: Modifier = Modifier) {
                 modifier = Modifier.fillMaxWidth(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
                 visualTransformation = PhoneNumberVisualTransformation(),
-                colors = WhiteTextFieldColors()
+                colors = OutlinedTextFieldDefaults.colors(
+                    // You can customize colors here if you want
+                    focusedBorderColor = MaterialTheme.colorScheme.primary,
+                    unfocusedBorderColor = Color.Gray,
+                    // The container color is the background of the text field
+                    focusedContainerColor = Color.Transparent,
+                    unfocusedContainerColor = Color.Transparent,
+                    disabledContainerColor = Color.Transparent
+                ),
             )
 
             Spacer(Modifier.height(8.dp))
@@ -353,7 +377,15 @@ fun ContactInformation(modifier: Modifier = Modifier) {
                 label = { Text("Sponsor's Email") },
                 modifier = Modifier.fillMaxWidth(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-                colors = WhiteTextFieldColors()
+                colors = OutlinedTextFieldDefaults.colors(
+                    // You can customize colors here if you want
+                    focusedBorderColor = MaterialTheme.colorScheme.primary,
+                    unfocusedBorderColor = Color.Gray,
+                    // The container color is the background of the text field
+                    focusedContainerColor = Color.Transparent,
+                    unfocusedContainerColor = Color.Transparent,
+                    disabledContainerColor = Color.Transparent
+                ),
             )
 
         } else {
