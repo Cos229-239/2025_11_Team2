@@ -76,8 +76,20 @@ class CopingStrategiesViewModel(application: Application) : AndroidViewModel(app
 
     fun addCustomStrategy(triggerName: String, strategy: String) {
         viewModelScope.launch {
-            val newStrategy = StrategyEntity(triggerName = triggerName, strategy = strategy)
+            val newStrategy = StrategyEntity(triggerName = triggerName, strategy = strategy, isCustom = true)
             dao.insertAll(listOf(newStrategy))
+        }
+    }
+
+    fun updateStrategy(updatedStrategy: StrategyEntity) {  // New for edit
+        viewModelScope.launch {
+            dao.update(updatedStrategy)
+        }
+    }
+
+    fun deleteStrategy(strategy: StrategyEntity) {  // New for delete
+        viewModelScope.launch {
+            dao.delete(strategy)
         }
     }
 }

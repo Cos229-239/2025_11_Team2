@@ -1,7 +1,7 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
 package com.reclaim.reclaim.ui.coping
-
+import androidx.compose.ui.graphics.Color
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -19,6 +19,8 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Lightbulb
 import androidx.compose.material.icons.automirrored.filled.VolumeUp
+import androidx.compose.material.icons.filled.Edit  // New for edit custom strategies
+import androidx.compose.material.icons.filled.Delete  // New for deleting custom strategies
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -26,7 +28,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -62,6 +63,8 @@ fun CopingStrategiesScreen(
     var showAddDialog by remember { mutableStateOf(false) }
     var newTriggerName by remember { mutableStateOf("") }
     var newStrategy by remember { mutableStateOf("") }
+    var strategyToEdit by remember { mutableStateOf<StrategyEntity?>(null) }  // NEW
+    var strategyToDelete by remember { mutableStateOf<StrategyEntity?>(null) }  // NEW
     var stats by remember { mutableStateOf<Pair<Int, Int>>(Pair(0, 0)) }
     LaunchedEffect(Unit) {
         viewModel.stats.collectLatest { stats = it }
@@ -118,6 +121,65 @@ fun CopingStrategiesScreen(
                 ) { Text("Add") }
             },
             dismissButton = { Button(onClick = { showAddDialog = false }) { Text("Cancel") } }
+        )
+    }
+
+    if (strategyToEdit != null) {
+        AlertDialog(
+            onDismissRequest = { strategyToEdit = null },
+            title = { Text("Edit Strategy") },
+            text = {
+                Column {
+                    TextField(
+                        value = newTriggerName,
+                        onValueChange = { newTriggerName = it },
+                        label = { Text("Trigger Name") }
+                    )
+                    Spacer(Modifier.height(8.dp))
+                    TextField(
+                        value = newStrategy,
+                        onValueChange = { newStrategy = it },
+                        label = { Text("Strategy Description") }
+                    )
+                }
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        if (newTriggerName.isNotBlank() && newStrategy.isNotBlank()) {
+                            val updated = strategyToEdit!!.copy(triggerName = newTriggerName, strategy = newStrategy)
+                            viewModel.updateStrategy(updated)
+                            strategyToEdit = null
+                            newTriggerName = ""
+                            newStrategy = ""
+                        }
+                    }
+                ) { Text("Save") }
+            },
+            dismissButton = { Button(onClick = { strategyToEdit = null }) { Text("Cancel") } }
+        )
+    }
+    LaunchedEffect(strategyToEdit) {
+        if (strategyToEdit != null) {
+            newTriggerName = strategyToEdit!!.triggerName
+            newStrategy = strategyToEdit!!.strategy
+        }
+    }
+
+    if (strategyToDelete != null) {
+        AlertDialog(
+            onDismissRequest = { strategyToDelete = null },
+            title = { Text("Delete Strategy?") },
+            text = { Text("Remove '${strategyToDelete!!.triggerName}'? This can't be undone.") },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        viewModel.deleteStrategy(strategyToDelete!!)
+                        strategyToDelete = null
+                    }
+                ) { Text("Delete") }
+            },
+            dismissButton = { Button(onClick = { strategyToDelete = null }) { Text("Cancel") } }
         )
     }
 
@@ -272,6 +334,14 @@ fun CopingStrategiesScreen(
                                                         Icons.AutoMirrored.Filled.VolumeUp,
                                                         contentDescription = "Read Aloud"
                                                     )
+                                                }
+                                                if (strategyItem.isCustom) {
+                                                    IconButton(onClick = { strategyToEdit = strategyItem }) {
+                                                        Icon(Icons.Filled.Edit, contentDescription = "Edit", tint = MaterialTheme.colorScheme.primary)
+                                                    }
+                                                    IconButton(onClick = { strategyToDelete = strategyItem }) {
+                                                        Icon(Icons.Filled.Delete, contentDescription = "Delete", tint = MaterialTheme.colorScheme.error)
+                                                    }
                                                 }
                                             }
                                         }

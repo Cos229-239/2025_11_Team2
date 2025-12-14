@@ -1,6 +1,5 @@
 package com.reclaim.reclaim.data.db
 
-
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
@@ -28,7 +27,7 @@ import com.reclaim.reclaim.data.entities.User
  * - Singleton instance managed via getDatabase().
  */
 
-@Database(entities = [JournalEntity::class, MilestoneEntity::class, MoodEntry::class, StrategyEntity::class, TriggerEntity::class, User::class], version = 6, exportSchema = true)
+@Database(entities = [JournalEntity::class, MilestoneEntity::class, MoodEntry::class, StrategyEntity::class, TriggerEntity::class, User::class], version = 7, exportSchema = true)  // Bumped to 7 for isCustom
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
 
@@ -38,10 +37,6 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun triggerDao(): TriggerDao
     abstract fun journalDao(): JournalDao
     abstract fun userDao(): UserDao
-
-
-
-
 
     companion object {
         @Volatile private var INSTANCE: AppDatabase? = null
