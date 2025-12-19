@@ -321,7 +321,7 @@ fun CopingStrategiesScreen(
                                             enter = fadeIn() + scaleIn(),
                                             exit = fadeOut() + scaleOut()
                                         ) {
-                                            Column {  // NEW: Wrap in Column to avoid horizontal overflow shift
+                                            Column {  // Inserted Column wrap here (replaces the original Row to prevent overflow and shift)
                                                 Text(
                                                     text = strategyItem.strategy,
                                                     style = MaterialTheme.typography.bodyMedium,
@@ -332,33 +332,69 @@ fun CopingStrategiesScreen(
                                                     modifier = Modifier.fillMaxWidth(),
                                                     horizontalArrangement = Arrangement.End  // NEW: Align icons to right
                                                 ) {
-                                                    IconButton(onClick = { tts.speak(strategyItem.strategy, TextToSpeech.QUEUE_FLUSH, null, null) }) {
-                                                        Icon(Icons.AutoMirrored.Filled.VolumeUp, contentDescription = "Read Aloud")
-                                                    }
                                                     IconButton(onClick = {
-                                                        val prefill = "Used ${strategyItem.strategy} for ${strategyItem.triggerName} today—how did it go?"
-                                                        navController.navigate("journal?initialText=${java.net.URLEncoder.encode(prefill, "UTF-8")}")
+                                                        tts.speak(
+                                                            strategyItem.strategy,
+                                                            TextToSpeech.QUEUE_FLUSH,
+                                                            null,
+                                                            null
+                                                        )
                                                     }) {
-                                                        Icon(Icons.Filled.NoteAdd, contentDescription = "Log This", tint = MaterialTheme.colorScheme.secondary)
+                                                        Icon(
+                                                            Icons.AutoMirrored.Filled.VolumeUp,
+                                                            contentDescription = "Read Aloud"
+                                                        )
+                                                    }
+                                                    Button(  // Insert this Button here (replaces invisible IconButton for visible "Log This" with text)
+                                                        onClick = {
+                                                            val prefill =
+                                                                "Used ${strategyItem.strategy} for ${strategyItem.triggerName} today—how did it go?"
+                                                            navController.navigate(
+                                                                "journal?initialText=${
+                                                                    java.net.URLEncoder.encode(
+                                                                        prefill,
+                                                                        "UTF-8"
+                                                                    )
+                                                                }"
+                                                            )
+                                                        },
+                                                        shape = RoundedCornerShape(8.dp),
+                                                        colors = ButtonDefaults.buttonColors(
+                                                            MaterialTheme.colorScheme.secondary
+                                                        )
+                                                    ) {
+                                                        Text("Log This")
                                                     }
                                                     if (strategyItem.isCustom) {
-                                                        IconButton(onClick = { strategyToEdit = strategyItem }) {
-                                                            Icon(Icons.Filled.Edit, contentDescription = "Edit", tint = MaterialTheme.colorScheme.primary)
+                                                        IconButton(onClick = {
+                                                            strategyToEdit = strategyItem
+                                                        }) {
+                                                            Icon(
+                                                                Icons.Filled.Edit,
+                                                                contentDescription = "Edit",
+                                                                tint = MaterialTheme.colorScheme.primary
+                                                            )
                                                         }
-                                                        IconButton(onClick = { strategyToDelete = strategyItem }) {
-                                                            Icon(Icons.Filled.Delete, contentDescription = "Delete", tint = MaterialTheme.colorScheme.error)
+                                                        IconButton(onClick = {
+                                                            strategyToDelete = strategyItem
+                                                        }) {
+                                                            Icon(
+                                                                Icons.Filled.Delete,
+                                                                contentDescription = "Delete",
+                                                                tint = MaterialTheme.colorScheme.error
+                                                            )
                                                         }
                                                     }
                                                 }
                                             }
                                         }
-                                    }
-                                    IconButton(onClick = { viewModel.toggleFavorite(strategyItem) }) {
-                                        Icon(
-                                            imageVector = if (strategyItem.isFavorite) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
-                                            contentDescription = "Toggle Favorite",
-                                            tint = if (strategyItem.isFavorite) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurface
-                                        )
+                                        IconButton(onClick = { viewModel.toggleFavorite(strategyItem) }) {
+                                            Icon(
+                                                imageVector = if (strategyItem.isFavorite) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
+                                                contentDescription = "Toggle Favorite",
+                                                tint = if (strategyItem.isFavorite) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurface
+                                            )
+                                        }
                                     }
                                 }
                             }
