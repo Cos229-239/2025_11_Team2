@@ -43,7 +43,7 @@ import androidx.compose.ui.Alignment
 import androidx.navigation.NavHostController
 import com.reclaim.reclaim.ui.components.HamburgerMenu
 import kotlinx.coroutines.launch
-
+import java.net.URLDecoder  // NEW: For decoding '+' appearing in pre-fill
 
 /**
  * JournalScreen
@@ -67,12 +67,13 @@ import kotlinx.coroutines.launch
 fun JournalScreen(
     name: String,
     navController: NavHostController,
-    viewModel: SavedJournals = viewModel()
+    viewModel: SavedJournals = viewModel(),
+    initialText: String = ""  // New (fixed): New param for pre-filling the entry field (defaults to empty)
 ) {
     val scope = rememberCoroutineScope()
     val drawerState = rememberDrawerState(DrawerValue.Closed)
 
-    var entry by remember { mutableStateOf("") }
+    var entry by remember { mutableStateOf(java.net.URLDecoder.decode(initialText, "UTF-8")) }  // Decodes to remove '+'
     val date = LocalDate.now().format(
         DateTimeFormatter.ofPattern("EEEE, MMM d")
     )

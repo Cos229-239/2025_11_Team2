@@ -19,8 +19,9 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Lightbulb
 import androidx.compose.material.icons.automirrored.filled.VolumeUp
-import androidx.compose.material.icons.filled.Edit  // New for edit custom strategies
-import androidx.compose.material.icons.filled.Delete  // New for deleting custom strategies
+import androidx.compose.material.icons.filled.Edit  // NEW: for edit custom strategies
+import androidx.compose.material.icons.filled.Delete  // NEW: for deleting custom strategies
+import androidx.compose.material.icons.filled.NoteAdd  // NEW: Icon for Log This
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -37,10 +38,12 @@ import android.speech.tts.TextToSpeech
 import androidx.compose.ui.platform.LocalContext
 import java.util.Locale
 import kotlinx.coroutines.flow.collectLatest
-
+import androidx.navigation.NavHostController  // NEW: For navigation
+import java.net.URLEncoder  // NEW: For encoding prefill text
 @Composable
 fun CopingStrategiesScreen(
     onBackClick: () -> Unit,
+    navController: NavHostController,  // NEW: Param for navigating to journal
     viewModel: CopingStrategiesViewModel = viewModel()
 ) {
     val strategies by viewModel.strategies.collectAsState(initial = emptyList())
@@ -147,7 +150,10 @@ fun CopingStrategiesScreen(
                 Button(
                     onClick = {
                         if (newTriggerName.isNotBlank() && newStrategy.isNotBlank()) {
-                            val updated = strategyToEdit!!.copy(triggerName = newTriggerName, strategy = newStrategy)
+                            val updated = strategyToEdit!!.copy(
+                                triggerName = newTriggerName,
+                                strategy = newStrategy
+                            )
                             viewModel.updateStrategy(updated)
                             strategyToEdit = null
                             newTriggerName = ""
@@ -315,32 +321,33 @@ fun CopingStrategiesScreen(
                                             enter = fadeIn() + scaleIn(),
                                             exit = fadeOut() + scaleOut()
                                         ) {
-                                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                            Column {  // NEW: Wrap in Column to avoid horizontal overflow shift
                                                 Text(
                                                     text = strategyItem.strategy,
                                                     style = MaterialTheme.typography.bodyMedium,
                                                     color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                                    modifier = Modifier.weight(1f)
+                                                    modifier = Modifier.fillMaxWidth()
                                                 )
-                                                IconButton(onClick = {
-                                                    tts.speak(
-                                                        strategyItem.strategy,
-                                                        TextToSpeech.QUEUE_FLUSH,
-                                                        null,
-                                                        null
-                                                    )
-                                                }) {
-                                                    Icon(
-                                                        Icons.AutoMirrored.Filled.VolumeUp,
-                                                        contentDescription = "Read Aloud"
-                                                    )
-                                                }
-                                                if (strategyItem.isCustom) {
-                                                    IconButton(onClick = { strategyToEdit = strategyItem }) {
-                                                        Icon(Icons.Filled.Edit, contentDescription = "Edit", tint = MaterialTheme.colorScheme.primary)
+                                                Row(
+                                                    modifier = Modifier.fillMaxWidth(),
+                                                    horizontalArrangement = Arrangement.End  // NEW: Align icons to right
+                                                ) {
+                                                    IconButton(onClick = { tts.speak(strategyItem.strategy, TextToSpeech.QUEUE_FLUSH, null, null) }) {
+                                                        Icon(Icons.AutoMirrored.Filled.VolumeUp, contentDescription = "Read Aloud")
                                                     }
-                                                    IconButton(onClick = { strategyToDelete = strategyItem }) {
-                                                        Icon(Icons.Filled.Delete, contentDescription = "Delete", tint = MaterialTheme.colorScheme.error)
+                                                    IconButton(onClick = {
+                                                        val prefill = "Used ${strategyItem.strategy} for ${strategyItem.triggerName} today—how did it go?"
+                                                        navController.navigate("journal?initialText=${java.net.URLEncoder.encode(prefill, "UTF-8")}")
+                                                    }) {
+                                                        Icon(Icons.Filled.NoteAdd, contentDescription = "Log This", tint = MaterialTheme.colorScheme.secondary)
+                                                    }
+                                                    if (strategyItem.isCustom) {
+                                                        IconButton(onClick = { strategyToEdit = strategyItem }) {
+                                                            Icon(Icons.Filled.Edit, contentDescription = "Edit", tint = MaterialTheme.colorScheme.primary)
+                                                        }
+                                                        IconButton(onClick = { strategyToDelete = strategyItem }) {
+                                                            Icon(Icons.Filled.Delete, contentDescription = "Delete", tint = MaterialTheme.colorScheme.error)
+                                                        }
                                                     }
                                                 }
                                             }
@@ -362,4 +369,3 @@ fun CopingStrategiesScreen(
         }
     }
 }
-

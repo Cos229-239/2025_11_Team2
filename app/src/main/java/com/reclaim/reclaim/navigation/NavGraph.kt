@@ -5,6 +5,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument  // ADDED: For navArgument
+import androidx.navigation.NavType  // ADDED: For NavType
 import com.reclaim.reclaim.ui.components.SplashScreen
 import com.reclaim.reclaim.ui.coping.CopingStrategiesScreen
 import com.reclaim.reclaim.ui.home.HomeScreen
@@ -51,15 +53,21 @@ fun NavGraph(
 
         composable(Screen.Strategies.route) {
             CopingStrategiesScreen(
-                onBackClick = { navController.popBackStack() }
+                onBackClick = { navController.popBackStack() },
+                navController = navController  // ADDED FIX: Pass navController to fix error
             )
         }
 
-        composable(Screen.Journal.route) {
+        composable(
+            route = "${Screen.Journal.route}?initialText={initialText}",
+            arguments = listOf(navArgument("initialText") { type = NavType.StringType; defaultValue = "" })  // Updated: Add arg for pre-fill
+        ) { backStackEntry ->
+            val initialText = backStackEntry.arguments?.getString("initialText") ?: ""
             JournalScreen(
                 name = name,
                 navController = navController,
-                viewModel = savedJournalsViewModel
+                viewModel = savedJournalsViewModel,
+                initialText = initialText  // Added: Pass to JournalScreen
             )
         }
 
