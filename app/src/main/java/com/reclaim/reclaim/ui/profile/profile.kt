@@ -15,7 +15,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -26,7 +25,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -43,16 +41,14 @@ import coil.compose.rememberAsyncImagePainter
 import com.reclaim.reclaim.R
 import com.reclaim.reclaim.navigation.Screen
 import com.reclaim.reclaim.ui.components.HamburgerMenu
-import com.reclaim.reclaim.ui.theme.WhiteTextFieldColors
 import com.reclaim.reclaim.ui.viewmodels.ProfileViewModel
 import kotlinx.coroutines.launch
 import java.io.File
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material.icons.filled.Notifications
-//import androidx.compose.material.icons.filled.Settings
+
 
 
 class PhoneNumberVisualTransformation : VisualTransformation {
@@ -211,7 +207,7 @@ fun ProfileScreen (
                                 }
 
                             )
-                            // You can add more DropdownMenuItems here later (e.g., for a "Settings" screen)
+
                         }
                     },
                     // --- END OF NEW PART ---
@@ -235,7 +231,7 @@ fun ProfileScreen (
                 Box(contentAlignment = Alignment.BottomEnd) {
                     Image(
                         painter = rememberAsyncImagePainter(
-                            model = uiState.profilePictureUri ?: R.drawable.reclaimcurrentpicture
+                            model = uiState.profilePictureUri ?: R.drawable.user
                         ),
                         contentDescription = "Profile picture",
                         modifier = Modifier
@@ -305,6 +301,53 @@ fun ContactInformation(modifier: Modifier = Modifier) {
     var sponsorName by remember { mutableStateOf("") }
     var sponsorPhoneNumber by remember { mutableStateOf("") }
     var sponsorEmail by remember { mutableStateOf("") }
+
+    val viewModel: ProfileViewModel = hiltViewModel()
+    val uiState by viewModel.uiState.collectAsState()
+    //var showMenu by remember { mutableStateOf(false) } // State for the dropdown menu
+    //var notificationsEnabled by remember { mutableStateOf(true) }
+    var showDialog by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+
+    val galleryLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent(),
+        onResult = { uri: Uri? ->
+            viewModel.onProfilePictureChanged(uri)
+            showDialog = false
+        }
+    )
+
+    val cameraImageUri: Uri = remember {
+        val file = File(context.cacheDir, "camera_photo.jpg")
+        FileProvider.getUriForFile(context, "com.reclaim.reclaim.fileprovider", file)
+    }
+
+    val cameraLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.TakePicture(),
+        onResult = { success ->
+            if(success) {
+                viewModel.onProfilePictureChanged(cameraImageUri)
+            }
+            showDialog = false
+        }
+    )
+    if(showDialog) {
+        AlertDialog(
+            onDismissRequest = { showDialog = false },
+            title = { Text("Update Profile Picture") },
+            text = { Text("Choose an option to update your profile picture") },
+            confirmButton = {
+                Button(onClick = { galleryLauncher.launch("image/*") }) {
+                    Text("From Gallery")
+                }
+            },
+            dismissButton = {
+                Button(onClick = { cameraLauncher.launch(cameraImageUri) }) {
+                    Text("From Camera")
+                }
+            }
+        )
+    }
 
     Column(
         modifier = modifier,
@@ -414,70 +457,99 @@ fun ContactInformation(modifier: Modifier = Modifier) {
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(
-                    text = "Before",
-                    style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier.padding(bottom = 4.dp)
-                )
-                Image(
-                    painter = painterResource(R.drawable.reclaimbeforepicture),
-                    contentDescription = "Before photo placeholder",
-                    modifier = Modifier
-                        .size(120.dp)
-                        .border(1.dp, Color.Gray)
-                )
-            }
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(
-                    text = "Current",
-                    style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier.padding(bottom = 4.dp)
-                )
-                Image(
-                    painter = painterResource(id = R.drawable.reclaimcurrentpicture),
-                    contentDescription = "Current photo placeholder",
-                    modifier = Modifier
-                        .size(120.dp)
-                        .border(1.dp, Color.Gray)
+                Box(contentAlignment = Alignment.BottomEnd) {
+                    Image(
+                        painter = rememberAsyncImagePainter(
+                            model = uiState.BeforePictureUri ?: R.drawable.user
+                        ),
+                        contentDescription = "before picture",
+                        modifier = Modifier
+                            .size(120.dp)
+                            .clip(CircleShape)
+                            .border(2.dp, Color.Gray, CircleShape),
+                    )
 
-                )
+                    IconButton(
+                        onClick = { showDialog = true },
+                        modifier = Modifier
+                            .size(30.dp)
+                            .clip(CircleShape)
+                            .background(MaterialTheme.colorScheme.primary)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Edit,
+                            contentDescription = "Edit",
+                            tint = MaterialTheme.colorScheme.onPrimary
+                        )
+                    }
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Box(contentAlignment = Alignment.BottomEnd) {
+                        Image(
+                            painter = rememberAsyncImagePainter(
+                                model = uiState.CurrentPictureUri ?: R.drawable.user
+                            ),
+                            contentDescription = "Current picture",
+                            modifier = Modifier
+                                .size(120.dp)
+                                .clip(CircleShape)
+                                .border(2.dp, Color.Gray, CircleShape),
+                        )
+
+                        IconButton(
+                            onClick = { showDialog = true },
+                            modifier = Modifier
+                                .size(30.dp)
+                                .clip(CircleShape)
+                                .background(MaterialTheme.colorScheme.primary)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Edit,
+                                contentDescription = "Edit",
+                                tint = MaterialTheme.colorScheme.onPrimary
+                            )
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Divider(
+                        thickness = 1.dp,
+                        color = Color.LightGray
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Text(
+                        text = "Emergency Contacts",
+                        style = MaterialTheme.typography.headlineMedium,
+                        fontWeight = FontWeight.SemiBold,
+                        modifier = Modifier
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Text(
+                        text = "Suicide Hotline: 1-800-273-8255",
+                        style = MaterialTheme.typography.bodySmall,
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    )
+                    Text(
+                        text = "Mental Health Helpline: 1-800-273-8255",
+                        style = MaterialTheme.typography.bodySmall,
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    )
+
+
+                    Text(
+                        text = "Substance Abuse Helpline: 1-800-273-8255",
+                        style = MaterialTheme.typography.bodySmall,
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    )
+                }
             }
         }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Divider(
-            thickness = 1.dp,
-            color = Color.LightGray
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Text(
-            text = "Emergency Contacts",
-            style = MaterialTheme.typography.headlineMedium,
-            fontWeight = FontWeight.SemiBold,
-            modifier = Modifier
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Text(
-            text = "Suicide Hotline: 1-800-273-8255",
-            style = MaterialTheme.typography.bodySmall,
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
-        Text(
-            text = "Mental Health Helpline: 1-800-273-8255",
-            style = MaterialTheme.typography.bodySmall,
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
-
-
-        Text(
-            text = "Substance Abuse Helpline: 1-800-273-8255",
-            style = MaterialTheme.typography.bodySmall,
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
     }
 }

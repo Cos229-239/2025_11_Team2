@@ -20,7 +20,9 @@ import javax.inject.Inject
 data class ProfileUiState(
     val userName: String = "",
     val isEditingName: Boolean = false,
-    val profilePictureUri: String? = null
+    val profilePictureUri: String? = null,
+    val BeforePictureUri: String? = null,
+    val CurrentPictureUri: String? = null
 )
 
 /**
