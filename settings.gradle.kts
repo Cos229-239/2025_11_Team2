@@ -21,3 +21,7 @@ dependencyResolutionManagement {
 
 rootProject.name = "Reclaim"
 include(":app")
+
+
+rootProject.name = "Reclaim"
+include(":app")

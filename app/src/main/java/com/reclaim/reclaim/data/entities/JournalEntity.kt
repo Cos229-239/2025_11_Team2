@@ -2,6 +2,8 @@ package com.reclaim.reclaim.data.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.google.firebase.firestore.ServerTimestamp
+
 
 /**
  * JournalEntity
@@ -22,6 +24,8 @@ data class  JournalEntity(
     val id: Int = 0,
     val text: String,
     val date: String,
-    val time: String
+    val time: String,
 
+    @ServerTimestamp
+    val createdAt: Long
 )

@@ -2,46 +2,8 @@
   "formatVersion": 1,
   "database": {
     "version": 7,
-    "identityHash": "d9edcc0470697a1db350526e6dfeea35",
+    "identityHash": "916172aeafe0203bd41679cc9000ef29",
     "entities": [
-      {
-        "tableName": "journals",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `text` TEXT NOT NULL, `date` TEXT NOT NULL, `time` TEXT NOT NULL)",
-        "fields": [
-          {
-            "fieldPath": "id",
-            "columnName": "id",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "text",
-            "columnName": "text",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "date",
-            "columnName": "date",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "time",
-            "columnName": "time",
-            "affinity": "TEXT",
-            "notNull": true
-          }
-        ],
-        "primaryKey": {
-          "autoGenerate": true,
-          "columnNames": [
-            "id"
-          ]
-        },
-        "indices": [],
-        "foreignKeys": []
-      },
       {
         "tableName": "milestones",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `dayCount` INTEGER NOT NULL, `dateReached` INTEGER NOT NULL)",
@@ -236,7 +198,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'd9edcc0470697a1db350526e6dfeea35')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '916172aeafe0203bd41679cc9000ef29')"
     ]
   }
 }

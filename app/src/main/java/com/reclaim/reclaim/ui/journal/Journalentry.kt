@@ -1,5 +1,6 @@
 package com.reclaim.reclaim.ui.journal
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
@@ -12,87 +13,54 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.reclaim.reclaim.R
-import com.reclaim.reclaim.ui.components.ProfileHeader
-import com.reclaim.reclaim.ui.theme.WhiteTextFieldColors
-import com.reclaim.reclaim.ui.viewmodels.SavedJournals
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import androidx.compose.material3.*
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
+import com.reclaim.reclaim.R
 import com.reclaim.reclaim.ui.components.HamburgerMenu
-import kotlinx.coroutines.launch
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.sp
 import com.reclaim.reclaim.ui.theme.CormorantGaramond
-
-
-/**
- * JournalScreen
- * -------------
- * Displays the user’s journal entries.
- * - Intended for daily reflections, mood tracking, and recovery notes.
- * - Will integrate with JournalEntity + JournalDao via Hilt.
- *
- * TODO:
- * - Fetch journal entries from Room using Hilt-injected ViewModel.
- * - Add UI for creating new entries (text field, save button).
- * - Display list of past entries with timestamps.
- * - Support editing/deleting entries.
- * - Add filtering (by date, mood, or tags).
- * - Consider adding AI-assisted suggestions for reflection prompts.
- * - Ensure accessibility (large text scaling, voice input).
- */
+import com.reclaim.reclaim.ui.viewmodels.SavedJournals
+import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun JournalScreen(
     name: String,
     navController: NavHostController,
-    viewModel: SavedJournals = viewModel()
+    // This is the most critical change.
+    // It uses Hilt to get the ViewModel that is connected to AuthRepository and the cloud.
+    viewModel: SavedJournals = hiltViewModel()
 ) {
     val scope = rememberCoroutineScope()
     val drawerState = rememberDrawerState(DrawerValue.Closed)
+    val context = LocalContext.current
 
-    var entry by remember { mutableStateOf("") }
-    val date = LocalDate.now().format(
-        DateTimeFormatter.ofPattern("EEEE, MMM d")
-    )
+    var entryText by remember { mutableStateOf("") }
+    val currentDate = remember {
+        LocalDate.now().format(DateTimeFormatter.ofPattern("EEEE, MMM d"))
+    }
 
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
             HamburgerMenu(
                 navController = navController,
-                currentRoute = "journal",
+                currentRoute = "journal", // Assuming "journal" is the route for this screen
                 onClose = { scope.launch { drawerState.close() } }
             )
         }
@@ -113,17 +81,24 @@ fun JournalScreen(
                         }
                     },
                     actions = {
+                        // This "Save" button is now correctly wired to the cloud.
                         TextButton(
                             onClick = {
-                                if (entry.isNotBlank()) {
-                                    viewModel.addEntry(entry, date)
-                                    navController.navigate("saved_journals")
+                                if (entryText.isNotBlank()) {
+                                    // This calls the ViewModel function that saves to Firestore.
+                                    viewModel.addEntry(entryText, currentDate)
+
+                                    // Give user feedback and navigate away.
+                                    Toast.makeText(context, "Journal entry saved!", Toast.LENGTH_SHORT).show()
+                                    navController.navigate("saved_journals") {
+                                        // Optional: Clear the back stack so the user can't go "back" to the entry they just saved.
+                                        popUpTo("journal") { inclusive = true }
+                                    }
+                                } else {
+                                    Toast.makeText(context, "Please write something before saving.", Toast.LENGTH_SHORT).show()
                                 }
                             },
-                            enabled = entry.isNotBlank(),
-                            colors = ButtonDefaults.textButtonColors(
-                                contentColor = MaterialTheme.colorScheme.primary
-                            )
+                            enabled = entryText.isNotBlank() // Button is disabled until the user types something.
                         ) {
                             Text("Save")
                         }
@@ -135,6 +110,7 @@ fun JournalScreen(
                 )
             }
         ) { innerPadding ->
+            // --- Your original UI layout is preserved below ---
             Column(
                 modifier = Modifier
                     .padding(innerPadding)
@@ -143,9 +119,7 @@ fun JournalScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Image(
-                    painter = rememberAsyncImagePainter(
-                        model = R.drawable.reclaimcurrentpicture
-                    ),
+                    painter = rememberAsyncImagePainter(model = R.drawable.reclaimcurrentpicture),
                     contentDescription = "Profile picture",
                     modifier = Modifier
                         .size(120.dp)
@@ -161,16 +135,16 @@ fun JournalScreen(
                 )
 
                 Text(
-                    text = date,
+                    text = currentDate,
                     style = MaterialTheme.typography.bodyMedium
                 )
 
                 OutlinedTextField(
-                    value = entry,
-                    onValueChange = { entry = it },
+                    value = entryText,
+                    onValueChange = { entryText = it },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(260.dp)   // give it a nice box height
+                        .height(260.dp)
                         .padding(top = 16.dp),
                     placeholder = {
                         Text(
@@ -195,7 +169,6 @@ fun JournalScreen(
                     )
                 )
 
-
                 Spacer(Modifier.height(16.dp))
 
                 Button(
@@ -209,7 +182,8 @@ fun JournalScreen(
                         text = "View saved journals",
                         fontFamily = CormorantGaramond,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 18.sp)
+                        fontSize = 18.sp
+                    )
                 }
             }
         }

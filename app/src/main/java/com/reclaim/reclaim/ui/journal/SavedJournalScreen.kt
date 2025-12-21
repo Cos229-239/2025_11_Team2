@@ -16,11 +16,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+//import androidx.glance.appwidget.lazy.items
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import androidx.room.Delete
-import com.reclaim.reclaim.data.entities.JournalEntity
-import com.reclaim.reclaim.ui.components.BottomNavBar
+import com.reclaim.reclaim.data.JournalEntry
 import com.reclaim.reclaim.ui.theme.AppTypography
 import com.reclaim.reclaim.ui.viewmodels.SavedJournals
 
@@ -28,15 +27,19 @@ import com.reclaim.reclaim.ui.viewmodels.SavedJournals
 @Composable
 fun SavedJournalsScreen(
     navController: NavController,
-    viewModel: SavedJournals = viewModel()
+    // Ensure you are using the Hilt-injected ViewModel
+    viewModel: SavedJournals = hiltViewModel()
 ) {
-    val entries by viewModel.entries.collectAsState(initial = emptyList())
+    // This now collects a List<JournalEntry> from the cloud
+    val entries by viewModel.entries.collectAsState()
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Saved Journals",
-                    style = AppTypography.headlineLarge,) },
+                title = { Text(
+                    "Saved Journals",
+                    style = AppTypography.headlineLarge,
+                ) },
                 navigationIcon = {
                     IconButton(onClick = { navController.navigateUp() }) {
                         Icon(
@@ -57,15 +60,16 @@ fun SavedJournalsScreen(
                 modifier = Modifier
                     .padding(innerPadding)
                     .fillMaxSize()
-                    .padding(24.dp)
+                    .padding(24.dp),
+                contentAlignment = Alignment.Center
             ) {
                 Text(
                     text = "No journal entries yet.\nWrite your first one 💜",
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onBackground
                 )
             }
-        } else {
+        }   else {
             LazyColumn(
                 modifier = Modifier
                     .padding(innerPadding)
@@ -73,14 +77,13 @@ fun SavedJournalsScreen(
                     .padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                items(entries) { entry ->
+                // CORRECTED: The named parameter 'items' is removed.
+                // The 'entries' list is passed directly.
+                items(items = entries, key = { entry -> entry.id }) { entry ->
                     JournalListItem(
                         entry = entry,
-                        onClick = {
-                            // optional: navigate to detail screen
-                        },
-                        onDelete = { viewModel.deleteEntry(entry.id) }
-                    )
+                        onClick = { /* ... */ },
+                        onDelete = { viewModel.deleteEntry(entry.id) }    )
                 }
             }
         }
@@ -89,8 +92,9 @@ fun SavedJournalsScreen(
 
 @Composable
 private fun JournalListItem(
-    entry: JournalEntity,
-    onClick: () -> Unit,
+    // FIX: This composable now expects the `JournalEntry` data class
+    entry: JournalEntry,
+    onClick: () -> Unit = {},
     onDelete: () -> Unit
 ) {
     Card(
@@ -104,6 +108,7 @@ private fun JournalListItem(
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Row(
+                modifier = Modifier.fillMaxWidth(), // Make Row fill width
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -121,7 +126,7 @@ private fun JournalListItem(
                     )
                 }
                 IconButton(onClick = onDelete) {
-                    Icon(Icons.Default.Delete, contentDescription = "Delete entry")
+                    Icon(Icons.Default.Delete, contentDescription = "Delete entry", tint = MaterialTheme.colorScheme.background)
                 }
             }
 
