@@ -30,12 +30,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.reclaim.reclaim.R
+import com.reclaim.reclaim.R  // Added: Import for R.drawable.user to fix unresolved R
 import com.reclaim.reclaim.ui.components.ProfileHeader
 import com.reclaim.reclaim.ui.theme.WhiteTextFieldColors
 import com.reclaim.reclaim.ui.viewmodels.SavedJournals
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import androidx.compose.material3.*
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.rememberCoroutineScope
@@ -43,7 +41,10 @@ import androidx.compose.ui.Alignment
 import androidx.navigation.NavHostController
 import com.reclaim.reclaim.ui.components.HamburgerMenu
 import kotlinx.coroutines.launch
-import java.net.URLDecoder  // NEW: For decoding '+' appearing in pre-fill
+import java.net.URLDecoder  // NEW: For decoding '+' in pre-fill
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+
 
 /**
  * JournalScreen
@@ -68,12 +69,12 @@ fun JournalScreen(
     name: String,
     navController: NavHostController,
     viewModel: SavedJournals = viewModel(),
-    initialText: String = ""  // New (fixed): New param for pre-filling the entry field (defaults to empty)
+    initialText: String = ""  // New: Pre-fill param
 ) {
     val scope = rememberCoroutineScope()
     val drawerState = rememberDrawerState(DrawerValue.Closed)
 
-    var entry by remember { mutableStateOf(java.net.URLDecoder.decode(initialText, "UTF-8")) }  // Decodes to remove '+'
+    var entry by remember { mutableStateOf(URLDecoder.decode(initialText, "UTF-8")) }  // Updated: Decode to fix '+' in pre-fill
     val date = LocalDate.now().format(
         DateTimeFormatter.ofPattern("EEEE, MMM d")
     )
@@ -176,4 +177,3 @@ fun JournalScreen(
         }
     }
 }
-

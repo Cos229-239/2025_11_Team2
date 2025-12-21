@@ -332,18 +332,8 @@ fun CopingStrategiesScreen(
                                                     modifier = Modifier.fillMaxWidth(),
                                                     horizontalArrangement = Arrangement.End  // NEW: Align icons to right
                                                 ) {
-                                                    IconButton(onClick = {
-                                                        tts.speak(
-                                                            strategyItem.strategy,
-                                                            TextToSpeech.QUEUE_FLUSH,
-                                                            null,
-                                                            null
-                                                        )
-                                                    }) {
-                                                        Icon(
-                                                            Icons.AutoMirrored.Filled.VolumeUp,
-                                                            contentDescription = "Read Aloud"
-                                                        )
+                                                    IconButton(onClick = { tts.speak(strategyItem.strategy, TextToSpeech.QUEUE_FLUSH, null, null) }) {
+                                                        Icon(Icons.AutoMirrored.Filled.VolumeUp, contentDescription = "Read Aloud")
                                                     }
                                                     Button(  // Insert this Button here (replaces invisible IconButton for visible "Log This" with text)
                                                         onClick = {
@@ -366,35 +356,23 @@ fun CopingStrategiesScreen(
                                                         Text("Log This")
                                                     }
                                                     if (strategyItem.isCustom) {
-                                                        IconButton(onClick = {
-                                                            strategyToEdit = strategyItem
-                                                        }) {
-                                                            Icon(
-                                                                Icons.Filled.Edit,
-                                                                contentDescription = "Edit",
-                                                                tint = MaterialTheme.colorScheme.primary
-                                                            )
+                                                        IconButton(onClick = { strategyToEdit = strategyItem }) {
+                                                            Icon(Icons.Filled.Edit, contentDescription = "Edit", tint = MaterialTheme.colorScheme.primary)
                                                         }
-                                                        IconButton(onClick = {
-                                                            strategyToDelete = strategyItem
-                                                        }) {
-                                                            Icon(
-                                                                Icons.Filled.Delete,
-                                                                contentDescription = "Delete",
-                                                                tint = MaterialTheme.colorScheme.error
-                                                            )
+                                                        IconButton(onClick = { strategyToDelete = strategyItem }) {
+                                                            Icon(Icons.Filled.Delete, contentDescription = "Delete", tint = MaterialTheme.colorScheme.error)
                                                         }
                                                     }
                                                 }
                                             }
                                         }
-                                        IconButton(onClick = { viewModel.toggleFavorite(strategyItem) }) {
-                                            Icon(
-                                                imageVector = if (strategyItem.isFavorite) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
-                                                contentDescription = "Toggle Favorite",
-                                                tint = if (strategyItem.isFavorite) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurface
-                                            )
-                                        }
+                                    }
+                                    IconButton(onClick = { viewModel.toggleFavorite(strategyItem) }) {
+                                        Icon(
+                                            imageVector = if (strategyItem.isFavorite) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
+                                            contentDescription = "Toggle Favorite",
+                                            tint = if (strategyItem.isFavorite) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurface
+                                        )
                                     }
                                 }
                             }
