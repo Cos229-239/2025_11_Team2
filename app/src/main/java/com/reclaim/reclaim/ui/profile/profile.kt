@@ -143,7 +143,7 @@ fun ProfileScreen (
         imageTypeToUpdate?.let { type ->
             viewModel.onImageChanged(uri, type)
         }
-        showDialog = false // Close the dialog
+        showDialog = false
     }
 
     // Launcher for taking a picture with the camera.
