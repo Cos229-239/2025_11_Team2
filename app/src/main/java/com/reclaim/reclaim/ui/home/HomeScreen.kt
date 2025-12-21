@@ -38,7 +38,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.platform.LocalContext
 import androidx.glance.appwidget.updateAll
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.reclaim.reclaim.ui.components.MilestoneCelebrationCard
 import com.reclaim.reclaim.ui.components.NavigationGrid
@@ -54,7 +53,6 @@ import java.time.ZoneId
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun HomeScreen(
-    name: String,
     navController: NavController,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
@@ -67,6 +65,8 @@ fun HomeScreen(
     var showDatePicker by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
+
+    val uiState by viewModel.uiState.collectAsState()
 
     val greeting = remember {
         val hour = LocalTime.now().hour
@@ -85,7 +85,7 @@ fun HomeScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp),
             contentPadding = PaddingValues(16.dp)
         ) {
-            item { Text("$greeting, $name 👋", style = MaterialTheme.typography.headlineMedium) }
+            item { Text("$greeting, ${uiState.userName} 👋", style = MaterialTheme.typography.headlineMedium) }
             item {
                 Text("Your affirmation", style = MaterialTheme.typography.headlineSmall)
                 Text(affirmation, style = MaterialTheme.typography.bodyLarge)

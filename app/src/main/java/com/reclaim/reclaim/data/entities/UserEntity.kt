@@ -4,14 +4,16 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "user_profile")
-data class User(
+data class UserEntity(
     // Use a fixed ID for a single-user profile to easily find it
     @PrimaryKey val id: Int = 1,
 
     val name: String,
 
     // Store the path (URI) to the image, not the image itself
-    val profilePictureUri: String? = null
+    val profilePictureUri: String?,
+    val BeforePictureUri: String?,
+    val CurrentPictureUri: String?
 )
 
 

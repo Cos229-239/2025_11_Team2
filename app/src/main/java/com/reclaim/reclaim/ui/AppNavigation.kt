@@ -17,7 +17,7 @@ fun AppNavHost(
         startDestination = "home"
     ) {
         composable("home") {
-            HomeScreen(name = name, navController = navController)
+            HomeScreen(navController = navController)
         }
         composable("coping") {
             CopingStrategiesScreen(

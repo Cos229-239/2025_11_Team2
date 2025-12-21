@@ -43,10 +43,7 @@ fun NavGraph(
         }
 
         composable(Screen.Home.route) {
-            HomeScreen(
-                name = name,
-                navController = navController
-            )
+            HomeScreen(navController = navController)
         }
 
         composable(Screen.Map.route) {
@@ -72,7 +69,7 @@ fun NavGraph(
 
         composable(Screen.Profile.route) {
             ProfileScreen(
-                name = name,
+                //name = name,
                 navController = navController
             )
         }

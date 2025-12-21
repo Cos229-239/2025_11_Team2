@@ -17,7 +17,7 @@ import com.reclaim.reclaim.data.entities.MilestoneEntity
 import com.reclaim.reclaim.data.entities.MoodEntry
 import com.reclaim.reclaim.data.entities.StrategyEntity
 import com.reclaim.reclaim.data.entities.TriggerEntity
-import com.reclaim.reclaim.data.entities.User
+import com.reclaim.reclaim.data.entities.UserEntity
 
 /**
  * AppDatabase
@@ -28,7 +28,7 @@ import com.reclaim.reclaim.data.entities.User
  * - Singleton instance managed via getDatabase().
  */
 
-@Database(entities = [JournalEntity::class, MilestoneEntity::class, MoodEntry::class, StrategyEntity::class, TriggerEntity::class, User::class], version = 7, exportSchema = true)
+@Database(entities = [JournalEntity::class, MilestoneEntity::class, MoodEntry::class, StrategyEntity::class, TriggerEntity::class, UserEntity::class], version = 8, exportSchema = true)
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
 

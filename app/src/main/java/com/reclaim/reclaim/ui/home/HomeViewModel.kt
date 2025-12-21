@@ -7,6 +7,7 @@ import androidx.datastore.preferences.preferencesDataStore
 import androidx.glance.appwidget.updateAll
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.auth.FirebaseAuth
 import com.reclaim.reclaim.data.AuthRepository
 import com.reclaim.reclaim.data.affirmations
 import com.reclaim.reclaim.data.daos.MilestoneDao
@@ -19,20 +20,30 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 import javax.inject.Inject
 
 val Context.dataStore by preferencesDataStore(name = "settings")
 
+data class HomeUiState(
+    val userName: String = "User" // Default name while loading
+)
+
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val authRepository: AuthRepository,
     private val moodDao: MoodDao,
     private val milestoneDao: MilestoneDao,
-    @ApplicationContext private val appContext: Context
+    @ApplicationContext private val appContext: Context,
+    // FIX: Inject FirebaseAuth to get the current user ID
+    private val auth: FirebaseAuth
 ) : ViewModel() {
+
+    private val _uiState = MutableStateFlow(HomeUiState())
+    val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
+
+    private val currentUserId: String? get() = auth.currentUser?.uid
 
     private val milestoneDays = listOf(1L, 3L, 7L, 30L, 60L, 90L, 180L, 365L, 730L)
 
@@ -40,7 +51,6 @@ class HomeViewModel @Inject constructor(
         val SOBER_START_DATE = longPreferencesKey("sober_start_date")
     }
 
-    // Flow of sober start date from DataStore
     private val soberStartDateFlow: Flow<LocalDate?> =
         appContext.dataStore.data.map { prefs ->
             prefs[PreferencesKeys.SOBER_START_DATE]?.let { LocalDate.ofEpochDay(it) }
@@ -58,10 +68,16 @@ class HomeViewModel @Inject constructor(
     val weeklyMoodHistory: Flow<List<MoodEntry>> =
         moodDao.getMoodsSince(LocalDate.now().minusDays(6))
 
+    // FIX: Combined the two init blocks into one for clarity
     init {
+        // Load user name from the cloud
+        loadUserProfile()
+
+        // Set today's affirmation
         val todayIndex = LocalDate.now().dayOfYear % affirmations.size
         affirmation.value = affirmations[todayIndex]
 
+        // Launch a coroutine for other initial data loading
         viewModelScope.launch {
             val today = LocalDate.now()
             val saved = moodDao.getMoodByDate(today)
@@ -72,6 +88,19 @@ class HomeViewModel @Inject constructor(
                 val updated = calculateSoberTime(effectiveDate)
                 _soberTime.value = updated
                 checkMilestone(updated)
+            }
+        }
+    }
+
+    private fun loadUserProfile() {
+        val userId = currentUserId ?: return
+        viewModelScope.launch {
+            authRepository.getUserProfile(userId).onSuccess { profile ->
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        userName = profile.name?.takeIf { it.isNotBlank() } ?: "User"
+                    )
+                }
             }
         }
     }
@@ -124,7 +153,4 @@ class HomeViewModel @Inject constructor(
     fun triggerMilestone(days: Long) {
         milestoneReached.value = days
     }
-
-
-
 }
