@@ -5,10 +5,30 @@ import com.google.gson.Gson
 import com.reclaim.reclaim.data.entities.TriggerEntity
 import com.reclaim.reclaim.data.model.TriggerType
 import java.time.LocalDate
+import java.util.Date // <-- Import java.util.Date for the new converter
 
+// FIX: Changed from 'annotation class' to a regular 'class'.
+// This is the correct way to define a collection of converters for Room.
 class Converters {
 
-    private val gson = Gson()
+    private val gson = Gson() // It's better to make this a private val
+
+    // --- Converter for java.util.Date ---
+    // This was missing and is needed for the 'createdAt' field in JournalEntity.
+    @TypeConverter
+    fun fromTimestamp(value: Long?): Date? {
+        // Converts a Long from the database back into a Date object.
+        return value?.let { Date(it) }
+    }
+
+    @TypeConverter
+    fun dateToTimestamp(date: Date?): Long? {
+        // Converts a Date object into a Long (milliseconds) to be stored in the database.
+        return date?.time
+    }
+    // ------------------------------------
+
+    // --- Your Existing Converters (They are correct) ---
 
     // List<Int> ↔ String
     @TypeConverter

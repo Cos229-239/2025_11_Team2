@@ -1,3 +1,5 @@
+
+
 plugins {
     alias(libs.plugins.android.application)   // Android application plugin
     alias(libs.plugins.kotlin.android)        // Kotlin Android support
@@ -55,68 +57,68 @@ android {
     kotlinOptions {
         jvmTarget = "11"
         languageVersion = "1.9"
+        freeCompilerArgs += "-opt-in=androidx.compose.material3.ExperimentalMaterial3Api"
     }
 }
 
 dependencies {
-    // Core + lifecycle
+    // Core & Lifecycle
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
-    implementation("com.google.code.gson:gson:2.10.1")
-    implementation("androidx.work:work-runtime-ktx:2.9.0")
+    // WorkManager for background tasks
+    implementation(libs.androidx.work.runtime.ktx)
 
-    //Firebase
-    implementation (platform("com.google.firebase:firebase-bom:33.4.0"))
-    implementation ("com.google.firebase:firebase-auth-ktx")
-    implementation ("com.google.firebase:firebase-firestore-ktx")
-
-
-    // Compose BOM ensures consistent versions
+    // --- Compose Dependencies ---
     implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.compose.ui)
-    implementation(libs.androidx.compose.ui.graphics)
-    implementation(libs.androidx.compose.ui.tooling.preview)
-    implementation(libs.androidx.compose.runtime)
-    implementation(libs.androidx.compose.foundation)
-    implementation(libs.androidx.runtime)
 
-    implementation(libs.androidx.compose.material3)
+    // Use the newly defined alias for DataStore
+    implementation(libs.androidx.datastore.preferences)
+
+    // ... other Compose libraries
+    implementation("androidx.compose.ui:ui")
+    implementation("androidx.compose.ui:ui-graphics")
+    implementation("androidx.compose.ui:ui-tooling-preview")
+    implementation("androidx.compose.material3:material3")
+    implementation("androidx.compose.material:material-icons-extended") // For extra icons
+
+    // Glance for App Widgets
+    implementation(libs.androidx.glance.appwidget)
+
+    // Add this line for Accompanist Flow Layout
+    implementation(libs.accompanist.flowlayout)
 
     // Navigation
-    implementation("androidx.navigation:navigation-compose:2.9.5")
-    implementation(libs.androidx.navigation.runtime.ktx)
+    implementation(libs.androidx.navigation.compose)
 
-    // Room
-    implementation("androidx.room:room-runtime:2.6.1")
-    implementation(libs.androidx.foundation)
-    implementation(libs.ui)
-    implementation(libs.androidx.material3)
-    implementation(libs.firebase.storage)
-    kapt("androidx.room:room-compiler:2.6.1")
-    implementation("androidx.room:room-ktx:2.6.1")
+    // Hilt for Dependency Injection
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler)
+    implementation(libs.androidx.hilt.navigation.compose)
 
-    // Kotlin stdlib
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.22")
+    // Firebase
+    // Import the Firebase BOM to manage Firebase library versions
+    implementation(platform(libs.firebase.bom))
+    implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.firebase:firebase-firestore")
+    implementation("com.google.firebase:firebase-storage")
 
-    // Accompanist
-    implementation("com.google.accompanist:accompanist-flowlayout:0.30.1")
+    // Other essential libraries
+    implementation(libs.coil.compose)
+    implementation(libs.gson)
 
-    // Material icons (extended set)
-    implementation("androidx.compose.material:material-icons-extended")
-    implementation("androidx.glance:glance-appwidget:1.0.0")
-    // Hilt (DI)
-    implementation("com.google.dagger:hilt-android:2.51.1")
-    kapt("com.google.dagger:hilt-compiler:2.51.1")
-    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
-    implementation("io.coil-kt:coil-compose:2.6.0")
+    // We are removing Room for now to eliminate it as a source of crashes.
+    // If you need it for other features, we can add it back later.
+     implementation(libs.androidx.room.runtime)
+     implementation(libs.androidx.room.ktx)
+     kapt(libs.androidx.room.compiler)
 
     // Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.compose.ui.test.junit4)
-    debugImplementation(libs.androidx.compose.ui.tooling)
-    debugImplementation(libs.androidx.compose.ui.test.manifest)
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
+    debugImplementation("androidx.compose.ui:ui-tooling")
+    debugImplementation("androidx.compose.ui:ui-test-manifest")
 }
