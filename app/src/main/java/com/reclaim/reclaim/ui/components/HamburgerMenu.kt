@@ -84,9 +84,9 @@ fun HamburgerMenu(
 
         NavigationDrawerItem(
             label = { Text("Trigger Map") },
-            selected = currentRoute == "triggerMap",
+            selected = currentRoute == "map",
             onClick = {
-                navController.navigate("triggerMap")
+                navController.navigate("map")
                 onClose()
             },
             icon = { Icon(Icons.Filled.Map, contentDescription = "Trigger Map") },
