@@ -39,11 +39,11 @@ fun triggerColor(trigger: TriggerType): Color {
         TriggerType.SOCIAL_EVENTS -> scheme.outline
         TriggerType.HEALTH        -> scheme.secondary.copy(alpha = 0.8f)
         TriggerType.LIFE_CHANGES  -> scheme.surfaceVariant
-        TriggerType.EMOTIONAL -> TODO()
-        TriggerType.PHYSICAL -> TODO()
-        TriggerType.ENVIRONMENTAL -> TODO()
-        TriggerType.SOCIAL -> TODO()
-        TriggerType.COGNITIVE -> TODO()
+        TriggerType.EMOTIONAL -> scheme.primary.copy(alpha = 0.7f)
+        TriggerType.PHYSICAL -> scheme.primary
+        TriggerType.ENVIRONMENTAL -> scheme.surfaceVariant
+        TriggerType.SOCIAL -> scheme.surfaceVariant
+        TriggerType.COGNITIVE -> scheme.primary.copy(alpha = 0.7f)
     }
 }
 

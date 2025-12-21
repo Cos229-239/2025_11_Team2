@@ -1,28 +1,62 @@
 package com.reclaim.reclaim.ui.viewmodels
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import android.content.Context
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.longPreferencesKey
+import androidx.datastore.preferences.preferencesDataStore
+import androidx.glance.appwidget.updateAll
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.auth.FirebaseAuth
+import com.reclaim.reclaim.data.AuthRepository
 import com.reclaim.reclaim.data.affirmations
-import com.reclaim.reclaim.data.db.AppDatabase
-import com.reclaim.reclaim.data.entities.MoodEntry
+import com.reclaim.reclaim.data.daos.MilestoneDao
+import com.reclaim.reclaim.data.daos.MoodDao
 import com.reclaim.reclaim.data.entities.MilestoneEntity
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import com.reclaim.reclaim.data.entities.MoodEntry
+import com.reclaim.reclaim.model.SoberTime
+import com.reclaim.reclaim.ui.widget.SoberTimeWidget
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
-import com.reclaim.reclaim.model.SoberTime
-import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class HomeViewModel(application: Application) : AndroidViewModel(application) {
+val Context.dataStore by preferencesDataStore(name = "settings")
 
-    private val moodDao = AppDatabase.getDatabase(application).moodDao()
-    private val milestoneDao = AppDatabase.getDatabase(application).milestoneDao()
-    private val soberStartDate = LocalDate.of(2024, 8, 25)
+data class HomeUiState(
+    val userName: String = "User" // Default name while loading
+)
+
+@HiltViewModel
+class HomeViewModel @Inject constructor(
+    private val authRepository: AuthRepository,
+    private val moodDao: MoodDao,
+    private val milestoneDao: MilestoneDao,
+    @ApplicationContext private val appContext: Context,
+    // FIX: Inject FirebaseAuth to get the current user ID
+    private val auth: FirebaseAuth
+) : ViewModel() {
+
+    private val _uiState = MutableStateFlow(HomeUiState())
+    val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
+
+    private val currentUserId: String? get() = auth.currentUser?.uid
+
     private val milestoneDays = listOf(1L, 3L, 7L, 30L, 60L, 90L, 180L, 365L, 730L)
 
-    private val _soberTime = MutableStateFlow(calculateSoberTime(soberStartDate))
+    object PreferencesKeys {
+        val SOBER_START_DATE = longPreferencesKey("sober_start_date")
+    }
+
+    private val soberStartDateFlow: Flow<LocalDate?> =
+        appContext.dataStore.data.map { prefs ->
+            prefs[PreferencesKeys.SOBER_START_DATE]?.let { LocalDate.ofEpochDay(it) }
+        }
+
+    private val _soberTime = MutableStateFlow(SoberTime(0, 0, 0, 0))
     val soberTime: StateFlow<SoberTime> = _soberTime
 
     val affirmationsList = affirmations
@@ -31,17 +65,43 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     val milestoneReached = MutableStateFlow<Long?>(null)
 
     val moodHistory: Flow<List<MoodEntry>> = moodDao.getAllMoods()
-    val weeklyMoodHistory: Flow<List<MoodEntry>> = moodDao.getMoodsSince(LocalDate.now().minusDays(6))
+    val weeklyMoodHistory: Flow<List<MoodEntry>> =
+        moodDao.getMoodsSince(LocalDate.now().minusDays(6))
 
+    // FIX: Combined the two init blocks into one for clarity
     init {
+        // Load user name from the cloud
+        loadUserProfile()
+
+        // Set today's affirmation
         val todayIndex = LocalDate.now().dayOfYear % affirmations.size
         affirmation.value = affirmations[todayIndex]
 
+        // Launch a coroutine for other initial data loading
         viewModelScope.launch {
             val today = LocalDate.now()
             val saved = moodDao.getMoodByDate(today)
             mood.value = saved?.mood
-            refreshSoberTime() // ✅ recalc and check milestone
+
+            soberStartDateFlow.collect { startDate ->
+                val effectiveDate = startDate ?: LocalDate.now()
+                val updated = calculateSoberTime(effectiveDate)
+                _soberTime.value = updated
+                checkMilestone(updated)
+            }
+        }
+    }
+
+    private fun loadUserProfile() {
+        val userId = currentUserId ?: return
+        viewModelScope.launch {
+            authRepository.getUserProfile(userId).onSuccess { profile ->
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        userName = profile.name?.takeIf { it.isNotBlank() } ?: "User"
+                    )
+                }
+            }
         }
     }
 
@@ -53,26 +113,26 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun refreshSoberTime() {
-        val updated = calculateSoberTime(soberStartDate)
-        _soberTime.value = updated
-        viewModelScope.launch { checkMilestone(updated) }
+    fun saveSoberStart(context: Context, date: LocalDate) {
+        viewModelScope.launch {
+            val uid = authRepository.currentUid() ?: return@launch
+            val result = authRepository.updateSoberStart(uid, date)
+            result.onSuccess {
+                context.dataStore.edit { prefs ->
+                    prefs[PreferencesKeys.SOBER_START_DATE] = date.toEpochDay()
+                }
+                SoberTimeWidget().updateAll(context)
+            }
+        }
     }
 
     private fun calculateSoberTime(startDate: LocalDate): SoberTime {
         val now = LocalDate.now()
         val totalDays = ChronoUnit.DAYS.between(startDate, now)
-
         val years = totalDays / 365
         val months = (totalDays % 365) / 30
         val days = (totalDays % 365) % 30
-
-        return SoberTime(
-            years = years.toInt(),
-            months = months.toInt(),
-            days = days.toInt(),
-            totalDays = totalDays
-        )
+        return SoberTime(years.toInt(), months.toInt(), days.toInt(), totalDays)
     }
 
     private suspend fun checkMilestone(soberTime: SoberTime) {
@@ -90,10 +150,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    // Debug helper(delete later when not need along with the debug code in HomeScreen.kt)
     fun triggerMilestone(days: Long) {
         milestoneReached.value = days
     }
-
-
 }

@@ -21,6 +21,7 @@ import androidx.navigation.NavController
 import androidx.room.Delete
 import com.reclaim.reclaim.data.entities.JournalEntity
 import com.reclaim.reclaim.ui.components.BottomNavBar
+import com.reclaim.reclaim.ui.theme.AppTypography
 import com.reclaim.reclaim.ui.viewmodels.SavedJournals
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -35,22 +36,21 @@ fun SavedJournalsScreen(
         topBar = {
             TopAppBar(
                 title = { Text("Saved Journals",
-                    color = MaterialTheme.colorScheme.onPrimary) },
+                    style = AppTypography.headlineLarge,) },
                 navigationIcon = {
                     IconButton(onClick = { navController.navigateUp() }) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
                             contentDescription = "Back",
-                            tint = MaterialTheme.colorScheme.onPrimary
+                            tint = MaterialTheme.colorScheme.secondary
                         )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primary
+                    containerColor = MaterialTheme.colorScheme.background
                 )
             )
         },
-        bottomBar = { BottomNavBar(navController = navController) }
     ) { innerPadding ->
         if (entries.isEmpty()) {
             Box(
@@ -98,7 +98,7 @@ private fun JournalListItem(
             .fillMaxWidth()
             .clickable { onClick() },
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
+            containerColor = MaterialTheme.colorScheme.secondary
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
@@ -111,13 +111,13 @@ private fun JournalListItem(
                     Text(
                         text = entry.date,
                         style = MaterialTheme.typography.labelMedium,
-                        fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.secondary
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.background
                     )
                     Text(
                         text = entry.time,
                         style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.tertiary
+                        color = MaterialTheme.colorScheme.background
                     )
                 }
                 IconButton(onClick = onDelete) {

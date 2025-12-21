@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 7,
-    "identityHash": "18c3ce9c801fb28bb45a3cfa2b4dd7fe",
+    "identityHash": "d9edcc0470697a1db350526e6dfeea35",
     "entities": [
       {
         "tableName": "journals",
@@ -107,8 +107,8 @@
         "foreignKeys": []
       },
       {
-        "tableName": "StrategyEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `triggerName` TEXT NOT NULL, `strategy` TEXT NOT NULL, `isFavorite` INTEGER NOT NULL, `isCustom` INTEGER NOT NULL)",
+        "tableName": "strategies",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `triggerName` TEXT NOT NULL, `strategy` TEXT NOT NULL, `isFavorite` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -131,12 +131,6 @@
           {
             "fieldPath": "isFavorite",
             "columnName": "isFavorite",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "isCustom",
-            "columnName": "isCustom",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -196,7 +190,7 @@
       },
       {
         "tableName": "user_profile",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `name` TEXT NOT NULL, `profilePictureUri` TEXT, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `name` TEXT NOT NULL, `profilePictureUri` TEXT, `BeforePictureUri` TEXT, `CurrentPictureUri` TEXT, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -215,6 +209,18 @@
             "columnName": "profilePictureUri",
             "affinity": "TEXT",
             "notNull": false
+          },
+          {
+            "fieldPath": "BeforePictureUri",
+            "columnName": "BeforePictureUri",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "CurrentPictureUri",
+            "columnName": "CurrentPictureUri",
+            "affinity": "TEXT",
+            "notNull": false
           }
         ],
         "primaryKey": {
@@ -230,7 +236,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '18c3ce9c801fb28bb45a3cfa2b4dd7fe')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'd9edcc0470697a1db350526e6dfeea35')"
     ]
   }
 }

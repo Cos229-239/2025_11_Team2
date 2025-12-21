@@ -5,27 +5,31 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.navArgument  // ADDED: For navArgument
-import androidx.navigation.NavType  // ADDED: For NavType
+import com.reclaim.reclaim.ui.components.LoginScreen
 import com.reclaim.reclaim.ui.components.SplashScreen
 import com.reclaim.reclaim.ui.coping.CopingStrategiesScreen
 import com.reclaim.reclaim.ui.home.HomeScreen
 import com.reclaim.reclaim.ui.journal.JournalScreen
 import com.reclaim.reclaim.ui.journal.SavedJournalsScreen
 import com.reclaim.reclaim.ui.profile.ProfileScreen
+import com.reclaim.reclaim.ui.settings.SettingsScreen
 import com.reclaim.reclaim.ui.trigger.TriggerMapScreen
+import com.reclaim.reclaim.ui.viewmodels.HomeViewModel
 import com.reclaim.reclaim.ui.viewmodels.SavedJournals
+import com.reclaim.reclaim.ui.components.SignUpScreen // <-- Import the new screen
+
 
 @Composable
 fun NavGraph(
     navController: NavHostController,
-    name: String
+    name: String,
+    viewModel: HomeViewModel = viewModel()
 ) {
     val savedJournalsViewModel: SavedJournals = viewModel()
 
     NavHost(
         navController = navController,
-        startDestination = Screen.Splash.route
+        startDestination = Screen.Login.route
     ) {
         // ---------- Splash ----------
         composable(Screen.Splash.route) {
@@ -39,10 +43,7 @@ fun NavGraph(
         }
 
         composable(Screen.Home.route) {
-            HomeScreen(
-                name = name,
-                navController = navController
-            )
+            HomeScreen(navController = navController)
         }
 
         composable(Screen.Map.route) {
@@ -53,27 +54,22 @@ fun NavGraph(
 
         composable(Screen.Strategies.route) {
             CopingStrategiesScreen(
-                onBackClick = { navController.popBackStack() },
-                navController = navController  // ADDED FIX: Pass navController to fix error
+                navController = navController,
+                onBackClick = { navController.popBackStack() }
             )
         }
 
-        composable(
-            route = "${Screen.Journal.route}?initialText={initialText}",
-            arguments = listOf(navArgument("initialText") { type = NavType.StringType; defaultValue = "" })  // Updated: Add arg for pre-fill
-        ) { backStackEntry ->
-            val initialText = backStackEntry.arguments?.getString("initialText") ?: ""
+        composable(Screen.Journal.route) {
             JournalScreen(
                 name = name,
                 navController = navController,
-                viewModel = savedJournalsViewModel,
-                initialText = initialText  // Added: Pass to JournalScreen
+                viewModel = savedJournalsViewModel
             )
         }
 
         composable(Screen.Profile.route) {
             ProfileScreen(
-                name = name,
+                //name = name,
                 navController = navController
             )
         }
@@ -83,6 +79,18 @@ fun NavGraph(
                 navController = navController,
                 viewModel = savedJournalsViewModel
             )
+        }
+
+        composable(Screen.Settings.route) {
+            SettingsScreen(
+                navController = navController
+            )
+        }
+        composable(Screen.Login.route) {
+            LoginScreen(navController = navController)
+        }
+        composable(Screen.SignUp.route) {
+            SignUpScreen(navController = navController)
         }
     }
 }

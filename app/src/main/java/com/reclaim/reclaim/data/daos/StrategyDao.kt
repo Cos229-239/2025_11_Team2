@@ -14,6 +14,9 @@ interface StrategyDao {
     @Query("SELECT * FROM StrategyEntity")
     fun getAllStrategies(): Flow<List<StrategyEntity>>
 
+    @Insert
+    suspend fun insert(strategy: StrategyEntity)
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(strategies: List<StrategyEntity>)
 

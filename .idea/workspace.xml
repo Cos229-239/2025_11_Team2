@@ -4,18 +4,45 @@
     <shared>
       <config />
     </shared>
+    <layouts>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/drawable/ic_launcher_background.xml">
+        <config>
+          <theme>@style/Theme.Reclaim</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/drawable/ic_launcher_round_foreground.xml">
+        <config>
+          <theme>@style/Theme.Reclaim</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/drawable/usericon.xml">
+        <config>
+          <theme>@style/Theme.Reclaim</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml">
+        <config>
+          <theme>@style/Theme.Reclaim</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round_round.xml">
+        <config>
+          <theme>@style/Theme.Reclaim</theme>
+        </config>
+      </layout>
+    </layouts>
   </component>
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3e3e4e22-4395-422b-83cf-f6a32f180c4f" name="Changes" comment="Added &quot;Log This&quot; function to strategies screen. This allows users to &quot;log&quot; a coping strategy they used for the day into a journal entry with the click of a button.">
+    <list default="true" id="3e3e4e22-4395-422b-83cf-f6a32f180c4f" name="Changes" comment="hamburger menu updated and fixed">
       <change beforePath="$PROJECT_DIR$/.gradle/8.13/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.13/executionHistory/executionHistory.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/8.13/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.13/fileHashes/fileHashes.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/8.13/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.13/fileHashes/fileHashes.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/reclaim/reclaim/ui/coping/CopingStrategiesScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/reclaim/reclaim/ui/coping/CopingStrategiesScreen.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/reclaim/reclaim/ui/components/HamburgerMenu.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/reclaim/reclaim/ui/components/HamburgerMenu.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -25,7 +52,7 @@
   <component name="ClangdSettings">
     <option name="formatViaClangd" value="false" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[DeviceId(pluginId=LocalEmulator, isTemplate=false, identifier=path=C:\Users\George\.android\avd\Medium_Phone.avd)]" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[DeviceId(pluginId=LocalEmulator, isTemplate=false, identifier=path=C:\Users\myamr\.android\avd\Medium_Phone.avd)]" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
@@ -57,6 +84,7 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="resourceFile" />
         <option value="Kotlin File" />
       </list>
     </option>
@@ -91,10 +119,10 @@
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/Cos229-239/2025_11_Team2.git&quot;,
-    &quot;accountId&quot;: &quot;e17a24d4-dba5-434d-9ffd-1b1c7991cb81&quot;
+    &quot;accountId&quot;: &quot;874f6b63-da77-4735-9dae-8e91cae8ee88&quot;
   }
 }</component>
-  <component name="GradleScriptDefinitionsStorage" workingDir="$PROJECT_DIR$" gradleHome="C:\Users\George\.gradle\caches\8.13\wrapper\dists\gradle-8.13-bin\5xuhj0ry160q40clulazy9h7d\gradle-8.13" javaHome="C:\Program Files\Android\Android Studio\jbr" gradleVersion="8.13" />
+  <component name="GradleScriptDefinitionsStorage" workingDir="$PROJECT_DIR$" gradleHome="C:\Users\myamr\.gradle\wrapper\dists\gradle-8.13-bin\5xuhj0ry160q40clulazy9h7d\gradle-8.13" javaHome="C:\Users\myamr\Desktop\android\jbr" gradleVersion="8.13" />
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
   </component>
@@ -115,16 +143,17 @@
     &quot;Android App.app.executor&quot;: &quot;Run&quot;,
     &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
     &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
     &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;Personal__George&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;dev&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;/Users/stalkytwig1987/StudioProjects/2025_11_Team2/app/src/main/res/drawable&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settingsdialog.project.gradle&quot;
   }
 }</component>
   <component name="RecentsManager">
@@ -363,91 +392,136 @@
       <option name="project" value="LOCAL" />
       <updated>1763834851659</updated>
     </task>
-    <task id="LOCAL-00009" summary="Added Quick Tip Button and Voice Readout for Coping Strategies Screen">
+    <task id="LOCAL-00009" summary="Fixed merge">
       <option name="closed" value="true" />
-      <created>1764214379678</created>
+      <created>1763872165053</created>
       <option name="number" value="00009" />
       <option name="presentableId" value="LOCAL-00009" />
       <option name="project" value="LOCAL" />
-      <updated>1764214379678</updated>
+      <updated>1763872165053</updated>
     </task>
-    <task id="LOCAL-00010" summary="Added &quot;Custom Stategy&quot; button and a counter for favorited strategies. Op check good">
+    <task id="LOCAL-00010" summary="JournalDao.kt, JournalEntity.kt, ability to save journal entries, and started changing colors">
       <option name="closed" value="true" />
-      <created>1765077269500</created>
+      <created>1764215306671</created>
       <option name="number" value="00010" />
       <option name="presentableId" value="LOCAL-00010" />
       <option name="project" value="LOCAL" />
-      <updated>1765077269500</updated>
+      <updated>1764215306671</updated>
     </task>
-    <task id="LOCAL-00011" summary="Added &quot;Custom Stategy&quot; button and a counter for favorited strategies. Op check good">
+    <task id="LOCAL-00011" summary="JournalDao.kt, JournalEntity.kt, ability to save journal entries, and started changing colors">
       <option name="closed" value="true" />
-      <created>1765077462305</created>
+      <created>1764215317505</created>
       <option name="number" value="00011" />
       <option name="presentableId" value="LOCAL-00011" />
       <option name="project" value="LOCAL" />
-      <updated>1765077462305</updated>
+      <updated>1764215317505</updated>
     </task>
-    <task id="LOCAL-00012" summary="merged dev into personal George">
+    <task id="LOCAL-00012" summary="Put the background color back due to clashing with buttons">
       <option name="closed" value="true" />
-      <created>1765144443504</created>
+      <created>1764346988175</created>
       <option name="number" value="00012" />
       <option name="presentableId" value="LOCAL-00012" />
       <option name="project" value="LOCAL" />
-      <updated>1765144443504</updated>
+      <updated>1764346988175</updated>
     </task>
-    <task id="LOCAL-00013" summary="merged dev into personal George">
+    <task id="LOCAL-00013" summary="Moved the affirmations list to its own file, Affirmations.kt, to be able to be easily reused, like in the MilestoneCelebrationCard.kt, and I added to the Theme.kt a default text field to be reused on all text fields">
       <option name="closed" value="true" />
-      <created>1765446726361</created>
+      <created>1764353849305</created>
       <option name="number" value="00013" />
       <option name="presentableId" value="LOCAL-00013" />
       <option name="project" value="LOCAL" />
-      <updated>1765446726361</updated>
+      <updated>1764353849305</updated>
     </task>
-    <task id="LOCAL-00014" summary="merged dev into personal George">
+    <task id="LOCAL-00014" summary="Journalentry.kt save button doesn't dissappear into background and now when saving it takes you to the saved entries instead of home">
       <option name="closed" value="true" />
-      <created>1765448604669</created>
+      <created>1764355594813</created>
       <option name="number" value="00014" />
       <option name="presentableId" value="LOCAL-00014" />
       <option name="project" value="LOCAL" />
-      <updated>1765448604669</updated>
+      <updated>1764355594813</updated>
     </task>
-    <task id="LOCAL-00015" summary="merged dev into personal George">
+    <task id="LOCAL-00015" summary="Added trigger logging through Hilt">
       <option name="closed" value="true" />
-      <created>1765498944701</created>
+      <created>1764361037489</created>
       <option name="number" value="00015" />
       <option name="presentableId" value="LOCAL-00015" />
       <option name="project" value="LOCAL" />
-      <updated>1765498944701</updated>
+      <updated>1764361037489</updated>
     </task>
-    <task id="LOCAL-00016" summary="merged dev into personal George">
+    <task id="LOCAL-00016" summary="Added trigger logging through Hilt">
       <option name="closed" value="true" />
-      <created>1765499279114</created>
+      <created>1764361044876</created>
       <option name="number" value="00016" />
       <option name="presentableId" value="LOCAL-00016" />
       <option name="project" value="LOCAL" />
-      <updated>1765499279114</updated>
+      <updated>1764361044876</updated>
     </task>
-    <task id="LOCAL-00017" summary="Added &quot;Log This&quot; function to strategies screen. This allows users to &quot;log&quot; a coping strategy they used for the day into a journal entry with the click of a button.">
+    <task id="LOCAL-00017" summary="Added trigger logging through Hilt">
       <option name="closed" value="true" />
-      <created>1766131298439</created>
+      <created>1764361436671</created>
       <option name="number" value="00017" />
       <option name="presentableId" value="LOCAL-00017" />
       <option name="project" value="LOCAL" />
-      <updated>1766131298439</updated>
+      <updated>1764361436671</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="Added File description on most files and TODO's">
+      <option name="closed" value="true" />
+      <created>1764362784119</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1764362784119</updated>
+    </task>
+    <task id="LOCAL-00019" summary="Added File description on most files and TODO's">
+      <option name="closed" value="true" />
+      <created>1764363041734</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1764363041734</updated>
+    </task>
+    <task id="LOCAL-00020" summary="Fixed errors from merge">
+      <option name="closed" value="true" />
+      <created>1764881126236</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1764881126236</updated>
+    </task>
+    <task id="LOCAL-00021" summary="Fixed errors from merge">
+      <option name="closed" value="true" />
+      <created>1764881132268</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1764881132268</updated>
+    </task>
+    <task id="LOCAL-00022" summary="Added a sober time widget with SoberTimeWidget.kt, SoberTimeWidgetReceiver.kt, and sober_time_widget_info.xml along with code to set the current sober time. and a rounded_card.xml to display for the widget">
+      <option name="closed" value="true" />
+      <created>1765257370087</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1765257370087</updated>
+    </task>
+    <task id="LOCAL-00023" summary="updated the profile page with the menu button and added a settings menu, i also added a login page and added a logout button to the settings menu on the profile page">
+      <option name="closed" value="true" />
+      <created>1765475625701</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1765475625701</updated>
+    </task>
+    <task id="LOCAL-00024" summary="hamburger menu updated and fixed">
+      <option name="closed" value="true" />
+      <created>1766280347685</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1766280347685</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
-  </component>
-  <component name="Vcs.Log.Tabs.Properties">
-    <option name="TAB_STATES">
-      <map>
-        <entry key="MAIN">
-          <value>
-            <State />
-          </value>
-        </entry>
-      </map>
-    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Reclaim Main" />
@@ -458,24 +532,30 @@
     <MESSAGE value="added splash_logo.webp again to drawable to fix error" />
     <MESSAGE value="added MilestoneCelebrationCard.kt&#10;and made some visual fixes to WeeklyMoodTimeline.kt" />
     <MESSAGE value="added nav bar to CopingStrategiesScreen.kt" />
-    <MESSAGE value="Added Quick Tip Button and Voice Readout for Coping Strategies Screen" />
-    <MESSAGE value="Added &quot;Custom Stategy&quot; button and a counter for favorited strategies. Op check good" />
-    <MESSAGE value="merged dev into personal George" />
-    <MESSAGE value="Added &quot;Log This&quot; function to strategies screen. This allows users to &quot;log&quot; a coping strategy they used for the day into a journal entry with the click of a button." />
-    <option name="LAST_COMMIT_MESSAGE" value="Added &quot;Log This&quot; function to strategies screen. This allows users to &quot;log&quot; a coping strategy they used for the day into a journal entry with the click of a button." />
-    <option name="GROUP_MULTIFILE_MERGE_BY_DIRECTORY" value="true" />
+    <MESSAGE value="Fixed merge" />
+    <MESSAGE value="JournalDao.kt, JournalEntity.kt, ability to save journal entries, and started changing colors" />
+    <MESSAGE value="Put the background color back due to clashing with buttons" />
+    <MESSAGE value="Moved the affirmations list to its own file, Affirmations.kt, to be able to be easily reused, like in the MilestoneCelebrationCard.kt, and I added to the Theme.kt a default text field to be reused on all text fields" />
+    <MESSAGE value="Journalentry.kt save button doesn't dissappear into background and now when saving it takes you to the saved entries instead of home" />
+    <MESSAGE value="Added trigger logging through Hilt" />
+    <MESSAGE value="Added File description on most files and TODO's" />
+    <MESSAGE value="Fixed errors from merge" />
+    <MESSAGE value="Added a sober time widget with SoberTimeWidget.kt, SoberTimeWidgetReceiver.kt, and sober_time_widget_info.xml along with code to set the current sober time. and a rounded_card.xml to display for the widget" />
+    <MESSAGE value="updated the profile page with the menu button and added a settings menu, i also added a login page and added a logout button to the settings menu on the profile page" />
+    <MESSAGE value="hamburger menu updated and fixed" />
+    <option name="LAST_COMMIT_MESSAGE" value="hamburger menu updated and fixed" />
   </component>
   <component name="play_dynamic_filters_status">
     <option name="appIdToCheckInfo">
       <map>
         <entry key="com.reclaim.reclaim">
           <value>
-            <CheckInfo lastCheckTimestamp="1761867713731" />
+            <CheckInfo lastCheckTimestamp="1765244451921" />
           </value>
         </entry>
         <entry key="com.reclaim.reclaim.test">
           <value>
-            <CheckInfo lastCheckTimestamp="1761867713731" />
+            <CheckInfo lastCheckTimestamp="1765244451922" />
           </value>
         </entry>
       </map>

@@ -36,12 +36,14 @@ import com.reclaim.reclaim.data.entities.StrategyEntity
 import com.reclaim.reclaim.ui.viewmodels.CopingStrategiesViewModel
 import android.speech.tts.TextToSpeech
 import androidx.compose.ui.platform.LocalContext
+import androidx.navigation.NavHostController
 import java.util.Locale
 import kotlinx.coroutines.flow.collectLatest
 import androidx.navigation.NavHostController  // NEW: For navigation
 import java.net.URLEncoder  // NEW: For encoding prefill text
 @Composable
 fun CopingStrategiesScreen(
+    navController: NavHostController,
     onBackClick: () -> Unit,
     navController: NavHostController,  // NEW: Param for navigating to journal
     viewModel: CopingStrategiesViewModel = viewModel()
